@@ -1,0 +1,61 @@
+version: 1
+disable_existing_loggers: true
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: NOTSET
+        formatter: simpleFormatter
+        filters: [request_id]
+        stream: ext://sys.stdout
+
+loggers:
+    <module>:
+        level: ERROR
+        handlers: [console]
+        qualname: app
+        propagate: false
+    sqlalchemy.engine:
+        level: ERROR
+        handlers: [console]
+        qualname: sqlalchemy.engine
+        propagate: false
+    boto3:
+        level: ERROR
+        handlers: [console]
+        qualname: boto3
+        propagate: false
+    botocore:
+        level: ERROR
+        handlers: [console]
+        qualname: botocore
+        propagate: false
+    nose:
+        level: ERROR
+        handlers: [console]
+        qualname: nose
+        propagate: false
+    s3transfer:
+        level: ERROR
+        handlers: [console]
+        qualname: nose
+        propagate: false
+    urllib3:
+        level: ERROR
+        handlers: [console]
+        qualname: nose
+        propagate: false
+filters:
+    request_id:
+        (): flask_log_request_id.RequestIDLogFilter
+
+formatters:
+    simpleFormatter:
+        class: logging.Formatter
+        format: '%(asctime)s.%(msecs)03d - request_id=%(request_id)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s'
+        datefmt: '%Y-%m-%d %H:%M:%S'
+
+root:
+    level: NOTSET
+    handlers: [console]
+    propogate: no
