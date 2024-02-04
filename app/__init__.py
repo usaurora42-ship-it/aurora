@@ -7,7 +7,6 @@ from flask import Flask, request, jsonify, render_template
 from flask_cachebuster import CacheBuster
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-from flask_replicated import FlaskReplicated
 from flask_migrate import Migrate
 from flask_reverse_proxy import ReverseProxied
 from flask_cors import CORS
@@ -92,7 +91,6 @@ FlaskApp.json_encoder = LazyJSONEncoder
 
 # DataBase
 db = SQLAlchemy(app=FlaskApp)
-FlaskReplicated(FlaskApp)
 from app.model import *
 
 migrate = Migrate(FlaskApp, db)
