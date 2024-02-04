@@ -1,11 +1,11 @@
 # create migration
-flask db migrate
+FLASK_ENV=development flask db migrate
 
 # aplicar alteração no banco
-flask db upgrade
+FLASK_ENV=development flask db upgrade
 
 # execure fixtures
-flask db fixtures
+FLASK_ENV=development flask db fixtures
 
 # executar projeto
-flask run
+FLASK_ENV=development flask run
