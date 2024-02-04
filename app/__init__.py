@@ -95,7 +95,7 @@ from app.model import *
 
 migrate = Migrate(FlaskApp, db)
 
-""" # Database Fixtures
+# Database Fixtures
 from app.model.fixture import ModelFixtures
 
 #
@@ -107,8 +107,8 @@ def fixtures():
     fixture.countries()
     fixture.languages()
     fixture.currencies()
-    fixture.cbos()
 
+""""
 @FlaskApp.cli.command('test')
 def test():
     sys.exit(pytest.main(['-v', 'app/tests']))
