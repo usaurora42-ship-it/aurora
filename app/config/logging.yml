@@ -6,7 +6,7 @@ handlers:
         class: logging.StreamHandler
         level: NOTSET
         formatter: simpleFormatter
-        filters: [request_id]
+        # filters: [request_id]
         stream: ext://sys.stdout
 
 loggers:
@@ -45,14 +45,15 @@ loggers:
         handlers: [console]
         qualname: nose
         propagate: false
-filters:
-    request_id:
-        (): flask_log_request_id.RequestIDLogFilter
+# filters:
+#     request_id:
+#         (): flask_log_request_id.RequestIDLogFilter
 
 formatters:
     simpleFormatter:
         class: logging.Formatter
-        format: '%(asctime)s.%(msecs)03d - request_id=%(request_id)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s'
+        # format: '%(asctime)s.%(msecs)03d - request_id=%(request_id)s - %(name)s:%(lineno)d - %(levelname)s - %(message)s'
+        format: '%(asctime)s.%(msecs)03d - %(name)s:%(lineno)d - %(levelname)s - %(message)s'
         datefmt: '%Y-%m-%d %H:%M:%S'
 
 root:

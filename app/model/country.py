@@ -53,8 +53,6 @@ class ModelCountry(db.Model):
         default=lambda : format(datetime.now().timestamp(), '.3f')
     )
 
-    country_factor = db.relationship('ModelCountryFactor', uselist=False, primaryjoin='ModelCountryFactor.country_id == ModelCountry.id', viewonly=True)
-
     errors = None
 
     # Create Country

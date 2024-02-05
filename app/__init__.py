@@ -17,7 +17,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt
 from flask_jwt_extended.exceptions import NoAuthorizationError, JWTDecodeError, RevokedTokenError, \
     FreshTokenRequired, WrongTokenError, CSRFError
-from flask_log_request_id import RequestID, current_request_id
+# from flask_log_request_id import RequestID, current_request_id
 from flask_caching import Cache
 from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from functools import wraps
@@ -38,7 +38,7 @@ FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
 
 
 # LOGGER
-RequestID(FlaskApp)
+# RequestID(FlaskApp)
 with FlaskApp.open_resource('config/logging.yml') as f:
     config_data = yaml.safe_load(f.read())
     logging.config.dictConfig(config_data)
@@ -53,10 +53,10 @@ cache = Cache()
 cache.init_app(FlaskApp)
 
 
-@FlaskApp.after_request
-def add_header(response):
-    response.headers['X-RequestID'] = current_request_id()
-    return response
+# @FlaskApp.after_request
+# def add_header(response):
+#     response.headers['X-RequestID'] = current_request_id()
+#     return response
 
 @FlaskApp.errorhandler(exceptions.InternalServerError)
 def handle_bad_request(e):
@@ -80,7 +80,6 @@ if environment == 'development' or environment == 'testing' or environment == 'l
 cache_config = {'extensions': ['.js', '.css'], 'hash_size': 5}
 cache_buster = CacheBuster(config=cache_config)
 cache_buster.init_app(FlaskApp)
-LOGGER.info(environment)
 
 # Minify
 #minify(app=FlaskApp, js=False, cssless=False)
@@ -101,18 +100,19 @@ from app.model.fixture import ModelFixtures
 #
 # COMMANDS
 #
-# @FlaskApp.cli.command('fixtures')
+@FlaskApp.cli.command('fixtures')
 def fixtures():
     fixture = ModelFixtures()
     fixture.countries()
     fixture.languages()
     fixture.currencies()
 
-""""
+
 @FlaskApp.cli.command('test')
 def test():
     sys.exit(pytest.main(['-v', 'app/tests']))
 
+""""
 # JWT
 jwt = JWTManager(FlaskApp)
 
