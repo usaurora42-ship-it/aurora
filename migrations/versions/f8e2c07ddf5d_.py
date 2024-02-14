@@ -22,7 +22,6 @@ def upgrade():
     sa.Column('id', mysql.SMALLINT(unsigned=True), autoincrement=True, nullable=False),
     sa.Column('message', sa.Text(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('message'),
     mysql_charset='utf8mb4',
     mysql_collate='utf8mb4_unicode_ci',
     mysql_engine='InnoDB',
