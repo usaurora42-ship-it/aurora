@@ -25,3 +25,8 @@ Query._has_entity = _has_entity
 Query.unique_join = unique_join
 
 from app.model.address import ModelAddress
+from app.model.partners import ModelPartner
+from app.model.units import ModelUnit
+from app.model.customer import ModelCustomer
+from app.model.product import ModelProduct
+from app.model.messages import ModelCustomerMessages
