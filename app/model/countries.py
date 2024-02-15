@@ -1,7 +1,7 @@
 # encoding: utf-8
 import yaml
+from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
-from sqlalchemy.dialects.mysql import SMALLINT
 
 from app import db, logging
 from app.model.validator import ModelValidator
@@ -10,8 +10,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelLanguage(db.Model):
-    __tablename__ = 'languages'
+class ModelCountry(db.Model):
+    __tablename__ = 'countries'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -20,8 +20,8 @@ class ModelLanguage(db.Model):
     }
 
     id = db.Column(
-        SMALLINT(unsigned=True),
-        db.Sequence('language_id_seq'),
+        INTEGER(unsigned=True),
+        db.Sequence('country_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
@@ -31,8 +31,21 @@ class ModelLanguage(db.Model):
         unique=True,
         nullable=False
     )
+    official_name = db.Column(
+        db.String(60)
+    )
+    alpha_2 = db.Column(
+        db.String(2)
+    )
     alpha_3 = db.Column(
-        db.String(3)
+        db.String(3),
+        index=True,
+        nullable=False
+    )
+    numeric_ref = db.Column(
+        INTEGER(unsigned=True),
+        nullable=False,
+        index=True
     )
     date_create = db.Column(
         db.DECIMAL(15, 3),
@@ -42,8 +55,8 @@ class ModelLanguage(db.Model):
 
     errors = None
 
-    # Create Language
-    def create_language(self, data):
+    # Create Country
+    def create_country(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -51,11 +64,7 @@ class ModelLanguage(db.Model):
 
         data = v.document
 
-        exists = ModelLanguage.query.filter_by(name=data['name']).count()
-        if exists > 0:
-            return True
-
-        # pop data partner
+        # pop data
         for k in data:
             setattr(self, k, data[k])
 
@@ -66,24 +75,23 @@ class ModelLanguage(db.Model):
         except Exception as e:
             raise e
 
-    # Get ID Language
-    def get_language_id(self, value):
+    def get_country_id(self, value):
         if not value:
             return None
 
         util = Util()
 
-        lang_name = util.language_lookup(value)
-        if lang_name is None:
+        country_name = util.country_lookup(value)
+        if country_name is None:
             return None
 
-        query = ModelLanguage.query.with_entities(ModelLanguage.id).filter_by(
-            name=lang_name
+        query = ModelCountry.query.with_entities(ModelCountry.id).filter_by(
+            name=country_name
         )
 
         try:
-            lang = query.first()
-            return lang.id if lang else None
+            country = query.first()
+            return country.id if country else None
         except Exception as e:
             raise e
 
@@ -94,13 +102,13 @@ class ModelLanguage(db.Model):
         # default keys
         if keys is None:
             keys = [
-                'id', 'name', 'alpha_3'
+                'id', 'name', 'official_name', 'alpha_3'
             ]
 
         # exclude
         for e in exclude:
             if e in keys:
-                keys.pop(e)
+                keys.remove(e)
 
         return util.get_dict(obj=obj, keys=keys)
 
@@ -111,11 +119,22 @@ class ModelLanguage(db.Model):
             type: string
             maxlength: 40
             required: true
+        official_name:
+            type: string
+            maxlength: 60
+        alpha_2:
+            type: string
+            maxlength: 2
         alpha_3:
             type: string
             maxlength: 3
+            required: true
+        numeric_ref:
+            type: integer
+            coerce: integer
+            min: 0
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Language %r>" % self.name
+        return "<Country %r>" % self.name

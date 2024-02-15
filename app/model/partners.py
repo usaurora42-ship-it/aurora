@@ -1,7 +1,7 @@
 # encoding: utf-8
 import yaml
 from datetime import datetime
-from sqlalchemy.dialects.mysql import SMALLINT
+from sqlalchemy.dialects.mysql import INTEGER
 
 from app import db, logging
 from app.model.validator import ModelValidator
@@ -21,19 +21,19 @@ class ModelPartner(db.Model):
     }
 
     id = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         db.Sequence('partner_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
     )
     country_id = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         db.ForeignKey('countries.id', onupdate='CASCADE'),
         nullable=False
     )
     language_id = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         db.ForeignKey('languages.id', onupdate='CASCADE'),
         nullable=False
     )

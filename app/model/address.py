@@ -28,7 +28,7 @@ class ModelAddress(db.Model):
         nullable=False
     )
     country_id = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         db.ForeignKey('countries.id', onupdate='CASCADE'),
         nullable=False
     )

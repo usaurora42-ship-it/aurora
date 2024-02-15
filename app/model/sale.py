@@ -1,7 +1,7 @@
 # encoding: utf-8
 import yaml
 from datetime import datetime
-from sqlalchemy.dialects.mysql import SMALLINT
+from sqlalchemy.dialects.mysql import INTEGER
 
 from app import db, logging
 from app.model.validator import ModelValidator
@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelProduct(db.Model):
-    __tablename__ = 'products'
+class ModelSale(db.Model):
+    __tablename__ = 'sales'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -21,25 +21,31 @@ class ModelProduct(db.Model):
     }
 
     id = db.Column(
-        SMALLINT(unsigned=True),
-        db.Sequence('product_id_seq'),
+        INTEGER(unsigned=True),
+        db.Sequence('sale_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
     )    
-    unit_id = db.Column(
-        SMALLINT(unsigned=True),
-        db.ForeignKey('units.id', onupdate='CASCADE'),
-        nullable=False
-    )
-    description = db.Column(
-        db.String(80),
-        nullable=False
-    )
     value = db.Column(
         db.DECIMAL(15, 2),
         nullable=False,
-    )    
+    )  
+    voucher = db.Column(
+        db.DECIMAL(15, 2),
+        nullable=False,
+    ) 
+    status = db.Column(
+        db.Enum(StatusEnum, validate_strings=True),
+        default=StatusEnum.enabled,
+        server_default='enabled',
+        index=True
+    )
+    payment_code = db.Column(
+        db.String(40),
+        unique=True,
+        nullable=False
+    )
     date_create = db.Column(
         db.DECIMAL(15, 3),
         nullable=False,
@@ -47,15 +53,15 @@ class ModelProduct(db.Model):
     )
 
     # relationship
-    unit = db.relationship(
-        'ModelUnit',
-        backref=db.backref('unit_product', lazy=True)
+    client = db.relationship(
+        'ModelClient',
+        backref=db.backref('client_sale', lazy=True)
     )    
 
     errors = None
 
-    # Create Product
-    def create_product(self, data):
+    # Create Sale
+    def create_sale(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -64,8 +70,8 @@ class ModelProduct(db.Model):
         data = v.document        
         
 
-    # Update Product
-    def update_product(self, data):
+    # Update Sale
+    def update_sale(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_update__()):
             self.errors = v.errors
@@ -73,56 +79,49 @@ class ModelProduct(db.Model):
 
         data = v.document
 
-        product_id = data.pop('id')
-        product= ModelProduct.query.filter_by(
-            id=product_id,
+        sale_id = data.pop('id')
+        sale = ModelSales.query.filter_by(
+            id=sale_id,
             status=StatusEnum.enabled
         ).first()
 
-        if not product:
+        if not sale:
             self.errors = {
-                'product': ['product not found']
+                'sale': ['sale not found']
             }
             return None
 
         # pop data partner
         for k in data:
-            setattr(product, k, data[k])
+            setattr(sale, k, data[k])
 
         try:
             db.session.commit()
-            return product
+            return sale
         except Exception as e:
             raise e
     
     # Validators
     def __val_create__(self):
         schema = '''
-        unit_id:
+        sale_id:
             coerce: integer
             max: 65535
             min: 1
             required: true
             type: integer        
-        description:
-            maxlength: 80
-            required: true
-            type: string
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __val_update__(self):
         schema = '''        
-        unit_id:
+        sale_id:
             coerce: integer
             max: 65535
             min: 1
             type: integer        
-        description:
-            maxlength: 80
-            type: string
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Product %r>" % self.name
+        return "<Sale %r>" % self.name

@@ -1,7 +1,7 @@
 from app import logging
-from app.model.country import ModelCountry
-from app.model.language import ModelLanguage
-from app.model.currency import ModelCurrency
+from app.model.countries import ModelCountry
+from app.model.languages import ModelLanguage
+from app.model.currencies import ModelCurrency
 import pycountry
 import json
 

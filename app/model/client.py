@@ -1,7 +1,7 @@
 # encoding: utf-8
 import yaml
 from datetime import datetime
-from sqlalchemy.dialects.mysql import SMALLINT
+from sqlalchemy.dialects.mysql import INTEGER
 
 from app import db, logging
 from app.model.validator import ModelValidator
@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelCustomer(db.Model):
-    __tablename__ = 'customers'
+class ModelClient(db.Model):
+    __tablename__ = 'clients'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -21,8 +21,8 @@ class ModelCustomer(db.Model):
     }
 
     id = db.Column(
-        SMALLINT(unsigned=True),
-        db.Sequence('customer_id_seq'),
+        INTEGER(unsigned=True),
+        db.Sequence('client_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
@@ -32,7 +32,7 @@ class ModelCustomer(db.Model):
         nullable=False
     )
     type = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         nullable=False
     )
     email = db.Column(
@@ -54,8 +54,8 @@ class ModelCustomer(db.Model):
         default=lambda : format(datetime.now().timestamp(), '.3f')
     )
 
-    # Create Customer
-    def create_customer(self, data):
+    # Create Client
+    def create_client(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -68,8 +68,8 @@ class ModelCustomer(db.Model):
         if exists:
             return exists
         
-    # Update Customer
-    def update_customer(self, data):
+    # Update Client
+    def update_client(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_update__()):
             self.errors = v.errors
@@ -77,25 +77,25 @@ class ModelCustomer(db.Model):
 
         data = v.document
 
-        customer_id = data.pop('id')
-        customer = ModelCustomer.query.filter_by(
-            id=customer_id,
+        client_id = data.pop('id')
+        client = ModelClient.query.filter_by(
+            id=client_id,
             status=StatusEnum.enabled
         ).first()
 
-        if not customer:
+        if not client:
             self.errors = {
-                'customer': ['customer not found']
+                'client': ['client not found']
             }
             return None
 
         # pop data partner
         for k in data:
-            setattr(customer, k, data[k])
+            setattr(client, k, data[k])
 
         try:
             db.session.commit()
-            return customer
+            return client
         except Exception as e:
             raise e
 
@@ -143,4 +143,4 @@ class ModelCustomer(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
    
     def __repr__(self):
-        return "<Customer %r>" % self.name
+        return "<Client %r>" % self.name

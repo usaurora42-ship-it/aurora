@@ -1,6 +1,6 @@
 # encoding: utf-8
 import yaml
-from sqlalchemy.dialects.mysql import SMALLINT
+from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 
 from app import db, logging
@@ -20,7 +20,7 @@ class ModelUnit(db.Model):
     }
 
     id = db.Column(
-        SMALLINT(unsigned=True),
+        INTEGER(unsigned=True),
         db.Sequence('unit_id_seq'),
         primary_key=True,
         autoincrement=True,

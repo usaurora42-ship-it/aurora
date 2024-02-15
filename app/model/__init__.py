@@ -27,6 +27,13 @@ Query.unique_join = unique_join
 from app.model.address import ModelAddress
 from app.model.partners import ModelPartner
 from app.model.units import ModelUnit
-from app.model.customer import ModelCustomer
-from app.model.product import ModelProduct
-from app.model.messages import ModelCustomerMessages
+from app.model.client import ModelClient
+from app.model.products import ModelProduct
+from app.model.client_message import ModelClientMessage
+from app.model.phones import ModelPhone
+from app.model.client_address import ModelClientAddress
+from app.model.partner_product import ModelPartnerProduct
+from app.model.partner_client import ModelPartnerClient
+from app.model.partner_phone import ModelPartnerPhone
+from app.model.sale import ModelSale
+from app.model.sale_product import ModelSaleProduct
