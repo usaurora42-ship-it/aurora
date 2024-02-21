@@ -17,7 +17,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_jwt_extended import JWTManager, verify_jwt_in_request, get_jwt
 from flask_jwt_extended.exceptions import NoAuthorizationError, JWTDecodeError, RevokedTokenError, \
     FreshTokenRequired, WrongTokenError, CSRFError
-# from flask_log_request_id import RequestID, current_request_id
+from flask_log_request_id import RequestID, current_request_id
 from flask_caching import Cache
 from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from functools import wraps
@@ -111,6 +111,7 @@ def fixtures():
 @FlaskApp.cli.command('test')
 def test():
     sys.exit(pytest.main(['-v', 'app/tests']))
+
 
 """"
 # JWT
@@ -214,15 +215,17 @@ def handle_bad_request(e):
             ]
         }
     }, 500
+"""
 
 # API
 api = Api(FlaskApp)
 
 # Home
-from app.home import Home, Version, ClientIp
+from app.home import Home
+""" , Version, ClientIp """
 api.add_resource(Home, '/api')
-api.add_resource(Version, '/api/version')
-api.add_resource(ClientIp, '/api/client-ip')
+""" api.add_resource(Version, '/api/version')
+api.add_resource(ClientIp, '/api/client-ip') """
 
 #
 # BluePrints
@@ -230,7 +233,7 @@ api.add_resource(ClientIp, '/api/client-ip')
 from app.blueprints.site import SiteBlueprint
 FlaskApp.register_blueprint(SiteBlueprint)
 
-from app.blueprints.common import CommonBlueprint
+""" from app.blueprints.common import CommonBlueprint
 FlaskApp.register_blueprint(CommonBlueprint, url_prefix='/api')
 
 from app.blueprints.partner import PartnerBlueprint
@@ -261,4 +264,5 @@ from app.blueprints.loan import LoanBlueprint
 FlaskApp.register_blueprint(LoanBlueprint, url_prefix='/api')
 
 from app.blueprints.partnership import PartnerShipBlueprint
-FlaskApp.register_blueprint(PartnerShipBlueprint, url_prefix='/api') """
+FlaskApp.register_blueprint(PartnerShipBlueprint, url_prefix='/api') 
+ """
