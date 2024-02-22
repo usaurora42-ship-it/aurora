@@ -27,12 +27,18 @@ class ModelClient(db.Model):
         autoincrement=True,
         nullable=False
     )
+    uuid = db.Column(
+        db.String(36),
+        unique=True,
+        nullable=False
+    )
     name = db.Column(
         db.String(80),
         nullable=False
     )
     type = db.Column(
-        INTEGER(unsigned=True),
+        db.String(2),
+        unique=True,
         nullable=False
     )
     email = db.Column(

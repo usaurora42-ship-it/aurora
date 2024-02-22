@@ -26,7 +26,12 @@ class ModelSale(db.Model):
         primary_key=True,
         autoincrement=True,
         nullable=False
-    )    
+    )  
+    uuid = db.Column(
+        db.String(36),
+        unique=True,
+        nullable=False
+    )  
     value = db.Column(
         db.DECIMAL(15, 2),
         nullable=False,
@@ -43,6 +48,16 @@ class ModelSale(db.Model):
     )
     payment_code = db.Column(
         db.String(40),
+        unique=True,
+        nullable=False
+    )
+    date_delivery = db.Column(
+        db.DECIMAL(15, 3),
+        nullable=False,
+        default=lambda : format(datetime.now().timestamp(), '.3f')
+    )
+    time_slot = db.Column(
+        db.String(20),
         unique=True,
         nullable=False
     )

@@ -51,29 +51,29 @@ Bootstrap 5 HTML CSS Template
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav ms-lg-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.html#section_1">Home</a>
+                                    <a class="nav-link" href="/#section_1">Home</a>
                                 </li>
         
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.html#section_2">About us</a>
+                                    <a class="nav-link" href="/#section_2">Sobre Nós</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.html#section_3">Our Menu</a>
+                                    <a class="nav-link" href="/#section_3">Nosso Menu</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.html#section_4">Testimonials</a>
+                                    <a class="nav-link" href="/#section_4">Avaliações</a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.html#section_5">Contact</a>
+                                    <a class="nav-link" href="/#section_5">Contato</a>
                                 </li>
                             </ul>
 
                             <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="reservation.html">
-                                    Reservation
+                                <a class="btn custom-btn custom-border-btn" href="cadastro">
+                                    Comprar
                                     <i class="bi-arrow-up-right ms-2"></i>
                                 </a>
                             </div>
@@ -90,7 +90,7 @@ Bootstrap 5 HTML CSS Template
                             <div class="booking-form-wrap">
                                 <div class="row">
                                     <div class="col-lg-8 col-12 p-0">
-                                        <form class="custom-form booking-form" action="#" method="post" role="form">
+                                        <form class="custom-form booking-form" action="/cadastro" method="POST" role="form">
                                             <div class="text-center mb-6 pb-lg-4">
                                                 <h6 class="text-white">Seus Dados</h6>
 
@@ -100,19 +100,19 @@ Bootstrap 5 HTML CSS Template
                                             <div class="booking-form-body">
                                                 <div class="row">
                                                     <div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Nome Completo" required>
+                                                        <input type="text" name="name" id="name" class="form-control" placeholder="Nome Completo" required>
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Email" required>
+                                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" required>
                                                     </div>
 													
                                                     <div class="col-lg-6 col-12">
-                                                        <input type="tel" class="form-control" name="booking-form-phone" placeholder="Telefone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                                                        <input type="tel" class="form-control" name="phone" placeholder="Telefone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-														<select class="form-control" name="pessoa">
+														<select class="form-control" name="typeperson">
 														  <option value="tp" selected>Tipo de Pessoa</option>
 														  <option value="pf">Pessoa Física</option>
 														  <option value="pj">Pessoa Jurídica</option>
@@ -120,35 +120,35 @@ Bootstrap 5 HTML CSS Template
 													</div>
 
                                                     <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="cpf" name="booking-form-time" value="CPF" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                                        <input class="form-control" type="cpf" name="document" value="CPF" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="cep" name="booking-form-time" value="CEP" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                                        <input class="form-control" type="cep" name="zipcode" value="CEP" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
                                                     </div>
 													
 													<div class="col-lg-9 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Endereço" required>
+                                                        <input type="text" name="street" value="Endereço" id="street" class="form-control" placeholder="Endereço" required>
                                                     </div>
 													
 													<div class="col-lg-3 col-12">
-                                                        <input class="form-control" type="nr" name="booking-form-time" value="Número" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                                                        <input class="form-control" type="text" name="number" value="Número" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Complemento" required>
+                                                        <input type="text" name="complement" id="complement" class="form-control" placeholder="Complemento" required>
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Bairro" required>
+                                                        <input type="text" name="district" id="district" class="form-control" placeholder="Bairro" required>
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Cidade" required>
+                                                        <input type="text" name="city" id="city" class="form-control" placeholder="Cidade" required>
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-														<select class="form-control" name="estado">
+														<select class="form-control" name="state">
 														  <option value="estado" selected>Estado</option>
 														    <option value="ac">AC</option>
 															<option value="al">AL</option>
@@ -181,7 +181,7 @@ Bootstrap 5 HTML CSS Template
 													</div>
 													
 													<div class="col-lg-4 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="País" required>
+                                                        <input type="text" name="country" id="country" class="form-control" placeholder="País" required>
                                                     </div>	
 													<p>
 													
@@ -190,33 +190,33 @@ Bootstrap 5 HTML CSS Template
 													</div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Nome do Presenteado" required>
+                                                        <input type="text" name="giftedname" id="giftedname" class="form-control" placeholder="Nome do Presenteado" required>
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input type="telp" class="form-control" name="booking-form-phone" placeholder="Telefone do Presenteado" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
+                                                        <input type="telp" class="form-control" name="giftedphone" placeholder="Telefone do Presenteado" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required="">
                                                     </div>													
 													
 													<div class="col-lg-12 col-12">
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Ocasião do Presente" required>
+                                                        <input type="text" name="giftedocasion" id="giftedocasion" class="form-control" placeholder="Ocasião do Presente" required>
                                                     </div>
 													
                                                     <div class="col-lg-12 col-12">
-                                                        <textarea name="booking-form-message" rows="3" class="form-control" id="booking-form-message" placeholder="Texto para o Cartão (Opcional)"></textarea>
+                                                        <textarea name="giftedmessage" rows="3" class="form-control" id="giftedmessage" placeholder="Texto para o Cartão (Opcional)"></textarea>
                                                     </div>
 													
 													<div class="col-lg-12 col-12">
 													    <br>
-                                                        <input type="text" name="booking-form-name" id="booking-form-name" class="form-control" placeholder="Assinatura do Cartão" required>
+                                                        <input type="text" name="signaturecard" id="signaturecard" class="form-control" placeholder="Assinatura do Cartão" required>
                                                     </div>
 													
                                                     <div class="col-lg-6 col-12">
 													    <h8 class="text-white">Data de Entrega</h8>
-                                                        <input type="date" name="booking-form-date" id="booking-form-date" class="form-control" placeholder="Date" required="">
+                                                        <input type="date" name="datedelivery" id="datedelivery" class="form-control" placeholder="Date" required="">
                                                     </div>
 													<div class="col-lg-6 col-12">
 													    <h8 class="text-white">Faixa de Horário</h8>
-														<select class="form-control" name="horario">
+														<select class="form-control" name="timeslot">
 														  <option value="hr" selected>Selecione um intervalo de tempo</option>
 														  <option value="1">08:00 - 12:00</option>
 														  <option value="2">12:00 - 18:00</option>
@@ -336,11 +336,12 @@ Bootstrap 5 HTML CSS Template
 
 
         <!-- JAVASCRIPT FILES -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.sticky.js"></script>
-        <script src="js/vegas.min.js"></script>
-        <script src="js/custom.js"></script>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 
+       
     </body>
 </html>

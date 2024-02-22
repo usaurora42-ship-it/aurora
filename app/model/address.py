@@ -27,6 +27,11 @@ class ModelAddress(db.Model):
         autoincrement=True,
         nullable=False
     )
+    uuid = db.Column(
+        db.String(36),
+        unique=True,
+        nullable=False
+    )
     country_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('countries.id', onupdate='CASCADE'),
