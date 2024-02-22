@@ -38,6 +38,8 @@ def cad():
 def create_register():
     data = request.form.to_dict() or {}
 
+    LOGGER.info(json.dumps(data))
+
     # get client
     client = ModelClient.query.with_entities(
         ModelClient.id

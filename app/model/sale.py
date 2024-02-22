@@ -65,13 +65,7 @@ class ModelSale(db.Model):
         db.DECIMAL(15, 3),
         nullable=False,
         default=lambda : format(datetime.now().timestamp(), '.3f')
-    )
-
-    # relationship
-    client = db.relationship(
-        'ModelClient',
-        backref=db.backref('client_sale', lazy=True)
-    )    
+    ) 
 
     errors = None
 
@@ -95,7 +89,7 @@ class ModelSale(db.Model):
         data = v.document
 
         sale_id = data.pop('id')
-        sale = ModelSales.query.filter_by(
+        sale = ModelSale.query.filter_by(
             id=sale_id,
             status=StatusEnum.enabled
         ).first()

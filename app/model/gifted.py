@@ -54,15 +54,6 @@ class ModelClientGifted(db.Model):
         comment='message'
     ) 
 
-    sale = db.relationship(
-        'ModelSale',
-        backref=db.backref('gifted_sale', lazy=True)
-    )
-    phone = db.relationship(
-        'ModelPhone',
-        backref=db.backref('gifted_phone', lazy=True)
-    )
-
     errors = None
 
     # Create Gifted
