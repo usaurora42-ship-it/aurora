@@ -119,11 +119,14 @@ Bootstrap 5 HTML CSS Template
 													</div>
 
                                                     <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="document" value="CPF">
+                                                        <input class="form-control" type="text" name="document" placeholder="CPF" value="{{ data_input['document'] }}">
+                                                        {% if erros and errors.document %}
+                                                            <span>documento inválido</span>
+                                                        {% endif %}
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="zipcode" value="CEP">
+                                                        <input class="form-control" type="text" name="zipcode" placeholder="CEP" value="{{ data_input['zipcode'] }}">
                                                     </div>
 													
 													<div class="col-lg-9 col-12">

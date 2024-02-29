@@ -20,10 +20,12 @@ LOGGER = logging.getLogger(__name__)
 
 @SiteBlueprint.route('/client/signup')
 def signup_get():
-    resp = make_response(
-        render_template('client/signup.html', success=False, email_error=False, environment=environment))
+    resp = make_response(render_template('client/signup.html',
+        success=False,
+        errors=None,
+        data_input=None))
     resp.mimetype = 'text/html'
-    return resp
+    return resp 
 
 
 @SiteBlueprint.route('/client/signup', methods=['POST'])
@@ -50,7 +52,7 @@ def signup_post():
     # instance models
     model_client = ModelClient()
     model_phone = ModelPhone()
-    model_client_phone = ModelClient
+    model_client_phone = ModelClientPhone()
 
     try:
 
@@ -64,7 +66,8 @@ def signup_post():
             data_client = {
                 'document': data['document'],
                 'email': data['email'],
-                'name': data['name']
+                'name': data['name'],
+                'type': data['typeperson']
             }
 
             client = model_client.create_client(data_client)
@@ -91,9 +94,9 @@ def signup_post():
         # create client phone
         if phone is None:
             data_phone = {
-                'code_country': '',
-                'code_area': '',
-                'number': ''
+                'code_country': data['code_country'],
+                'code_area': data['code_area'],
+                'number': data['number']
             }
 
             phone = model_phone.create_phone(data_phone)
@@ -143,25 +146,6 @@ def signup_post():
                                     errors=None))
             resp.mimetype = 'text/html'
             return resp, 500
-
-
-
-
-    
-    # # get gifted
-    # gifted = ModelClientGifted.query.with_entities(
-    #     ModelClientGifted.id
-    # ).filter_by(
-    #     uuid=data['gifted_uuid']
-    # ).first()
-
-    # if gifted is None:
-    #     resp = make_response(render_template('client/signup.html',
-    #                         success=False,
-    #                         errosr={'gifted': ['gifted not found']},
-    #                         gifted_name=data['gifted_name']))
-    #     resp.mimetype = 'text/html'
-    #     return resp 
 
 
     

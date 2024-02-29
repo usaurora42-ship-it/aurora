@@ -69,10 +69,20 @@ class ModelClient(db.Model):
 
         data = v.document
 
-        # if exists
-        exists = self.query.filter_by(email=data['email']).first()
-        if exists:
-            return exists
+        # # if exists
+        # exists = self.query.filter_by(email=data['email']).first()
+        # if exists:
+        #     return exists
+
+        for k in data:
+            setattr(self, k, data[k])
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except Exception as e:
+            raise e
         
     # Update Client
     def update_client(self, data):
