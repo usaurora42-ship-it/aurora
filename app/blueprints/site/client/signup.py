@@ -141,7 +141,7 @@ def signup_post():
 
     except Exception as e:
             LOGGER.exception(e)
-            resp = make_response(render_template('client/signup.html',                            
+            resp = make_response(render_template('errors/500.html',                            
                                     success=False,
                                     errors=None))
             resp.mimetype = 'text/html'
