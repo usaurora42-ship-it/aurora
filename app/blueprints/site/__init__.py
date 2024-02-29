@@ -4,4 +4,4 @@ from flask import Blueprint
 SiteBlueprint = Blueprint('site_bp', 'site', url_prefix='')
 
 from app.blueprints.site import home
-from app.blueprints.site.client import signup
+from app.blueprints.site.client import signup, login
