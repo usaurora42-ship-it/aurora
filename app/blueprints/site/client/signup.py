@@ -39,20 +39,20 @@ def signup_post():
         status=StatusEnum.enabled,
         document=data['document']
     )
-
+    
     # query phone
-    query_phone = ModelPhone.query.with_entities(
-        ModelPhone.id
-    ).filter(
-        status=StatusEnum.enabled
-    ).join(ModelClient).filter_by(
-        status=StatusEnum.enabled
-    )
+    # query_phone = ModelPhone.query.with_entities(
+    #     ModelPhone.id
+    # ).filter(
+    #     status=StatusEnum.enabled
+    # ).join(ModelClient).filter_by(
+    #     status=StatusEnum.enabled
+    # ).first()
 
     # instance models
     model_client = ModelClient()
-    model_phone = ModelPhone()
-    model_client_phone = ModelClientPhone()
+    # model_phone = ModelPhone()
+    # model_client_phone = ModelClientPhone()
 
     try:
 
@@ -84,7 +84,7 @@ def signup_post():
         #
         # GET OR CREATE A CLIENT PHONE
         #
-        phone = query_phone.filter(
+        """ phone = query_phone.filter(
             ModelPhone.code_area == data['code_area'],
             ModelPhone.code_country == data['code_country'],
             ModelPhone.number == data['number'],
@@ -125,7 +125,7 @@ def signup_post():
                             errors=model_client_phone.errors,
                             data_input=data))
                 resp.mimetype = 'text/html'
-                return resp
+                return resp """
     
         #
         # GET OR CREATE CLIENT ADDRESS
