@@ -9,6 +9,7 @@ from datetime import datetime, time
 from pytz import timezone
 from ipaddress import ip_address, ip_network
 from sqlalchemy import text
+from email_validator import validate_email, EmailNotValidError
 
 from app import db
 
