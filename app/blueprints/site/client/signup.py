@@ -36,9 +36,10 @@ def signup_post():
     query_client = ModelClient.query.with_entities(
         ModelClient.id
     ).filter_by(
-        status=StatusEnum.enabled,
+        #status=StatusEnum.enabled,
         document=data['document']
     )
+    
     
     # query phone
     # query_phone = ModelPhone.query.with_entities(
@@ -66,7 +67,7 @@ def signup_post():
             data_client = {
                 'document': data['document'],
                 'email': data['email'],
-                'name': data['name'],
+                'name': data['name'],                
                 'type': data['typeperson']
             }
 
