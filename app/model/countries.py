@@ -76,15 +76,20 @@ class ModelCountry(db.Model):
             raise e
 
     def get_country_id(self, value):
+        print("value country")
+        print(value)
         if not value:
             return None
 
         util = Util()
+        
 
         country_name = util.country_lookup(value)
+
         if country_name is None:
             return None
-
+            
+        
         query = ModelCountry.query.with_entities(ModelCountry.id).filter_by(
             name=country_name
         )
@@ -95,6 +100,7 @@ class ModelCountry(db.Model):
         except Exception as e:
             raise e
 
+        
     # prepare response dict json
     def get_dict(obj, keys=None, exclude=[]):
         util = Util()

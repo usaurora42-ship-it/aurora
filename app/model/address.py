@@ -27,11 +27,6 @@ class ModelAddress(db.Model):
         autoincrement=True,
         nullable=False
     )
-    uuid = db.Column(
-        db.String(36),
-        unique=True,
-        nullable=False
-    )
     country_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('countries.id', onupdate='CASCADE'),
@@ -120,6 +115,7 @@ class ModelAddress(db.Model):
         for k in data:
             setattr(self, k, data[k])
 
+
         try:
             db.session.add(self)
             db.session.commit()
@@ -205,10 +201,6 @@ class ModelAddress(db.Model):
             min: 0
             type: number
             coerce: float
-        name:
-            maxlength: 20
-            required: true
-            type: string
         state:
             maxlength: 50
             required: true
@@ -231,6 +223,9 @@ class ModelAddress(db.Model):
         zip_code:
             maxlength: 20
             required: true
+            type: string
+        name:
+            maxlength: 20
             type: string
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
@@ -261,9 +256,6 @@ class ModelAddress(db.Model):
             min: 0
             type: number
             coerce: float
-        name:
-            maxlength: 20
-            type: string
         state:
             maxlength: 50
             type: string
@@ -281,6 +273,9 @@ class ModelAddress(db.Model):
             - comercial
             type: string
         zip_code:
+            maxlength: 20
+            type: string
+        name:
             maxlength: 20
             type: string
         '''

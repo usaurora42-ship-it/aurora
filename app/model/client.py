@@ -62,14 +62,9 @@ class ModelClient(db.Model):
 
     # Create Client
     def create_client(self, data):
-        print("entreiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
-        print("dataaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print(data)
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
-            print("erroooo")
             self.errors = v.errors
-            print(self.errors)
             return None
             
         data = v.document

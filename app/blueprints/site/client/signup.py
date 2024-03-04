@@ -12,6 +12,7 @@ from app.model.address import ModelAddress
 from app.model.gifted import ModelClientGifted
 from app.model.client_phone import ModelClientPhone
 from app.model.client_address import ModelClientAddress
+from app.model.countries import ModelCountry
 from app.model.enum import StatusEnum
 
 
@@ -40,20 +41,30 @@ def signup_post():
         document=data['document']
     )
     
-    
-    # query phone
-    # query_phone = ModelPhone.query.with_entities(
-    #     ModelPhone.id
-    # ).filter(
-    #     status=StatusEnum.enabled
-    # ).join(ModelClient).filter_by(
-    #     status=StatusEnum.enabled
-    # ).first()
+    # query phone 
+    query_phone = ModelPhone.query.with_entities(
+        ModelPhone.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelClientPhone).join(ModelClient).filter_by(
+        status=StatusEnum.enabled
+    )
+
+    # query address 
+    query_address = ModelAddress.query.with_entities(
+        ModelAddress.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelClientAddress).join(ModelClient).filter_by(
+        status=StatusEnum.enabled
+    )
 
     # instance models
     model_client = ModelClient()
-    # model_phone = ModelPhone()
-    # model_client_phone = ModelClientPhone()
+    model_phone = ModelPhone()
+    model_client_phone = ModelClientPhone()
+    model_address = ModelAddress()
+    model_client_address = ModelClientAddress()
 
     try:
 
@@ -85,19 +96,19 @@ def signup_post():
         #
         # GET OR CREATE A CLIENT PHONE
         #
-        """ phone = query_phone.filter(
-            ModelPhone.code_area == data['code_area'],
-            ModelPhone.code_country == data['code_country'],
-            ModelPhone.number == data['number'],
+        phone = query_phone.filter(
+            ModelPhone.code_country == data['phone'][0:2],
+            ModelPhone.code_area == data['phone'][2:4],            
+            ModelPhone.number == data['phone'][4:16],
             ModelClient.id == client.id
         ).first()
 
         # create client phone
         if phone is None:
             data_phone = {
-                'code_country': data['code_country'],
-                'code_area': data['code_area'],
-                'number': data['number']
+                'code_country': data['phone'][0:2],
+                'code_area': data['phone'][2:4],
+                'number': data['phone'][4:16]
             }
 
             phone = model_phone.create_phone(data_phone)
@@ -126,12 +137,70 @@ def signup_post():
                             errors=model_client_phone.errors,
                             data_input=data))
                 resp.mimetype = 'text/html'
-                return resp """
+                return resp
     
         #
         # GET OR CREATE CLIENT ADDRESS
         #
+        address = query_address.filter(            
+            ModelClient.id == client.id
+        ).first()
 
+        # country
+        data_country = data.pop('country')
+        model_country = ModelCountry()
+        country_id = model_country.get_country_id(data_country)
+        if country_id is None:
+            return {
+                'errors': {
+                    'country': ['country %s unavalible' % data_country]
+                }
+            }, 400
+
+        data['country_id'] = country_id
+
+        # create client address
+        if address is None:
+            data_address = {
+                'state': data['state'],
+                'city': data['city'],
+                'district': data['district'],
+                'zip_code': data['zip_code'],
+                'street': data['street'],
+                'street_number': data['street_number'],
+                'complement': data['complement'],
+                'country_id': data['country_id'] ,
+                'name': 'casa'
+            }
+
+            address = model_address.create_address(data_address)
+            
+            # errors
+            if address is None:
+                resp = make_response(render_template('client/signup.html',
+                            success=False,
+                            errors=model_address.errors,
+                            data_input=data))
+
+                resp.mimetype = 'text/html'
+                return resp 
+            
+            # create client x address
+            data_client_address = {
+                'client_id': client.id,
+                'address_id': address.id
+            }
+
+            client_address = model_client_address.create_client_address(data_client_address)
+
+            # errors
+            if client_address is None:
+                resp = make_response(render_template('client/signup.html',
+                            success=False,
+                            errors=model_client_phone.errors,
+                            data_input=data))
+                resp.mimetype = 'text/html'
+                return resp
 
         # success response
         resp = make_response(render_template('client/signup.html',                            

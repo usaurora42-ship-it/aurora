@@ -27,14 +27,10 @@ class ModelPhone(db.Model):
         autoincrement=True,
         nullable=False
     )
-    uuid = db.Column(
-        db.String(36),
-        unique=True,
-        nullable=False
-    )
     code_country = db.Column(
         db.String(4),
-        nullable=False
+        nullable=False,
+        server_default='55'
     )
     code_area = db.Column(
         db.String(4),
