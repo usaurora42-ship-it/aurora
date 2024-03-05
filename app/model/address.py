@@ -34,7 +34,8 @@ class ModelAddress(db.Model):
     )
     name = db.Column(
         db.String(20),
-        nullable=False
+        nullable=False,
+        default='contact'
     )
     state = db.Column(
         db.String(50),

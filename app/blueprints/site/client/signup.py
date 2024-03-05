@@ -97,18 +97,18 @@ def signup_post():
         # GET OR CREATE A CLIENT PHONE
         #
         phone = query_phone.filter(
-            ModelPhone.code_country == data['phone'][0:2],
-            ModelPhone.code_area == data['phone'][2:4],            
-            ModelPhone.number == data['phone'][4:16],
+            ModelPhone.code_country == '55', #data['phone'][0:2]'',
+            ModelPhone.code_area == data['phone'][0:2],            
+            ModelPhone.number == data['phone'][2:12],
             ModelClient.id == client.id
         ).first()
 
         # create client phone
         if phone is None:
             data_phone = {
-                'code_country': data['phone'][0:2],
-                'code_area': data['phone'][2:4],
-                'number': data['phone'][4:16]
+                'code_country': '55', #data['phone'][0:2]'',
+                'code_area': data['phone'][0:2],
+                'number': data['phone'][2:12]
             }
 
             phone = model_phone.create_phone(data_phone)
@@ -147,7 +147,7 @@ def signup_post():
         ).first()
 
         # country
-        data_country = data.pop('country')
+        data_country = data.pop('country')[0:3]
         model_country = ModelCountry()
         country_id = model_country.get_country_id(data_country)
         if country_id is None:
@@ -169,8 +169,7 @@ def signup_post():
                 'street': data['street'],
                 'street_number': data['street_number'],
                 'complement': data['complement'],
-                'country_id': data['country_id'] ,
-                'name': 'casa'
+                'country_id': data['country_id'] 
             }
 
             address = model_address.create_address(data_address)
