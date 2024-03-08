@@ -15,7 +15,6 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
-            
 
         <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
         
@@ -108,12 +107,12 @@ Bootstrap 5 HTML CSS Template
                                                     </div>
 													
                                                     <div class="col-lg-6 col-12">
-                                                        <input type="tel" class="form-control" name="phone" placeholder="Telefone" required="">
+                                                        <input type="phone" id="phone" class="form-control" name="phone" placeholder="Telefone" required="">
                                                         
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-														<select class="form-control" name="typeperson">
+														<select class="form-control" name="typeperson" id="typeperson">
 														  <option value="tp" selected>Tipo de Pessoa</option>
 														  <option value="pf">Pessoa Física</option>
 														  <option value="pj">Pessoa Jurídica</option>
@@ -121,12 +120,11 @@ Bootstrap 5 HTML CSS Template
 													</div>
 
                                                     <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="document" placeholder="CPF" value="">
-
+                                                        <input class="form-control" type="document" name="document" id="document" placeholder="CPF/CNPJ" value="">
                                                     </div>
 													
 													<div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="zip_code" placeholder="CEP" value="">
+                                                        <input class="form-control" type="zip_code" name="zip_code" placeholder="CEP" value="">
                                                     </div>
 													
 													<div class="col-lg-9 col-12">
@@ -198,29 +196,29 @@ Bootstrap 5 HTML CSS Template
                                                     </div>
                                                     
                                                     <div class="col-lg-6 col-12">
-                                                        <input type="text" name="giftedname" id="giftedname" class="form-control" placeholder="Nome do Presenteado" required>
+                                                        <input type="text" name="gifted_name" id="gifted_name" class="form-control" placeholder="Nome do Presenteado" required>
                                                     </div>
                                                     
                                                     <div class="col-lg-6 col-12">
-                                                        <input type="telp" class="form-control" name="giftedphone" placeholder="Telefone do Presenteado" required="">
+                                                        <input type="gifted_phone" id="gifted_phone" class="form-control" name="gifted_phone" placeholder="Telefone do Presenteado" required="">
                                                     </div>													
                                                     
                                                     <div class="col-lg-12 col-12">
-                                                        <input type="text" name="giftedocasion" id="giftedocasion" class="form-control" placeholder="Ocasião do Presente" required>
+                                                        <input type="text" name="gifted_ocasion" id="gifted_ocasion" class="form-control" placeholder="Ocasião do Presente" required>
                                                     </div>
                                                     
                                                     <div class="col-lg-12 col-12">
-                                                        <textarea name="giftedmessage" rows="3" class="form-control" id="giftedmessage" placeholder="Texto para o Cartão (Opcional)"></textarea>
+                                                        <textarea name="gifted_message" rows="3" class="form-control" id="gifted_message" placeholder="Texto para o Cartão (Opcional)"></textarea>
                                                     </div>
                                                     
                                                     <div class="col-lg-12 col-12">
                                                         <br>
-                                                        <input type="text" name="signaturecard" id="signaturecard" class="form-control" placeholder="Assinatura do Cartão" required>
+                                                        <input type="text" name="signature_card" id="signature_card" class="form-control" placeholder="Assinatura do Cartão" required>
                                                     </div>
 
                                                     <div class="col-lg-6 col-12">
 													    <h8 class="text-white">Data de Entrega</h8>
-                                                        <input type="date" name="datedelivery" id="datedelivery" class="form-control" placeholder="Date" required="">
+                                                        <input type="date" name="date_delivery" id="date_delivery" class="form-control" placeholder="Date" required="">
                                                     </div>
 													<div class="col-lg-6 col-12">
 													    <h8 class="text-white">Faixa de Horário</h8>
@@ -350,5 +348,6 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
     </body>
 </html>

@@ -1,3 +1,15 @@
-(function ($) {
-    $('[name="phone"]').mask('(00) 00000-0000');    
+$(function () {
+     $('input[type="phone"]').mask('(00) 00000-0000')
+     $('input[type="gifted_phone"]').mask('(00) 00000-0000')
+     $('input[type="zip_code"]').mask('00000-000')
 });
+
+var dropdown = document.getElementById("typeperson");
+dropdown.onchange = function(event){
+    if(dropdown.value=="pf"){
+        $('input[type="document"]').mask('000.000.000-00')
+    }
+    if(dropdown.value=="pj"){
+        $('input[type="document"]').mask('00.000.000/0000-00')
+    }
+}

@@ -38,7 +38,7 @@ def signup_post():
         ModelClient.id
     ).filter_by(
         #status=StatusEnum.enabled,
-        document=data['document']
+        document=data['document'].replace("-","").replace(".","").replace("/","")
     )
     
     # query phone 
@@ -59,12 +59,23 @@ def signup_post():
         status=StatusEnum.enabled
     )
 
+    # query gifted 
+    query_gifted = ModelClientGifted.query.with_entities(
+         ModelClientGifted.client_id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelClient).filter_by(
+        status=StatusEnum.enabled
+    )
+    
+
     # instance models
     model_client = ModelClient()
     model_phone = ModelPhone()
     model_client_phone = ModelClientPhone()
     model_address = ModelAddress()
     model_client_address = ModelClientAddress()
+    model_client_gifted = ModelClientGifted()
 
     try:
 
@@ -76,7 +87,7 @@ def signup_post():
         # create client
         if client is None:
             data_client = {
-                'document': data['document'],
+                'document': data['document'].replace("-","").replace(".","").replace("/",""),
                 'email': data['email'],
                 'name': data['name'],                
                 'type': data['typeperson']
@@ -98,17 +109,18 @@ def signup_post():
         #
         phone = query_phone.filter(
             ModelPhone.code_country == '55', #data['phone'][0:2]'',
-            ModelPhone.code_area == data['phone'][0:2],            
-            ModelPhone.number == data['phone'][2:12],
+            ModelPhone.code_area == data['phone'][1:3],            
+            ModelPhone.number == data['phone'][4:15].replace("-",""),
             ModelClient.id == client.id
         ).first()
+
 
         # create client phone
         if phone is None:
             data_phone = {
                 'code_country': '55', #data['phone'][0:2]'',
-                'code_area': data['phone'][0:2],
-                'number': data['phone'][2:12]
+                'code_area': data['phone'][1:3],
+                'number': data['phone'][4:15].replace("-","")
             }
 
             phone = model_phone.create_phone(data_phone)
@@ -165,7 +177,7 @@ def signup_post():
                 'state': data['state'],
                 'city': data['city'],
                 'district': data['district'],
-                'zip_code': data['zip_code'],
+                'zip_code': data['zip_code'].replace("-",""),
                 'street': data['street'],
                 'street_number': data['street_number'],
                 'complement': data['complement'],
@@ -199,8 +211,46 @@ def signup_post():
                             errors=model_client_phone.errors,
                             data_input=data))
                 resp.mimetype = 'text/html'
-                return resp
+                return resp     
 
+
+        gifted = query_gifted.filter(
+            ModelClient.id == client.id
+        ).first()
+
+        # # create client gifted
+        if gifted is None:
+            data_client_gifted = {
+                'client_id': client.id,
+                'gifted_name': data['gifted_name'],
+                'gifted_ocasion': data['gifted_ocasion'],
+                'signature_card': data['signature_card'],
+                'gifted_message': data['gifted_message'],
+                'code_country': '55', #data['phone'][0:2]'',
+                'code_area': data['gifted_phone'][1:3],
+                'number': data['gifted_phone'][4:15].replace("-","")         
+        }      
+       
+        
+        gifted = model_client_gifted.create_client_gifted(data_client_gifted)
+        
+        # errors
+        if gifted is None:
+            resp = make_response(render_template('client/signup.html',
+                        success=False,
+                        errors=model_address.errors,
+                            data_input=data))
+
+            resp.mimetype = 'text/html'
+            return resp 
+        
+        # create client x gifted
+        data_client_gifted = {
+            'gifted_id': gifted.client_id,
+            'client_id': client.id            
+        }
+         
+        
         # success response
         resp = make_response(render_template('client/signup.html',                            
                                 success=True,
