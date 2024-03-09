@@ -17,8 +17,8 @@ dropdown.onchange = function(event){
 function msgcheckFunction(){
     var checkBox = document.getElementById("msgcheck");
     if (checkBox.checked == true){
-        document.getElementById("div_gifted_data").style.visibility = "visible";
+        document.getElementById("div_gifted_data").style.display = "inline";
     } else {
-        document.getElementById("div_gifted_data").style.visibility = "hidden";
+        document.getElementById("div_gifted_data").style.display = "none";
     }
 }
