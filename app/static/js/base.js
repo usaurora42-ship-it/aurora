@@ -16,24 +16,9 @@ dropdown.onchange = function(event){
 
 function msgcheckFunction(){
     var checkBox = document.getElementById("msgcheck");
-
-    var text = document.getElementById("text");
-
     if (checkBox.checked == true){
-        document.getElementById("gifted_data").style.visibility = "visible";
-        document.getElementById("gifted_name").style.visibility = "visible";
-        document.getElementById("gifted_phone").style.visibility = "visible";
-        document.getElementById("gifted_ocasion").style.visibility = "visible";
-        document.getElementById("gifted_message").style.visibility = "visible";
-        document.getElementById("signature_card").style.visibility = "visible";
-        document.getElementById("gifted_name").required = true;
+        document.getElementById("div_gifted_data").style.visibility = "visible";
     } else {
-        document.getElementById("gifted_data").style.visibility = "hidden";
-        document.getElementById("gifted_name").style.visibility = "hidden";
-        document.getElementById("gifted_phone").style.visibility = "hidden";
-        document.getElementById("gifted_ocasion").style.visibility = "hidden";
-        document.getElementById("gifted_message").style.visibility = "hidden";
-        document.getElementById("signature_card").style.visibility = "hidden";
-        document.getElementById("gifted_name").required = false;
+        document.getElementById("div_gifted_data").style.visibility = "hidden";
     }
 }

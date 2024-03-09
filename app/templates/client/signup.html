@@ -7,7 +7,7 @@
         <meta name="description" content="static.js">
         <meta name="author" content="">
 
-        <title>Barista Cafe - HTML Reservation Form</title>
+        <title>Amora Platter Box - HTML Reservation Form</title>
 
         <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -190,35 +190,39 @@ Bootstrap 5 HTML CSS Template
                                                         <label for="scales" class="text-white">Escrever mensagem para o presenteado</label>
                                                     </div>
                                                     <p>                                                         
+                                                    
+                                                    <div id="div_gifted_data" name="div_gifted_data" style="visibility: hidden;">
+                                                        <div type="text" class="text-center mb-6 pb-lg-4" id="gifted_data" name="gifted_data">
+                                                            <h6 class="text-white" >Dados do Presenteado</h6>
+                                                        </div>
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-lg-6 col-12">
+                                                                <input type="gifted_name" name="gifted_name" id="gifted_name" class="form-control" placeholder="Nome do Presenteado">
+                                                            </div>
+                                                            
+                                                            <div class="col-lg-6 col-12">
+                                                                <input type="gifted_phone" id="gifted_phone" class="form-control" name="gifted_phone" placeholder="Telefone do Presenteado">
+                                                            </div>													
+                                                        </div>
 
-                                                    <div type="text" class="text-center mb-6 pb-lg-4" id="gifted_data" name="gifted_data" style="visibility: hidden;">
-                                                        <h6 class="text-white" >Dados do Presenteado</h6>
+                                                        <div class="col-lg-12 col-12">
+                                                            <input type="text" name="gifted_ocasion" id="gifted_ocasion" class="form-control" placeholder="Ocasião do Presente">
+                                                        </div>
+                                                        
+                                                        <div class="col-lg-12 col-12">
+                                                            <textarea name="gifted_message" rows="3" class="form-control" id="gifted_message" placeholder="Texto para o Cartão (Opcional)"></textarea>
+                                                        </div>
+                                                        
+                                                        <div class="col-lg-12 col-12">
+                                                            <br>
+                                                            <input type="text" name="signature_card" id="signature_card" class="form-control" placeholder="Assinatura do Cartão">
+                                                        </div>
                                                     </div>
                                                     
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="gifted_name" name="gifted_name" id="gifted_name" style="visibility: hidden;" class="form-control" placeholder="Nome do Presenteado">
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="gifted_phone" id="gifted_phone" class="form-control" name="gifted_phone" style="visibility: hidden;" placeholder="Telefone do Presenteado">
-                                                    </div>													
-                                                    
-                                                    <div class="col-lg-12 col-12">
-                                                        <input type="text" name="gifted_ocasion" id="gifted_ocasion" class="form-control" style="visibility: hidden;" placeholder="Ocasião do Presente">
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-12 col-12">
-                                                        <textarea name="gifted_message" rows="3" class="form-control" id="gifted_message" style="visibility: hidden;" placeholder="Texto para o Cartão (Opcional)"></textarea>
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-12 col-12">
-                                                        <br>
-                                                        <input type="text" name="signature_card" id="signature_card" class="form-control" style="visibility: hidden;" placeholder="Assinatura do Cartão">
-                                                    </div>
-
                                                     <div class="col-lg-6 col-12">
 													    <h8 class="text-white">Data de Entrega</h8>
-                                                        <input type="date" name="date_delivery" id="date_delivery" class="form-control" placeholder="Date" required="">
+                                                        <input type="date" name="date_delivery" id="date_delivery" class="form-control" placeholder="Date">
                                                     </div>
 													<div class="col-lg-6 col-12">
 													    <h8 class="text-white">Faixa de Horário</h8>
@@ -228,8 +232,6 @@ Bootstrap 5 HTML CSS Template
 														  <option value="2">12:00 - 18:00</option>
 														</select>
 													</div>
-													
-
                                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
                                                         <button type="submit" class="form-control">Enviar</button>
                                                     </div>

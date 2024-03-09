@@ -33,16 +33,13 @@ class ModelClientGifted(db.Model):
         nullable=False
     )
     gifted_name = db.Column(
-        db.String(80),
-        nullable=False
+        db.String(80)
     )
     gifted_ocasion = db.Column(
-        db.String(80),
-        nullable=False
+        db.String(80)
     )
     signature_card = db.Column(
-        db.String(80),
-        nullable=False
+        db.String(80)
     )
     gifted_message = db.Column(
         db.Text(),
@@ -50,16 +47,13 @@ class ModelClientGifted(db.Model):
     ) 
     code_country = db.Column(
         db.String(4),
-        nullable=False,
         server_default='55'
     )
     code_area = db.Column(
-        db.String(4),
-        nullable=False
+        db.String(4)
     )
     number = db.Column(
-        db.String(15),
-        nullable=False
+        db.String(15)
     )
     status = db.Column(
          db.Enum(StatusEnum, validate_strings=True),
