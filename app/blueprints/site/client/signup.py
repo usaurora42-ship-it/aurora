@@ -12,6 +12,7 @@ from app.model.address import ModelAddress
 from app.model.gifted import ModelClientGifted
 from app.model.client_phone import ModelClientPhone
 from app.model.client_address import ModelClientAddress
+from app.model.users import ModelUser
 from app.model.countries import ModelCountry
 from app.model.enum import StatusEnum
 
@@ -68,6 +69,14 @@ def signup_post():
         status=StatusEnum.enabled
     )
     
+    # query user 
+    query_user = ModelUser.query.with_entities(
+         ModelUser.client_id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelClient).filter_by(
+        status=StatusEnum.enabled
+    )
 
     # instance models
     model_client = ModelClient()
@@ -76,6 +85,7 @@ def signup_post():
     model_address = ModelAddress()
     model_client_address = ModelClientAddress()
     model_client_gifted = ModelClientGifted()
+    model_user = ModelUser()
 
     try:
 
@@ -248,8 +258,39 @@ def signup_post():
         data_client_gifted = {
             'gifted_id': gifted.client_id,
             'client_id': client.id            
-        }
-         
+        }         
+        
+        user = query_user.filter(
+            ModelClient.id == client.id
+        ).first()        
+
+
+        # # create client user
+        if user is None:
+            data_client_user = {
+                'client_id': client.id,
+                'user_name': data['user_name'],
+                'pwd': data['pwd']         
+        }      
+       
+        
+        user = model_user.create_user(data_client_user)
+        
+        # errors
+        if user is None:
+            resp = make_response(render_template('client/signup.html',
+                        success=False,
+                        errors=model_address.errors,
+                            data_input=data))
+
+            resp.mimetype = 'text/html'
+            return resp 
+        
+        # create client x user
+        data_client_user = {
+            'user_id': user.id,
+            'client_id': client.id            
+        }         
         
         # success response
         resp = make_response(render_template('client/signup.html',                            

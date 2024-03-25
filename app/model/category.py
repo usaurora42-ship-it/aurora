@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelUnit(db.Model):
-    __tablename__ = 'units'
+class ModelCategory(db.Model):
+    __tablename__ = 'categories'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -22,7 +22,7 @@ class ModelUnit(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('unit_id_seq'),
+        db.Sequence('category_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
@@ -31,18 +31,18 @@ class ModelUnit(db.Model):
         db.String(40),
         unique=True,
         nullable=False
-    )
+    )  
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         server_default='enabled',
         default=StatusEnum.enabled,
         index=True
-    )    
+    )  
 
     errors = None
 
-    # Create Unit
-    def create_unit(self, data):
+    # Create Category
+    def create_category(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -61,7 +61,7 @@ class ModelUnit(db.Model):
         except Exception as e:
             raise e
 
-    def get_unit_id(self, value):
+    def get_category_id(self, value):
         if not value:
             return None
 
@@ -71,7 +71,7 @@ class ModelUnit(db.Model):
         if unit_name is None:
             return None
 
-        query = ModelUnit.query.with_entities(ModelUnit.id).filter_by(
+        query = ModelCategory.query.with_entities(ModelCategory.id).filter_by(
             name=unit_name
         )
 
@@ -109,4 +109,4 @@ class ModelUnit(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Unit %r>" % self.name
+        return "<Category %r>" % self.name

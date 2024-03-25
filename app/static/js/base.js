@@ -22,3 +22,12 @@ function msgcheckFunction(){
         document.getElementById("div_gifted_data").style.display = "none";
     }
 }
+
+function checkuserFunction(){
+    var checkBox = document.getElementById("checkuser");
+    if (checkBox.checked == true){
+        document.getElementById("div_gifted_user").style.display = "inline";
+    } else {
+        document.getElementById("div_gifted_user").style.display = "none";
+    }
+}

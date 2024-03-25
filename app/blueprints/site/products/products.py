@@ -1,0 +1,117 @@
+# encoding: utf-8
+import re
+from flask import render_template, make_response, request
+from flask_wtf import FlaskForm
+
+from app.blueprints.site import SiteBlueprint
+
+from app import logging
+from app import environment
+from app.model.products import ModelProduct
+from app.model.category import ModelCategory
+from app.model.units import ModelUnit
+from app.model.enum import StatusEnum
+
+
+LOGGER = logging.getLogger(__name__)
+
+
+@SiteBlueprint.route('/products/products')
+def products_get():
+
+    # query categories
+    query_category = ModelCategory.query.with_entities(
+         ModelCategory.description
+    ).filter_by(
+        status=StatusEnum.enabled
+    )
+    descriptions = query_category.all()
+   # print(descriptions)
+    #return render_template('product/product.html',descriptions=descriptions)
+
+    # for category in query_category.all():
+    #     result_category = category.description
+    #     print(result_category)
+       # return render_template('product/product.html',result_category=result_category)
+    resp = make_response(render_template('products/products.html',
+        success=False,
+        errors=None,
+        data_input=None,
+        descriptions=descriptions))
+    resp.mimetype = 'text/html'
+    return resp 
+
+
+@SiteBlueprint.route('/products/products', methods=['GET', 'POST'])
+def products_post():
+    data = request.form.to_dict() or {}
+
+    # query product
+    query_product = ModelProduct.query.with_entities(
+        ModelProduct.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ) 
+
+    # query categories
+    query_category = ModelCategory.query.with_entities(
+         ModelCategory.description
+    ).filter_by(
+        status=StatusEnum.enabled
+    )
+
+
+    # for category in query_category.all():
+    #      result = ModelCategory.get_dict(category)
+    #      print(result)
+
+           
+    
+    # instance models
+    model_product = ModelProduct()
+    
+    try:
+
+        #
+        # GET OR CREATE PRODUCT
+        #
+        product = query_product.first()
+
+        # create product
+        if product is None:
+            data_product = {
+                'name': data['name'],
+                'description': data['description'],
+                'category': data['category'],                
+                'value': data['value'],
+                'size': data['size'],
+                'unit': data['unit']
+            }
+
+            produtct = model_product.create_product(data_product)
+
+            # error to create product
+            if product is None:
+                resp = make_response(render_template('product/product.html',
+                            success=False,
+                            errors=model_product.errors,
+                            data_input=data))
+                resp.mimetype = 'text/html'
+                return resp 
+            
+        resp = make_response(render_template('product/product.html',                          
+                                success=True,
+                                errors=None,))
+        resp.mimetype = 'text/html'
+        return resp
+
+    except Exception as e:
+            LOGGER.exception(e)
+            resp = make_response(render_template('errors/500.html',                            
+                                    success=False,
+                                    errors=None))
+            resp.mimetype = 'text/html'
+            return resp, 500
+
+
+    

@@ -38,3 +38,5 @@ from app.model.partner_phone import ModelPartnerPhone
 from app.model.sale import ModelSale
 from app.model.sale_product import ModelSaleProduct
 from app.model.gifted import ModelClientGifted
+from app.model.users import ModelUser
+from app.model.category import ModelCategory

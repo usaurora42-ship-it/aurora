@@ -26,15 +26,32 @@ class ModelProduct(db.Model):
         primary_key=True,
         autoincrement=True,
         nullable=False
-    )    
+    ) 
+    name = db.Column(
+        db.String(40),
+        unique=True,
+        nullable=False
+    )   
     unit_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('units.id', onupdate='CASCADE'),
         nullable=False
     )
+    category_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('categories.id', onupdate='CASCADE'),
+        nullable=False
+    )
     description = db.Column(
         db.String(80),
         nullable=False
+    )
+    size = db.Column(
+        db.Numeric,
+        nullable=False,
+    )
+    path = db.Column(
+        db.String(80)
     )
     value = db.Column(
         db.DECIMAL(15, 2),
@@ -45,11 +62,22 @@ class ModelProduct(db.Model):
         nullable=False,
         default=lambda : format(datetime.now().timestamp(), '.3f')
     )
+    status = db.Column(
+        db.Enum(StatusEnum, validate_strings=True),
+        server_default='enabled',
+        default=StatusEnum.enabled,
+        index=True
+    )
 
     # relationship
     unit = db.relationship(
         'ModelUnit',
         backref=db.backref('unit_product', lazy=True)
+    )    
+
+    category = db.relationship(
+        'ModelCategory',
+        backref=db.backref('category_product', lazy=True)
     )    
 
     errors = None
@@ -103,7 +131,17 @@ class ModelProduct(db.Model):
             max: 65535
             min: 1
             required: true
-            type: integer        
+            type: integer
+        category_id:
+            coerce: integer
+            max: 65535
+            min: 1
+            required: true
+            type: integer  
+        name:
+            maxlength: 40
+            required: true
+            type: string       
         description:
             maxlength: 80
             required: true
@@ -117,7 +155,17 @@ class ModelProduct(db.Model):
             coerce: integer
             max: 65535
             min: 1
-            type: integer        
+            type: integer  
+        category_id:
+            coerce: integer
+            max: 65535
+            min: 1
+            required: true
+            type: integer 
+        name:
+            maxlength: 40
+            required: true
+            type: string        
         description:
             maxlength: 80
             type: string
