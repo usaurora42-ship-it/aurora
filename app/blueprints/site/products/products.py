@@ -21,11 +21,24 @@ def products_get():
 
     # query categories
     query_category = ModelCategory.query.with_entities(
+         ModelCategory.id,
          ModelCategory.description
     ).filter_by(
         status=StatusEnum.enabled
-    )
+    ).order_by(ModelCategory.description)
+
     descriptions = query_category.all()
+
+    # query units
+    query_unit = ModelUnit.query.with_entities(
+         ModelUnit.id,
+         ModelUnit.description
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).order_by(ModelUnit.description)
+
+    units = query_unit.all()
+
    # print(descriptions)
     #return render_template('product/product.html',descriptions=descriptions)
 
@@ -37,7 +50,8 @@ def products_get():
         success=False,
         errors=None,
         data_input=None,
-        descriptions=descriptions))
+        descriptions=descriptions,
+        units=units))
     resp.mimetype = 'text/html'
     return resp 
 
@@ -53,12 +67,13 @@ def products_post():
         status=StatusEnum.enabled
     ) 
 
-    # query categories
-    query_category = ModelCategory.query.with_entities(
-         ModelCategory.description
-    ).filter_by(
-        status=StatusEnum.enabled
-    )
+
+    # # query categories
+    # query_category = ModelCategory.query.with_entities(
+    #      ModelCategory.description
+    # ).filter_by(
+    #     status=StatusEnum.enabled
+    # )
 
 
     # for category in query_category.all():
@@ -82,28 +97,31 @@ def products_post():
             data_product = {
                 'name': data['name'],
                 'description': data['description'],
-                'category': data['category'],                
+                'category_id': data['category'],                
                 'value': data['value'],
                 'size': data['size'],
-                'unit': data['unit']
+                'unit_id': data['unit']
             }
 
-            produtct = model_product.create_product(data_product)
+            product = model_product.create_product(data_product)
 
             # error to create product
+            
             if product is None:
-                resp = make_response(render_template('product/product.html',
+                resp = make_response(render_template('products/products.html',
                             success=False,
                             errors=model_product.errors,
-                            data_input=data))
+                                data_input=data))       
                 resp.mimetype = 'text/html'
                 return resp 
             
-        resp = make_response(render_template('product/product.html',                          
-                                success=True,
-                                errors=None,))
-        resp.mimetype = 'text/html'
-        return resp
+            # success response
+            resp = make_response(render_template('products/products.html',                            
+                                    success=True,
+                                    errors=None))
+            resp.mimetype = 'text/html'
+            return resp
+            
 
     except Exception as e:
             LOGGER.exception(e)

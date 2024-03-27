@@ -74,8 +74,6 @@ class ModelClientGifted(db.Model):
     def create_client_gifted(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
-            print("giftedwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-            print(v.errors)
             self.errors = v.errors
             return None
 

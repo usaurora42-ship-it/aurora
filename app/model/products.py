@@ -87,9 +87,22 @@ class ModelProduct(db.Model):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
+            print("erross")
+            print(self.errors)
             return None
+            
 
-        data = v.document        
+        data = v.document  
+
+        for k in data:
+            setattr(self, k, data[k])            
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except Exception as e:
+            raise e      
         
 
     # Update Product
@@ -146,6 +159,12 @@ class ModelProduct(db.Model):
             maxlength: 80
             required: true
             type: string
+        size:
+            type: number
+            coerce: float
+        value:
+            type: number
+            coerce: float
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
@@ -169,6 +188,12 @@ class ModelProduct(db.Model):
         description:
             maxlength: 80
             type: string
+        size:
+            type: number
+            coerce: float
+        value:
+            type: number
+            coerce: float
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 

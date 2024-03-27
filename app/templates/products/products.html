@@ -108,7 +108,7 @@ Bootstrap 5 HTML CSS Template
 														<select class="form-control" name="category">
 														  <option value="category" selected>Categoria</option>
                                                           {% for description in descriptions %}
-                                                            <option value>{{ description.description }}</option>
+                                                            <option name="category" value="{{description.id}}" id="category">{{description.description}}</option>
                                                           {% endfor %}
                                                         </select>
                                                     </div>
@@ -124,8 +124,9 @@ Bootstrap 5 HTML CSS Template
                                                     <div class="col-lg-6 col-12">
 														<select class="form-control" name="unit">
 														  <option value="unit" selected>Unidade</option>
-                                                          <option value="cx">cx</option>
-														  <option value="ml">ml</option>
+                                                          {% for unit in units %}
+                                                            <option name="unit" value="{{unit.id}}" id="unit">{{unit.description}}</option>
+                                                          {% endfor %}
                                                         </select>
                                                     </div>
 
@@ -246,6 +247,7 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
     </body>
 </html>
