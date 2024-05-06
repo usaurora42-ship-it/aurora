@@ -130,6 +130,28 @@ Bootstrap 5 HTML CSS Template
                                                         </select>
                                                     </div>
 
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-6 mx-auto mt-5 text-center">
+                                                                  {{ form.hidden_tag() }}
+                                                                    {% for error in form.photo.errors %}
+                                                                        <span style="color: red;">{{ error }}</span>
+                                                                    {% endfor %}
+                                                                    
+                                                                    <div class="row justify-content-center">
+                                                                        <div class="col-auto">
+                                                                            {{ form.photo(class="form-control") }}
+                                                                        </div>
+                                                                    </div>
+                                                                {% if file_url %}
+                                                                    <div class="mt-5">
+                                                                        <img src="{{ file_url }}" style="width: 400px;">
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
                                                         <button type="submit" class="form-control">Enviar</button>
                                                     </div>

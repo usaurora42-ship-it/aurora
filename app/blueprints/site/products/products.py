@@ -1,9 +1,13 @@
 # encoding: utf-8
 import re
-from flask import render_template, make_response, request
+import os
+from flask import Flask, flash, render_template, make_response, request, redirect, url_for, send_from_directory
 from flask_wtf import FlaskForm
-
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms import SubmitField
 from app.blueprints.site import SiteBlueprint
+from werkzeug.utils import secure_filename
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 
 from app import logging
 from app import environment
@@ -14,7 +18,25 @@ from app.model.enum import StatusEnum
 
 
 LOGGER = logging.getLogger(__name__)
+app = Flask(__name__)
+app.config['SECRET_KEY'] = 'asldfkjlj'
+app.config['UPLOADED_PHOTOS_DEST'] = 'uploads'
 
+photos = UploadSet('photos', IMAGES)
+configure_uploads(app, photos)
+
+class UploadForm(FlaskForm):
+	photo = FileField(
+		validators=[
+			FileAllowed(photos, 'Somente imagens são permitidas'),
+			FileRequired('O campo não pode estar vazio')
+        ]
+    )
+	submit = SubmitField('Upload')
+     
+@app.route('/images/products/<filename>')
+def get_file(filename):
+	return send_from_directory(app.config['UPLOADED_PHOTOS_DEST'], filename)
 
 @SiteBlueprint.route('/products/products')
 def products_get():
@@ -55,9 +77,18 @@ def products_get():
     resp.mimetype = 'text/html'
     return resp 
 
+@SiteBlueprint.route('/products/products', methods=['GET', 'POST'])	
+def upload_image():
+	form = UploadForm()
+	if form.validate_on_submit():
+		filename = photos.save(form.photo.data)
+		file_url = url_for('get_file', filename=filename)
+	else:
+		file_url = None
+	return render_template('products/products.html', form=form, file_url=file_url)
 
-@SiteBlueprint.route('/products/products', methods=['GET', 'POST'])
-def products_post():
+def products_post():      
+
     data = request.form.to_dict() or {}
 
     # query product
@@ -111,7 +142,9 @@ def products_post():
                 resp = make_response(render_template('products/products.html',
                             success=False,
                             errors=model_product.errors,
-                                data_input=data))       
+                            data_input=data,
+                            form=form, 
+                            file_url=file_url))      
                 resp.mimetype = 'text/html'
                 return resp 
             
