@@ -1,11 +1,10 @@
 # encoding: utf-8
 import re
-import os
-from flask import Flask, flash, render_template, make_response, request, redirect, url_for
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import SubmitField
+import os 
+import base64
+from flask import Flask, render_template, make_response, send_file, request, jsonify
 from app.blueprints.site import SiteBlueprint
+from os.path import join, dirname, realpath
 from werkzeug.utils import secure_filename
 
 from app import logging
@@ -17,58 +16,84 @@ from app.model.enum import StatusEnum
 
 
 LOGGER = logging.getLogger(__name__)
+app = Flask(__name__)
+app.config['UPLOAD_PATH'] = os.path.dirname(os.path.abspath(__file__)) + '\\uploads'
 
-@SiteBlueprint.route('/products/products')
-def products_get():
 
-    # query categories
+
+def descriptions_get():    
+    # query categories    
     query_category = ModelCategory.query.with_entities(
-         ModelCategory.id,
-         ModelCategory.description
+        ModelCategory.id,
+        ModelCategory.description
     ).filter_by(
         status=StatusEnum.enabled
     ).order_by(ModelCategory.description)
 
     descriptions = query_category.all()
 
+    return descriptions
+
+def units_get():    
     # query units
     query_unit = ModelUnit.query.with_entities(
-         ModelUnit.id,
-         ModelUnit.description
+        ModelUnit.id,
+        ModelUnit.description
     ).filter_by(
         status=StatusEnum.enabled
     ).order_by(ModelUnit.description)
 
     units = query_unit.all()
 
-   # print(descriptions)
-    #return render_template('product/product.html',descriptions=descriptions)
+    return units
 
-    # for category in query_category.all():
-    #     result_category = category.description
-    #     print(result_category)
-       # return render_template('product/product.html',result_category=result_category)
-    resp = make_response(render_template('products/products.html',
-        success=False,
-        errors=None,
-        data_input=None,
-        descriptions=descriptions,
-        units=units))
-    resp.mimetype = 'text/html'
-    return resp 
+@SiteBlueprint.route('/products/products', methods=['GET'])
+def products_get():
+    descriptions = descriptions_get()
+    units = units_get()
+    return render_template('/products/products.html', descriptions=descriptions, units=units)
+    # print(descriptions)
+        #return render_template('product/product.html',descriptions=descriptions)
 
-@SiteBlueprint.route('/products/products', methods=['GET', 'POST'])	
-def products_post():      
+        # for category in query_category.all():
+        #     result_category = category.description
+        #     print(result_category)
+        # return render_template('product/product.html',result_category=result_category)
+        # resp = make_response(render_template('products/products.html',
+        #     success=False,
+        #     errors=None,
+        #     data_input=None,
+        #     descriptions=descriptions,
+        #     units=units))
+        # resp.mimetype = 'text/html'
+        # return resp 
+        
 
-    data = request.form.to_dict() or {}
+@SiteBlueprint.route('/products/products', methods=['POST'])	
+def products_post():  
+    data = request.form.to_dict() or {}     
+
+    
+    file = request.files['file'] # get file
+    file.save(os.path.join(app.config['UPLOAD_PATH'], file.filename))
+    directory_path = os.path.join(app.config['UPLOAD_PATH'], file.filename)
+
+    descriptions = descriptions_get()
+    units = units_get()
+    #print(descriptions)
+    #print(units)
+    #return render_template('/products/products.html', descriptions=descriptions, units=units)
 
     # query product
     query_product = ModelProduct.query.with_entities(
-        ModelProduct.id
+        ModelProduct.description
     ).filter_by(
         status=StatusEnum.enabled
-    ) 
-
+    )
+    
+    # for product in query_product.all():
+    #       result = ModelCategory.get_dict(product)
+    #       print(result)
 
     # # query categories
     # query_category = ModelCategory.query.with_entities(
@@ -85,45 +110,50 @@ def products_post():
            
     
     # instance models
-    model_product = ModelProduct()
+    model_product = ModelProduct()  
     
     try:
-
+        
+    #return f'Uploaded: {file.filename}' 
         #
         # GET OR CREATE PRODUCT
         #
         product = query_product.first()
 
-        # create product
+       
+    # create product
+        #if product is None:
+        data_product = {
+            'name': data['name'],
+            'description': data['description'],
+            'category_id': data['category'],                
+            'value': data['value'],
+            'size': data['size'],
+            'unit_id': data['unit'],
+            'path': directory_path
+        }        
+           
+        
+        product = model_product.create_product(data_product)
+
+        # error to create product
+           
         if product is None:
-            data_product = {
-                'name': data['name'],
-                'description': data['description'],
-                'category_id': data['category'],                
-                'value': data['value'],
-                'size': data['size'],
-                'unit_id': data['unit']
-            }
-
-            product = model_product.create_product(data_product)
-
-            # error to create product
-            
-            if product is None:
-                resp = make_response(render_template('products/products.html',
-                            success=False,
-                            errors=model_product.errors,
-                            data_input=data))      
-                resp.mimetype = 'text/html'
-                return resp 
-            
-            # success response
-            resp = make_response(render_template('products/products.html',                            
-                                    success=True,
-                                    errors=None))
+            resp = make_response(render_template('products/products.html',
+                        success=False,
+                        errors=model_product.errors,
+                        data_input=data))      
             resp.mimetype = 'text/html'
-            return resp
+            return resp  
             
+            
+        # success response
+        resp = make_response(render_template('products/products.html',                            
+                                success=True,
+                                errors=None,descriptions=descriptions, units=units))
+        resp.mimetype = 'text/html'
+        return resp
+        
 
     except Exception as e:
             LOGGER.exception(e)
@@ -132,6 +162,3 @@ def products_post():
                                     errors=None))
             resp.mimetype = 'text/html'
             return resp, 500
-
-
-    

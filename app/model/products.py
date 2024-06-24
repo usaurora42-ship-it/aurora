@@ -51,7 +51,7 @@ class ModelProduct(db.Model):
         nullable=False,
     )
     path = db.Column(
-        db.String(80)
+        db.String(200)
     )
     value = db.Column(
         db.DECIMAL(15, 2),
@@ -78,24 +78,21 @@ class ModelProduct(db.Model):
     category = db.relationship(
         'ModelCategory',
         backref=db.backref('category_product', lazy=True)
-    )    
-
-    errors = None
-
-    # Create Product
-    def create_product(self, data):
-        v = ModelValidator()
+    )   
+  
+    # Create Product    
+    def create_product(self, data):              
+        v = ModelValidator()           
         if not v.validate(data, self.__val_create__()):
-            self.errors = v.errors
-            print("erross")
-            print(self.errors)
-            return None
-            
+            self.errors = v.errors  
+            return None       
 
         data = v.document  
+        
+        util = Util()
 
         for k in data:
-            setattr(self, k, data[k])            
+            setattr(self, k, data[k])  
 
         try:
             db.session.add(self)
@@ -106,35 +103,35 @@ class ModelProduct(db.Model):
         
 
     # Update Product
-    def update_product(self, data):
-        v = ModelValidator()
-        if not v.validate(data, self.__val_update__()):
-            self.errors = v.errors
-            return None
+    # def update_product(self, data):
+    #     v = ModelValidator()
+    #     if not v.validate(data, self.__val_update__()):
+    #         self.errors = v.errors
+    #         return None
 
-        data = v.document
+    #     data = v.document
 
-        product_id = data.pop('id')
-        product= ModelProduct.query.filter_by(
-            id=product_id,
-            status=StatusEnum.enabled
-        ).first()
+        # product_id = data.pop('id')
+        # product= ModelProduct.query.filter_by(
+        #     id=product_id,
+        #     status=StatusEnum.enabled
+        # ).first()
 
-        if not product:
-            self.errors = {
-                'product': ['product not found']
-            }
-            return None
+        # if not product:
+        #     self.errors = {
+        #         'product': ['product not found']
+        #     }
+        #     return None
 
         # pop data partner
-        for k in data:
-            setattr(product, k, data[k])
+        # for k in data:
+        #     setattr(product, k, data[k])
 
-        try:
-            db.session.commit()
-            return product
-        except Exception as e:
-            raise e
+        # try:
+        #     db.session.commit()
+        #     return product
+        # except Exception as e:
+        #     raise e 
     
     # Validators
     def __val_create__(self):
@@ -157,6 +154,10 @@ class ModelProduct(db.Model):
             type: string       
         description:
             maxlength: 80
+            required: true
+            type: string
+        path:
+            maxlength: 200
             required: true
             type: string
         size:
@@ -187,6 +188,10 @@ class ModelProduct(db.Model):
             type: string        
         description:
             maxlength: 80
+            type: string
+        path:
+            maxlength: 200
+            required: true
             type: string
         size:
             type: number
