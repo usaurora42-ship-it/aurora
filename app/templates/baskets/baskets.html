@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+    <head>        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <meta http-equiv="refresh" content="50" /> -->
+        <meta name="description" content="static.js">
+        <meta name="author" content="">
+
+        <title>Amora Platter Box - HTML Reservation Form</title>
+
+        <!-- CSS FILES -->                
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
+
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
+        
+        <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
+
+        <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">  
+
+        <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
+        
+
+        <!--
+
+Tooplate 2137 Barista
+
+https://www.tooplate.com/view/2137-barista-cafe
+
+Bootstrap 5 HTML CSS Template
+
+-->
+    </head>
+    
+    <body class="reservation-page">
+        <script>
+            function addProducts(){                  
+                var div = '';               
+                div =  '<select class="form-control" name="product" id="productvalue">'
+                        + '<option value="product" selected>Produto</option>'
+                        + '{% for product in products %}'
+                        + '<option value="{{ product.id }}">{{ product.name }}</option>'
+                        + '{% endfor %}' 
+                        + '</select>';
+                $('#listBaskets').append(div);              
+          
+            };
+            function getProducts(){
+                let inputs = document.getElementsByName("product");
+                let dados = [];
+                for (i = 0; i < inputs.length; i++) {
+                    dados += inputs[i].value; 
+                    if (i < inputs.length - 1) {
+                        dados += ',';
+                    }                     
+                }   
+                alert(dados);
+            };    
+                            
+    </script>
+              
+            <main>
+                <nav class="navbar navbar-expand-lg">                
+                    <div class="container">
+                        <a class="navbar-brand d-flex align-items-center" href="index.html">
+                            <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                            Amora
+                        </a>
+        
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+        
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav ms-lg-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/#section_1">Home</a>
+                                </li>
+        
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/#section_2">Sobre Nós</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/#section_3">Nosso Menu</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/#section_4">Avaliações</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/#section_5">Contato</a>
+                                </li>
+                            </ul>
+
+                            <div class="ms-lg-3">
+                                <a class="btn custom-btn custom-border-btn" href="cadastro">
+                                    Comprar
+                                    <i class="bi-arrow-up-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+
+                <section class="booking-section section-padding">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-16 col-12 mx-auto">
+                            <div class="booking-form-wrap">
+                                <div class="row">
+                                    <div class="col-lg-8 col-12 p-0">
+                                        <form class="custom-form booking-form" action="/baskets/baskets" method="POST" role="form" enctype="multipart/form-data" id="baskets">
+                                            
+                                                <div class="text-center mb-6 pb-lg-4">
+                                                    <h6 class="text-white">Cadastro de Cestas</h6>
+                                                </div>
+                                                <div class="booking-form-body">
+                                                    <div class="row">												
+                                                        <div class="col-lg-6 col-12">
+                                                            <input type="text" name="description" id="description" class="form-control" placeholder="Descrição" required>
+                                                        </div>
+                                                        
+                                                        <div class="col-lg-6 col-12">
+                                                            <select class="form-control" name="category" id="category">
+                                                            <option value="category" selected>Categoria</option>
+                                                                {% for description in descriptions %}
+                                                                    <option value="{{ description.id }}">{{ description.description }}</option>
+                                                                {% endfor %} 
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-lg-6 col-12">                                                        
+                                                            <input type="text" name="value" id="value" class="form-control" placeholder="Valor" required>
+                                                        </div>	                                                    
+                                                        <!-- <ul id="listBaskets"> -->
+                                                        <div class="col-lg-8 col-12" id="listBaskets">
+                                                            <select class="form-control" name="product" id="product">
+                                                                <option value="product" selected>Produto</option>
+                                                                {% for product in products %}
+                                                                    <option value="{{ product.id }}">{{ product.name }}</option>
+                                                                {% endfor %} 
+                                                            </select>
+                                                        </div>
+                                                    
+                                                        <div class="col-lg-2 col-12">
+                                                            <!-- <button class="btn" onclick="addProducts();return false;"> -->
+                                                                <img src="{{url_for('static', filename='images/mais/sinal-de-mais.png')}}" class="navbar-brand-image img-fluid" alt="" onclick="addProducts()" type="button">
+                                                            <!-- </button>  -->
+                                                        </div>    
+                                                    <!-- </ul>                                                 -->
+                                                    
+                                                        <div>
+                                                            <input class="form-control" type="file" name="file" id="file" onchange="previewImagem(event)">                                             
+                                                        </div>
+                                                        <div class="col-lg-12 col-12">
+                                                            <img id="imagem-preview" style="width:200px;height:200px;display: none;">
+                                                        </div>                                                    
+                                                      
+                                                        <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
+                                                            <button type="submit" class="form-control">Enviar</button>                                      
+                                                        </div>                                                      
+
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        
+                                    </div>
+
+                                    <div class="col-lg-4 col-12 p-0">
+                                        <div class="booking-form-image-wrap">
+                                            
+                                            <img src="{{url_for('static', filename='images/barman-with-fruits.jpg')}}" class="booking-form-image img-fluid" alt="">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </section>
+
+
+                <footer class="site-footer">
+                    <div class="container">
+                        <div class="row">
+
+                            <div class="col-lg-4 col-12 me-auto">
+                                <em class="text-white d-block mb-4">Onde nos encontrar?</em>
+
+                                <strong class="text-white">
+                                    <i class="bi-geo-alt me-2"></i>
+                                    
+                                </strong>
+
+                                <ul class="social-icon mt-4">
+                                    <li class="social-icon-item">
+                                        <a href="#" class="social-icon-link bi-facebook">
+                                        </a>
+                                    </li>
+        
+                                    <li class="social-icon-item">
+                                        <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter">
+                                        </a>
+                                    </li>
+
+                                    <li class="social-icon-item">
+                                        <a href="#" class="social-icon-link bi-whatsapp">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                                <em class="text-white d-block mb-4">Contact</em>
+
+                                <p class="d-flex mb-1">
+                                    <strong class="me-2">Telefone:</strong>
+                                    <a href="tel: 99800-2691" class="site-footer-link">
+                                        (34) 
+                                        998002691
+                                    </a>
+                                </p>
+
+                                <p class="d-flex">
+                                    <strong class="me-2">Email:</strong>
+
+                                    <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">
+                                        amoraplatterbox@gmail.com
+                                    </a>
+                                </p>
+                            </div>
+
+
+                            <div class="col-lg-5 col-12">
+                                <em class="text-white d-block mb-4">Horário de funcionamento.</em>
+
+                                <ul class="opening-hours-list">
+                                    <li class="d-flex">
+                                        Segunda - Sexta
+                                        <span class="underline"></span>
+
+                                        <strong>7:00 - 19:00</strong>
+                                    </li>
+
+                                    <li class="d-flex">
+                                        Sábado
+                                        <span class="underline"></span>
+
+                                        <strong>8:00 - 12:00</strong>
+                                    </li>
+
+                                    <li class="d-flex">
+                                        Domingo
+                                        <span class="underline"></span>
+
+                                        <strong>Fechado</strong>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-8 col-12 mt-4">
+                                <p class="copyright-text mb-0">Copyright © Amora 2024 
+                                    - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                            </div>
+
+                    </div>
+                </footer>
+            </main>
+
+
+        <!-- JAVASCRIPT FILES -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+    </body>
+</html>
