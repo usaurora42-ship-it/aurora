@@ -40,5 +40,9 @@ from app.model.sale_product import ModelSaleProduct
 from app.model.gifted import ModelClientGifted
 from app.model.users import ModelUser
 from app.model.category import ModelCategory
+<<<<<<< HEAD
 from app.model.baskets import ModelBasket
 from app.model.basket_products import ModelBasketProduct
+=======
+from app.model.baskets import ModelBasket
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee

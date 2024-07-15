@@ -14,7 +14,10 @@ from app.model.products import ModelProduct
 from app.model.category import ModelCategory
 from app.model.baskets import ModelBasket
 from app.model.enum import StatusEnum
+<<<<<<< HEAD
 from app.model.basket_products import ModelBasketProduct
+=======
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
 
 
 LOGGER = logging.getLogger(__name__)
@@ -66,6 +69,7 @@ def baskets_post():
 
     descriptions = descriptions_get()
     products = products_get()  
+<<<<<<< HEAD
    
 
      # query basket
@@ -83,24 +87,43 @@ def baskets_post():
     ).join(ModelBasketProduct).join(ModelBasket).filter_by(
         status=StatusEnum.enabled
     )
+=======
+
+
+     # query basket
+    query_basket = ModelBasket.query.with_entities(
+        ModelBasket.description
+    ).filter_by(
+        status=StatusEnum.enabled
+    )
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
     
     # instance models
     model_basket = ModelBasket()  
     
+<<<<<<< HEAD
     
     try:       
+=======
+    try:
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         
         #
         # GET OR CREATE BASKET
         #
         basket = query_basket.first()
+<<<<<<< HEAD
         product = query_product.first()
         
+=======
+
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         
     # create basket
         #if basket is None:
         data_basket = {
             'description': data['description'],
+<<<<<<< HEAD
             'category_id': data['category'],                
             'value': data['value'],
             'path': directory_path                
@@ -109,10 +132,24 @@ def baskets_post():
         basket = model_basket.create_basket(data_basket)
 
         # errors
+=======
+            'product_id': data['product'], 
+            'category_id': data['category'],                
+            'value': data['value'],
+            'path': directory_path
+        }        
+           
+        
+        basket = model_basket.create_basket(data_basket)
+
+        # error to create basket
+           
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         if basket is None:
             resp = make_response(render_template('baskets/baskets.html',
                         success=False,
                         errors=model_basket.errors,
+<<<<<<< HEAD
                         data_input=data))
             resp.mimetype = 'text/html'
             return resp 
@@ -143,6 +180,8 @@ def baskets_post():
             resp = make_response(render_template('baskets/baskets.html',
                         success=False,
                         errors=model_basket.errors,
+=======
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                         data_input=data))      
             resp.mimetype = 'text/html'
             return resp  

@@ -27,6 +27,14 @@ class ModelBasket(db.Model):
         autoincrement=True,
         nullable=False
     ) 
+<<<<<<< HEAD
+=======
+    product_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('products.id', onupdate='CASCADE'),
+        nullable=False
+    )
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
     category_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('categories.id', onupdate='CASCADE'),
@@ -55,7 +63,16 @@ class ModelBasket(db.Model):
         index=True
     )
 
+<<<<<<< HEAD
     # relationship    
+=======
+    # relationship
+    product = db.relationship(
+        'ModelProduct',
+        backref=db.backref('basket_product', lazy=True)
+    )    
+
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
     category = db.relationship(
         'ModelCategory',
         backref=db.backref('category_basket', lazy=True)
@@ -70,6 +87,11 @@ class ModelBasket(db.Model):
 
         data = v.document  
         
+<<<<<<< HEAD
+=======
+        util = Util()
+
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         for k in data:
             setattr(self, k, data[k])  
 
@@ -115,6 +137,15 @@ class ModelBasket(db.Model):
     # Validators
     def __val_create__(self):
         schema = '''
+<<<<<<< HEAD
+=======
+        product_id:
+            coerce: integer
+            max: 65535
+            min: 1
+            required: true
+            type: integer
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         category_id:
             coerce: integer
             max: 65535
@@ -137,6 +168,14 @@ class ModelBasket(db.Model):
 
     def __val_update__(self):
         schema = '''        
+<<<<<<< HEAD
+=======
+        product_id:
+            coerce: integer
+            max: 65535
+            min: 1
+            type: integer  
+>>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         category_id:
             coerce: integer
             max: 65535
