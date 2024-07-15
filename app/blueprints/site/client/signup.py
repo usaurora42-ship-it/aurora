@@ -16,7 +16,6 @@ from app.model.users import ModelUser
 from app.model.countries import ModelCountry
 from app.model.enum import StatusEnum
 
-
 LOGGER = logging.getLogger(__name__)
 
 

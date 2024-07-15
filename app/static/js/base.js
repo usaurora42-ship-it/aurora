@@ -21,7 +21,7 @@ function msgcheckFunction(){
     } else {
         document.getElementById("div_gifted_data").style.display = "none";
     }
-}
+};
 
 function checkuserFunction(){
     var checkBox = document.getElementById("checkuser");
@@ -30,4 +30,12 @@ function checkuserFunction(){
     } else {
         document.getElementById("div_gifted_user").style.display = "none";
     }
-}
+};
+
+function previewImagem(event) {
+    const imagemPreview = document.getElementById('imagem-preview');    
+    imagemPreview.src = URL.createObjectURL(event.target.files[0]);
+    imagemPreview.style.display = 'block';
+};
+
+
