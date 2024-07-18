@@ -100,14 +100,9 @@ Bootstrap 5 HTML CSS Template
                                                                                                               
                                                         <div class="col-lg-6 col-12">
                                                             {% for breakfast in breakfast_get %}
-                                                                <a>{{ breakfast.description }}</a>
-                                                                <a>{{ breakfast.path }}</a>
-                                                                <a>{{ breakfast.value }}</a>
-                                                                <img src="{{ breakfast.path }}" style="width:200px;height:200px;" class="image">
-                                                                <img src="{{ url_for('static', filename='{{ breakfast.path }}') }}" style="width:100px;height:100px;"/>
-                                                               <img src="C:\Users\priscilla.goncalves\Documents\amora-backend\amora\app\blueprints\site\baskets\uploads\1696466042923.jp" style="width:100px;height:100px;">                                                                
-                                                               <img src="{{url_for('static', filename='{{ breakfast.path }}')}}">
-
+                                                                <a>{{ breakfast.description }}</a>                                                                
+                                                                <a>{{ breakfast.value }}</a>                                                                
+                                                                <img src="{{ breakfast.path }}" width="200px" style="width:200px;height:200px;" class="image"></img>
                                                             {% endfor %} 
                                                       
                                                         </div>

@@ -3,10 +3,6 @@
     <head>        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
-=======
-        <!-- <meta http-equiv="refresh" content="50" /> -->
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
         <meta name="description" content="static.js">
         <meta name="author" content="">
 
@@ -43,20 +39,13 @@ Bootstrap 5 HTML CSS Template
         <script>
             function addProducts(){                  
                 var div = '';               
-<<<<<<< HEAD
                 div =  '<select class="form-control" name="product" id="product">'
-=======
-                div =  '<select class="form-control" name="product" id="productvalue">'
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                         + '<option value="product" selected>Produto</option>'
                         + '{% for product in products %}'
                         + '<option value="{{ product.id }}">{{ product.name }}</option>'
                         + '{% endfor %}' 
                         + '</select>';
-<<<<<<< HEAD
                         
-=======
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                 $('#listBaskets').append(div);              
           
             };
@@ -68,17 +57,10 @@ Bootstrap 5 HTML CSS Template
                     if (i < inputs.length - 1) {
                         dados += ',';
                     }                     
-<<<<<<< HEAD
                 }           
        
            };   
                       
-=======
-                }   
-                alert(dados);
-            };    
-                            
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
     </script>
               
             <main>
@@ -163,13 +145,8 @@ Bootstrap 5 HTML CSS Template
                                                                 <option value="product" selected>Produto</option>
                                                                 {% for product in products %}
                                                                     <option value="{{ product.id }}">{{ product.name }}</option>
-<<<<<<< HEAD
                                                                 {% endfor %}                                                                                                                     
                                                             </select>                                                            
-=======
-                                                                {% endfor %} 
-                                                            </select>
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                                                         </div>
                                                     
                                                         <div class="col-lg-2 col-12">
@@ -187,11 +164,7 @@ Bootstrap 5 HTML CSS Template
                                                         </div>                                                    
                                                       
                                                         <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-<<<<<<< HEAD
                                                             <button type="submit" class="form-control" onclick="getProducts();">Enviar</button>                                      
-=======
-                                                            <button type="submit" class="form-control">Enviar</button>                                      
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                                                         </div>                                                      
 
                                                     </div>
@@ -221,10 +194,7 @@ Bootstrap 5 HTML CSS Template
 
                             <div class="col-lg-4 col-12 me-auto">
                                 <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-<<<<<<< HEAD
                                 <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
-=======
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
 
                                 <strong class="text-white">
                                     <i class="bi-geo-alt me-2"></i>
@@ -233,11 +203,7 @@ Bootstrap 5 HTML CSS Template
 
                                 <ul class="social-icon mt-4">
                                     <li class="social-icon-item">
-<<<<<<< HEAD
                                         <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram">
-=======
-                                        <a href="#" class="social-icon-link bi-facebook">
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                                         </a>
                                     </li>
         
@@ -247,11 +213,7 @@ Bootstrap 5 HTML CSS Template
                                     </li>
 
                                     <li class="social-icon-item">
-<<<<<<< HEAD
                                         <a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp">
-=======
-                                        <a href="#" class="social-icon-link bi-whatsapp">
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
                                         </a>
                                     </li>
                                 </ul>

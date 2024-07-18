@@ -36,7 +36,7 @@ def breakfast_baskets_get():
 
 @SiteBlueprint.route('/baskets/breakfast', methods=['GET'])
 def breakfast_get():
-    breakfast_get = breakfast_baskets_get()
+    breakfast_get = breakfast_baskets_get()    
     return render_template('/baskets/breakfast.html', breakfast_get=breakfast_get)
 
 
