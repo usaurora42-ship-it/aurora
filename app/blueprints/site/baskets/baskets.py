@@ -96,8 +96,6 @@ def baskets_post():
         basket = query_basket.first()
         product = query_product.first()
 
-        print("pathhhhhhhhhhhhhhhhhhhhhhhhhh")
-        print(directory_path)
         # print("diretoriooooooooooooooooooooo")
         # print(os.getcwd() + '\\app\\static\\images\\products')
         # print(os.path.basename(__file__))

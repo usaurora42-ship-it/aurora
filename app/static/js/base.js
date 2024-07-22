@@ -38,7 +38,3 @@ function previewImagem(event) {
     imagemPreview.style.display = 'block';
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 34269319e32e9a4130e037742af7f2222682b6ee
