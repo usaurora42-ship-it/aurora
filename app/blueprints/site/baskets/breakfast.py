@@ -17,8 +17,28 @@ from app.model.basket_products import ModelBasketProduct
 
 LOGGER = logging.getLogger(__name__)
 
-def breakfast_baskets_get():    
-    # query breakfast baskets    
+# def breakfast_baskets_get():    
+#     # query breakfast baskets    
+#     query_breakfast = ModelBasket.query.with_entities(
+#         ModelBasket.description,
+#         ModelBasket.path,
+#         ModelBasket.value
+#     ).filter_by(
+#         status=StatusEnum.enabled,
+#         category_id=5
+#     ).order_by(ModelBasket.description)
+
+#     breakfast_baskets = query_breakfast.all()
+
+#     return breakfast_baskets
+
+
+
+@SiteBlueprint.route('/baskets/breakfast', methods=['GET'])
+def breakfast_get():
+    # breakfast_get = breakfast_baskets_get()
+
+    #query basket breakfas
     query_breakfast = ModelBasket.query.with_entities(
         ModelBasket.description,
         ModelBasket.path,
@@ -28,29 +48,18 @@ def breakfast_baskets_get():
         category_id=5
     ).order_by(ModelBasket.description)
 
-    breakfast_baskets = query_breakfast.all()
+    breakfast_baskets = query_breakfast.all()    
 
-    return breakfast_baskets
-
-
-
-@SiteBlueprint.route('/baskets/breakfast', methods=['GET'])
-def breakfast_get():
-    breakfast_get = breakfast_baskets_get()    
-    return render_template('/baskets/breakfast.html', breakfast_get=breakfast_get)
+    page = request.args.get('page', 1, type=int) 
+    posts = query_breakfast.paginate(page=page, per_page=16, error_out=False)
+    return render_template('/baskets/breakfast.html', breakfast_get=breakfast_baskets, items=posts.items, pagination=posts)
 
 
 # @SiteBlueprint.route('/baskets/breakfast', methods=['POST'])	
 # def baskets_post():  
 #     data = request.form.to_dict() or {}     
 
-    
-#     file = request.files['file'] # get file
-#     file.save(os.path.join(app.config['UPLOAD_PATH'], file.filename))
-#     directory_path = os.path.join(app.config['UPLOAD_PATH'], file.filename)
-
-#     descriptions = descriptions_get()
-#     products = products_get()  
+#     posts = Post.query.paginate(page=page, per_page=10, error_out=False)
    
 
 #      # query basket
