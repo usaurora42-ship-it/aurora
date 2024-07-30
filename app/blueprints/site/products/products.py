@@ -17,9 +17,15 @@ from app.model.enum import StatusEnum
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
-app.config['UPLOAD_PATH'] = os.path.dirname(os.path.abspath(__file__)) + '\\uploads'
+app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\products'
 
-
+# print("diretoriooooooooooooooooooooo")
+# print(os.getcwd() + '\\app\\static\\images\\products')
+# print(os.path.basename(__file__))
+# print(os.path.abspath(__file__))
+# print(os.path.dirname(__file__))
+# print(os.path.dirname(os.path.abspath(__file__)))
+# print(dirname(dirname(dirname(os.path.abspath(__file__)))))
 
 def descriptions_get():    
     # query categories    
@@ -27,7 +33,8 @@ def descriptions_get():
         ModelCategory.id,
         ModelCategory.description
     ).filter_by(
-        status=StatusEnum.enabled
+        status=StatusEnum.enabled,
+        category_type=1
     ).order_by(ModelCategory.description)
 
     descriptions = query_category.all()
@@ -40,7 +47,7 @@ def units_get():
         ModelUnit.id,
         ModelUnit.description
     ).filter_by(
-        status=StatusEnum.enabled
+        status=StatusEnum.enabled        
     ).order_by(ModelUnit.description)
 
     units = query_unit.all()

@@ -14,11 +14,12 @@ from app.model.products import ModelProduct
 from app.model.category import ModelCategory
 from app.model.baskets import ModelBasket
 from app.model.enum import StatusEnum
+from app.model.basket_products import ModelBasketProduct
 
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
-app.config['UPLOAD_PATH'] = os.path.dirname(os.path.abspath(__file__)) + '\\uploads'
+app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\baskets'
 
 def descriptions_get():    
     # query categories    
@@ -65,42 +66,92 @@ def baskets_post():
 
     descriptions = descriptions_get()
     products = products_get()  
-
+   
 
      # query basket
     query_basket = ModelBasket.query.with_entities(
-        ModelBasket.description
+        ModelBasket.id    
     ).filter_by(
+        status=StatusEnum.enabled
+    )
+
+    # query product 
+    query_product = ModelProduct.query.with_entities(
+        ModelProduct.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelBasketProduct).join(ModelBasket).filter_by(
         status=StatusEnum.enabled
     )
     
     # instance models
     model_basket = ModelBasket()  
     
-    try:
+    
+    try:       
         
         #
         # GET OR CREATE BASKET
         #
         basket = query_basket.first()
+        product = query_product.first()
 
+        # print("diretoriooooooooooooooooooooo")
+        # print(os.getcwd() + '\\app\\static\\images\\products')
+        # print(os.path.basename(__file__))
+        # print(os.path.abspath(__file__))
+        # print(os.path.dirname(__file__))
+        # print(os.path.dirname(os.path.abspath(__file__)))
+        # print(dirname(dirname(dirname(os.path.abspath(__file__)))))
+
+        substring = "\static"
+        string = directory_path      
+        n = string.find(substring)
+        path = ".."+ string[n:].replace("\\","/")        
         
     # create basket
         #if basket is None:
         data_basket = {
             'description': data['description'],
-            'product_id': data['product'], 
             'category_id': data['category'],                
             'value': data['value'],
-            'path': directory_path
+            'path': path                
         }        
-           
-        
+
         basket = model_basket.create_basket(data_basket)
 
-        # error to create basket
-           
+        # errors
         if basket is None:
+            resp = make_response(render_template('baskets/baskets.html',
+                        success=False,
+                        errors=model_basket.errors,
+                        data_input=data))
+            resp.mimetype = 'text/html'
+            return resp 
+
+       
+        
+        # basket_products = query_basket.filter(
+        #             ModelBasket.id == basket.id,
+        #             ModelProduct.id == products.id
+        #         ).first()
+
+        product = request.values.getlist("product")
+
+        for p in product:
+
+            model_basket_product = ModelBasketProduct()
+
+
+            data_basket_product = {
+                'basket_id': basket.id,
+                'product_id': p
+            }
+
+            basket_product = model_basket_product.create_basket_product(data_basket_product)
+
+        # error to create basket           
+        if basket_product is None:
             resp = make_response(render_template('baskets/baskets.html',
                         success=False,
                         errors=model_basket.errors,

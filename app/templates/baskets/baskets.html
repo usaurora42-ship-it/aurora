@@ -3,7 +3,6 @@
     <head>        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- <meta http-equiv="refresh" content="50" /> -->
         <meta name="description" content="static.js">
         <meta name="author" content="">
 
@@ -40,12 +39,13 @@ Bootstrap 5 HTML CSS Template
         <script>
             function addProducts(){                  
                 var div = '';               
-                div =  '<select class="form-control" name="product" id="productvalue">'
+                div =  '<select class="form-control" name="product" id="product">'
                         + '<option value="product" selected>Produto</option>'
                         + '{% for product in products %}'
                         + '<option value="{{ product.id }}">{{ product.name }}</option>'
                         + '{% endfor %}' 
                         + '</select>';
+                        
                 $('#listBaskets').append(div);              
           
             };
@@ -57,10 +57,12 @@ Bootstrap 5 HTML CSS Template
                     if (i < inputs.length - 1) {
                         dados += ',';
                     }                     
-                }   
-                alert(dados);
-            };    
-                            
+                }           
+       
+           };   
+           
+
+                      
     </script>
               
             <main>
@@ -145,8 +147,8 @@ Bootstrap 5 HTML CSS Template
                                                                 <option value="product" selected>Produto</option>
                                                                 {% for product in products %}
                                                                     <option value="{{ product.id }}">{{ product.name }}</option>
-                                                                {% endfor %} 
-                                                            </select>
+                                                                {% endfor %}                                                                                                                     
+                                                            </select>                                                            
                                                         </div>
                                                     
                                                         <div class="col-lg-2 col-12">
@@ -164,7 +166,7 @@ Bootstrap 5 HTML CSS Template
                                                         </div>                                                    
                                                       
                                                         <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                            <button type="submit" class="form-control">Enviar</button>                                      
+                                                            <button type="submit" class="form-control" onclick="getProducts();">Enviar</button>                                      
                                                         </div>                                                      
 
                                                     </div>
@@ -194,6 +196,7 @@ Bootstrap 5 HTML CSS Template
 
                             <div class="col-lg-4 col-12 me-auto">
                                 <em class="text-white d-block mb-4">Onde nos encontrar?</em>
+                                <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
 
                                 <strong class="text-white">
                                     <i class="bi-geo-alt me-2"></i>
@@ -202,7 +205,7 @@ Bootstrap 5 HTML CSS Template
 
                                 <ul class="social-icon mt-4">
                                     <li class="social-icon-item">
-                                        <a href="#" class="social-icon-link bi-facebook">
+                                        <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram">
                                         </a>
                                     </li>
         
@@ -212,7 +215,7 @@ Bootstrap 5 HTML CSS Template
                                     </li>
 
                                     <li class="social-icon-item">
-                                        <a href="#" class="social-icon-link bi-whatsapp">
+                                        <a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp">
                                         </a>
                                     </li>
                                 </ul>

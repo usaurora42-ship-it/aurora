@@ -41,3 +41,4 @@ from app.model.gifted import ModelClientGifted
 from app.model.users import ModelUser
 from app.model.category import ModelCategory
 from app.model.baskets import ModelBasket
+from app.model.basket_products import ModelBasketProduct

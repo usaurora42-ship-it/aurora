@@ -1,0 +1,9 @@
+ul {
+    -moz-column-count: 4;
+    -moz-column-gap: 16px;
+    -webkit-column-count: 4;
+    -webkit-column-gap: 16px;
+    column-count: 4;
+    column-gap: 20px;
+    display: inline-block;
+}

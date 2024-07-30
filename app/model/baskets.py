@@ -27,11 +27,6 @@ class ModelBasket(db.Model):
         autoincrement=True,
         nullable=False
     ) 
-    product_id = db.Column(
-        INTEGER(unsigned=True),
-        db.ForeignKey('products.id', onupdate='CASCADE'),
-        nullable=False
-    )
     category_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('categories.id', onupdate='CASCADE'),
@@ -60,12 +55,7 @@ class ModelBasket(db.Model):
         index=True
     )
 
-    # relationship
-    product = db.relationship(
-        'ModelProduct',
-        backref=db.backref('basket_product', lazy=True)
-    )    
-
+    # relationship    
     category = db.relationship(
         'ModelCategory',
         backref=db.backref('category_basket', lazy=True)
@@ -80,8 +70,6 @@ class ModelBasket(db.Model):
 
         data = v.document  
         
-        util = Util()
-
         for k in data:
             setattr(self, k, data[k])  
 
@@ -127,12 +115,6 @@ class ModelBasket(db.Model):
     # Validators
     def __val_create__(self):
         schema = '''
-        product_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            required: true
-            type: integer
         category_id:
             coerce: integer
             max: 65535
@@ -155,11 +137,6 @@ class ModelBasket(db.Model):
 
     def __val_update__(self):
         schema = '''        
-        product_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            type: integer  
         category_id:
             coerce: integer
             max: 65535
