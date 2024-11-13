@@ -65,7 +65,7 @@ Bootstrap 5 HTML CSS Template
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/baskets/breakfast">Nossas Cestas</a>
+                                    <a class="nav-link" href="/baskets/breakfast_details">Nossas Cestas</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -96,8 +96,7 @@ Bootstrap 5 HTML CSS Template
                             <div class="booking-form-wrap">
                                 <div class="row"> 
                                     <div class="col-lg-20 col-20 p-0">
-                                        <form class="custom-form booking-form" action="/baskets/breakfast" method="POST" role="form" enctype="multipart/form-data" id="breakfast">
-                                            
+                                        <form class="custom-form booking-form" action="/baskets/breakfast_details" method="POST" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
                                                 <div class="text-center mb-6 pb-lg-4">
                                                     <h4 class="small-text">Cestas de Café da Manhã</h4>
                                                 </div>
@@ -120,25 +119,23 @@ Bootstrap 5 HTML CSS Template
                                                         <div class="row">	
                                                             <ul>
                                                                 <div class="col-lg-20 col-20">                                                                     
-                                                                    {% for post in items %}   
-                                                                        <a class="nav-link" href="/baskets/{{ post.id }}/breakfast_details">                                                                
-                                                                            <img src="{{ post.path }}" width="200px" style="width:200px;height:200px;" class="image"></img>
-                                                                            <h8 class="small-text">{{ post.description }}</h8>                                                                
-                                                                            <br>
-                                                                            <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
-                                                                            <br>  
-                                                                            <!-- <p>
-                                                                                <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                 
-                                                                                <input value="" maxlength="3" size="3"></input>                                                                            
-                                                                                <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                       
-                                                                            </p>                                                                                                                                            -->
-                                                                    
+                                                                    {% for post in items %}                                                                   
+                                                                        <img src="{{ post.path }}" width="200px" style="width:200px;height:200px;" class="image"></img>
+                                                                        <h8 class="small-text">{{ post.description }}</h8>                                                                
+                                                                        <br>
+                                                                        <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
+                                                                        <br>  
+                                                                        <p>
+                                                                            <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                 
+                                                                            <input value="" maxlength="3" size="3"></input>                                                                            
+                                                                            <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                       
+                                                                        </p>                                                                   
                                                                     {% endfor %} 
                                                                 </div>                                                       
                                                             </ul>                                          
                                                         </div>                                             
                                                     </ul>
-                                                     <nav aria-label="Page navigation example">
+                                                     <!-- <nav aria-label="Page navigation example">
                                                         <ul class="pagination">
                                                            {% if pagination.has_prev %}
                                                                 <li class="page-item">
@@ -170,7 +167,7 @@ Bootstrap 5 HTML CSS Template
                                                                 <li class="page-item disabled"><span class="page-link">Próximo</span></li>
                                                             {% endif %}
                                                         </ul>
-                                                    </nav>     
+                                                    </nav>      -->
                                                 </div>
                                             </form>
                                         

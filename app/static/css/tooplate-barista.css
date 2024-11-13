@@ -95,6 +95,11 @@ h6 {
   font-size: var(--h6-font-size);
 }
 
+h8 {
+  margin-left: middle;
+  margin-right: middle;
+}
+
 p {
   color: var(--p-color);
   font-size: var(--p-font-size);
