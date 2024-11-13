@@ -38,14 +38,10 @@ LOGGER = logging.getLogger(__name__)
 
     
 
-@SiteBlueprint.route('/baskets/<int:id>/breakfast_details', methods=['GET'])
-def breakfast_details_get(id):
+@SiteBlueprint.route('/baskets/<int:id_basket_breakfast>/breakfast_details', methods=['GET'])
+def breakfast_details_get(id_basket_breakfast):
     # breakfast_get = breakfast_baskets_get()
-
-    #id = request.args.get('id')
-    print("Entrei aqui pra imprimir o id")
-    print (id)
-
+    
     #query basket breakfas
     query_breakfast_details = ModelBasket.query.with_entities(
         ModelBasket.description,
@@ -53,18 +49,16 @@ def breakfast_details_get(id):
         ModelBasket.value
     ).filter_by(
         status=StatusEnum.enabled,
-        category_id=8
+        category_id=8,
+        id=id_basket_breakfast
     ).order_by(ModelBasket.description)
 
-    id = request.files['id']
-    print("Entrei aqui pra imprimir o id")
-    print (id)
-
-    breakfast_details = query_breakfast_details.all()    
+      
+    breakfast_details = query_breakfast_details.all() 
 
     page = request.args.get('page', 1, type=int) 
-    posts = query_breakfast_details.paginate(page=page, per_page=16, error_out=False)
-    return render_template('/baskets/breakfast_details.html', breakfast_get=query_breakfast_details, items=posts.items, pagination=posts)
+    posts = query_breakfast_details.paginate(page=page, per_page=1, error_out=False)
+    return render_template('/baskets/breakfast_details.html', breakfast_get=breakfast_details, items=posts.items, pagination=posts)
 
 
 # @SiteBlueprint.route('/baskets/breakfast', methods=['POST'])	
