@@ -107,7 +107,9 @@ def baskets_post():
         substring = "\static"
         string = directory_path      
         n = string.find(substring)
-        path = ".."+ string[n:].replace("\\","/")        
+        path = string[n:].replace("\\","/")        
+        print("path")
+        print(path)
         
     # create basket
         #if basket is None:
