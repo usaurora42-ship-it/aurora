@@ -115,29 +115,29 @@ Bootstrap 5 HTML CSS Template
                                                         </ul>                                          
                                                     </div> -->
 
-                                                    <ul class="list-group mb-4">    
+                                                    <!-- <ul class="list-group mb-4">     -->
                                                         <div class="row">	
-                                                            <ul>
-                                                                <div class="col-lg-20 col-20">                                                                     
-                                                                    {% for post in items %}                                                                   
+                                                          
+                                                                <div>                                                                     
+                                                                    <!-- {% for post in items %}                                                                    -->
                                                                         <img src="{{ post.path }}" width="200px" style="width:200px;height:200px;" class="image">                                                                        
-                                                                        
+                                                                        <br>
                                                                         <h8 class="small-text">{{ post.description }}</h8> 
                                                                                                                                 
                                                                         <br>
                                                                         <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
-                                                                        <br>  
+                                                                         
                                                                         <p>
                                                                             <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                 
                                                                             <input value="" maxlength="3" size="3"></input>                                                                            
                                                                             <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                       
                                                                         </p>                                                                   
-                                                                    {% endfor %} 
+                                                                    <!-- {% endfor %}  -->
                                                                 </div>                                                       
-                                                            </ul> 
+                                                            <!-- </ul>  -->
                                                                                                      
                                                         </div>                                             
-                                                    </ul>
+                                                    <!-- </ul> -->
                                                      <!-- <nav aria-label="Page navigation example">
                                                         <ul class="pagination">
                                                            {% if pagination.has_prev %}

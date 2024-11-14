@@ -121,14 +121,13 @@ Bootstrap 5 HTML CSS Template
                                                             <ul>
                                                                 <div class="col-lg-20 col-20">                                                                     
                                                                     {% for post in items %}    
-                                                                        <a class="nav-link" href="/baskets/{{ post.id }}/breakfast_details">                                                              
-                                                                            
-                                                                            <img src="{{ post.path }}" width="200px" style="width:200px;height:200px;" class="image">    
+                                                                        <a class="nav-link" style="width:200px;height:250;" href="/baskets/{{ post.id }}/breakfast_details">  
+                                                                            <img src="{{ post.path }}" style="width:200px;height:200px;" class="image">   
                                                                                                                                                 
-                                                                            <h8 class="small-text">{{ post.description }}</h8>                                                                
+                                                                            <h8 class="small-text" >{{ post.description }}</h8>                                                                
                                                                             <br>
-                                                                            <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
-                                                                            <br>  
+                                                                            <h8 class="small-text">R$ {{ post.value }}</h8>                                                                        
+                                                                    
                                                                             <!-- <p>
                                                                                 <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                                                 
                                                                                 <input value="" maxlength="3" size="3"></input>                                                                            
