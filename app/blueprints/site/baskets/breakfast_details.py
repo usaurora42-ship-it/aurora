@@ -9,7 +9,7 @@ from app.blueprints.site import SiteBlueprint
 from app import logging
 from app import environment
 from app.model.products import ModelProduct
-from app.model.category import ModelCategory
+from app.model.units import ModelUnit
 from app.model.baskets import ModelBasket
 from app.model.enum import StatusEnum
 from app.model.basket_products import ModelBasketProduct
@@ -53,12 +53,39 @@ def breakfast_details_get(id_basket_breakfast):
         id=id_basket_breakfast
     ).order_by(ModelBasket.description)
 
-      
-    breakfast_details = query_breakfast_details.all() 
+    # query product 
+    query_product = ModelProduct.query.with_entities(
+        ModelProduct.name,
+        ModelProduct.description,
+        ModelProduct.size,
+        ModelUnit.description.label('unit_description')
+    ).join(ModelBasketProduct).join(ModelBasket).filter_by(
+        status=StatusEnum.enabled,
+        id=id_basket_breakfast    
+    ).join(ModelUnit).filter_by(
+        status=StatusEnum.enabled,
+        id=ModelProduct.unit_id
+    )
+    
+    # query unit 
+    # query_unit = ModelUnit.query.with_entities(        
+    #     ModelUnit.description
+    # ).join(ModelProduct).filter_by(
+    #     status=StatusEnum.enabled,
+    #     unit_id=ModelUnit.id
+    # ).join(ModelBasketProduct).join(ModelBasket).filter_by(
+    #     status=StatusEnum.enabled,
+    #     id=id_basket_breakfast    
+    # )
 
+
+    breakfast_details = query_breakfast_details.all() 
+    product = query_product.all()
+    # unit = query_unit.all()
+    
     page = request.args.get('page', 1, type=int) 
     posts = query_breakfast_details.paginate(page=page, per_page=1, error_out=False)
-    return render_template('/baskets/breakfast_details.html', breakfast_get=breakfast_details, items=posts.items, pagination=posts)
+    return render_template('/baskets/breakfast_details.html', breakfast_get=breakfast_details, products=product, items=posts.items, pagination=posts)
 
 
 # @SiteBlueprint.route('/baskets/breakfast', methods=['POST'])	

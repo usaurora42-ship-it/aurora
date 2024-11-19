@@ -38,3 +38,15 @@ function previewImagem(event) {
     imagemPreview.style.display = 'block';
 };
 
+
+function addBasket(qtdBasket){ 
+    const countBasket = parseInt(qtdBasket) + 1;
+    let qtdB = document.getElementById('qtdBasket');
+    qtdB.value = countBasket;                                                                
+};
+
+function remBasket(qtdBasket){ 
+    const countBasket = parseInt(qtdBasket) - 1;
+    let qtdB = document.getElementById('qtdBasket');    
+    qtdB.value = countBasket;                                                                
+};

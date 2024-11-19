@@ -33,8 +33,8 @@ def descriptions_get():
         ModelCategory.id,
         ModelCategory.description
     ).filter_by(
-        status=StatusEnum.enabled,
-        category_type=1
+        status=StatusEnum.enabled#,
+        #category_type=1
     ).order_by(ModelCategory.description)
 
     descriptions = query_category.all()

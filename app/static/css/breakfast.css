@@ -7,3 +7,27 @@ ul {
     column-gap: 20px;
     display: inline-block;
 }
+
+.column {
+    float: left;
+    width: 30%;
+}
+  
+  /* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.container__botao{
+    background-color: var(--botao-azul);
+    color: var(--branco-principal);
+    border: 2px solid var(--botao-azul);
+    border-radius: 5px;
+    padding: 1em;
+    display: flex;   /* inicia o display flex */
+    align-items: center; /* alinha os itens na vertical */
+    justify-content: center; /* alinha os itens na horizontal */
+    width: 140px;
+}
