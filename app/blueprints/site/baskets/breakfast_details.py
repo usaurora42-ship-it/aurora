@@ -44,6 +44,7 @@ def breakfast_details_get(id_basket_breakfast):
     
     #query basket breakfas
     query_breakfast_details = ModelBasket.query.with_entities(
+        ModelBasket.id,
         ModelBasket.description,
         ModelBasket.path,
         ModelBasket.value

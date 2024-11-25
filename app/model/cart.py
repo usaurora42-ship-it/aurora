@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelSale(db.Model):
-    __tablename__ = 'sales'
+class ModelCart(db.Model):
+    __tablename__ = 'cart'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -22,7 +22,7 @@ class ModelSale(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('sale_id_seq'),
+        db.Sequence('cart_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
@@ -37,8 +37,7 @@ class ModelSale(db.Model):
         nullable=False,
     )  
     voucher = db.Column(
-        db.DECIMAL(15, 2),
-        nullable=False,
+        db.DECIMAL(15, 2)
     ) 
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
@@ -48,8 +47,7 @@ class ModelSale(db.Model):
     )
     payment_code = db.Column(
         db.String(40),
-        unique=True,
-        nullable=False
+        unique=True
     )
     date_delivery = db.Column(
         db.DECIMAL(15, 3),
@@ -59,7 +57,8 @@ class ModelSale(db.Model):
     time_slot = db.Column(
         db.String(20),
         unique=True,
-        nullable=False
+        nullable=False,
+        default=lambda : format(datetime.now().timestamp(), '.3f')
     )
     date_create = db.Column(
         db.DECIMAL(15, 3),
@@ -69,8 +68,8 @@ class ModelSale(db.Model):
 
     errors = None
 
-    # Create Sale
-    def create_sale(self, data):
+    # Create Cart
+    def create_cart(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -79,8 +78,8 @@ class ModelSale(db.Model):
         data = v.document        
         
 
-    # Update Sale
-    def update_sale(self, data):
+    # Update Cart
+    def update_cart(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_update__()):
             self.errors = v.errors
@@ -88,32 +87,32 @@ class ModelSale(db.Model):
 
         data = v.document
 
-        sale_id = data.pop('id')
-        sale = ModelSale.query.filter_by(
-            id=sale_id,
+        cart_id = data.pop('id')
+        cart = ModelCart.query.filter_by(
+            id=cart_id,
             status=StatusEnum.enabled
         ).first()
 
-        if not sale:
+        if not cart:
             self.errors = {
-                'sale': ['sale not found']
+                'cart': ['cart not found']
             }
             return None
 
         # pop data partner
         for k in data:
-            setattr(sale, k, data[k])
+            setattr(cart, k, data[k])
 
         try:
             db.session.commit()
-            return sale
+            return cart
         except Exception as e:
             raise e
     
     # Validators
     def __val_create__(self):
         schema = '''
-        sale_id:
+        cart_id:
             coerce: integer
             max: 65535
             min: 1
@@ -124,7 +123,7 @@ class ModelSale(db.Model):
 
     def __val_update__(self):
         schema = '''        
-        sale_id:
+        cart_id:
             coerce: integer
             max: 65535
             min: 1
@@ -133,4 +132,4 @@ class ModelSale(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Sale %r>" % self.name
+        return "<Cart %r>" % self.name

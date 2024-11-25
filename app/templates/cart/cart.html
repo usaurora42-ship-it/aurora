@@ -99,7 +99,7 @@ Bootstrap 5 HTML CSS Template
                                     <div class="col-lg-20 col-20 p-0">
                                         <form class="custom-form booking-form" name="form" action="/cart/cart" method="POST" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
                                                 <div class="text-center mb-6 pb-lg-4">
-                                                    <h4 class="small-text">Cestas de Café da Manhã</h4>
+                                                    <h4 class="small-text">Meu Carrinho</h4>
                                                 </div>
                                                 <div class="row">
                                                     <div class="booking-form-body">
@@ -127,23 +127,17 @@ Bootstrap 5 HTML CSS Template
                                                                                                                                     
                                                                             <br>
                                                                             <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
+                                                                            <br>
                                                                             
-                                                                            <p>
-                                                                                <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="remBasket(document.form.qtdBasket.value)" type="button">                                                                 
-                                                                                <input class="small-text" value="0" maxlength="3" size="3" id="qtdBasket" name="qtdBasket"></input>                                                                            
-                                                                                <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="addBasket(document.form.qtdBasket.value)" type="button">                                                                                     
-                                                                            </p>
-                                                                            <a class="btn custom-btn custom-border-btn container__botao" href="/cart/cart" >
-                                                                                Compre
+                                                                            <a class="btn custom-btn custom-border-btn container__botao" href="/client/signup">
+                                                                                Continuar
                                                                             </a>                                                                          
                                                                                                                                         
                                                                         <!-- {% endfor %}  -->
                                                                     </div>                                                       
                                                                 <!-- </ul>  -->
-                                                                <div class="column">  
-                                                                    <h8 class="small-text">Descrição Geral</h8>
-                                                                    <br> 
-                                                                    <h8 class="small-text">Contém:</h8>                                                                   
+                                                                <!-- <div class="column">
+                                                                    <br>                                                                     
                                                                         {% for product in products %}                                                                         
                                                                             <br>
                                                                             <h8 class="small-text">{{ product.name }}</h8> 
@@ -153,43 +147,13 @@ Bootstrap 5 HTML CSS Template
                                                                         {% endfor %}                                                                      
                                                                    
                                                                     
-                                                                </div>
+                                                                </div> -->
                                                                                                         
                                                             <!-- </div>                                              -->
                                                         <!-- </ul> -->
                                                         <!-- <nav aria-label="Page navigation example">
-                                                            <ul class="pagination">
-                                                            {% if pagination.has_prev %}
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="?page={{ pagination.prev_num }}">Anterior</a>
-                                                                    </li>
-                                                                {% else %}
-                                                                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-                                                                {% endif %}
-                                                                
-                                                                {% for page_num in pagination.iter_pages() %}                                                            
-                                                                    {% if page_num %}                                                            
-                                                                        {% if page_num != pagination.page %}                                                       
-                                                                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
-                                                                        {% else %}                                                            
-                                                                            <li class="page-item active" aria-current="page">
-                                                                                <span class="page-link">{{ page_num }}</span>
-                                                                            </li>
-                                                                        {% endif %}
-                                                                    {% else %}
-                                                                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                                
-                                                                {% if pagination.has_next %}
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="?page={{ pagination.next_num }}">Próximo</a>                                                                
-                                                                    </li>
-                                                                {% else %}
-                                                                    <li class="page-item disabled"><span class="page-link">Próximo</span></li>
-                                                                {% endif %}
-                                                            </ul>
-                                                        </nav>      -->
+                                                         
+                                                           
                                                     </div>
                                                 </div>
                                             </form>
@@ -200,7 +164,7 @@ Bootstrap 5 HTML CSS Template
                         </div>
                     </div>
                 </div>
-                <!-- <div class="container mt-5">
+                 <div class="container mt-5">
                     <ul class="list-group mb-4">
                          Start looping through each post item provided to the template -->
                        <!-- {% for post in items %}
@@ -213,37 +177,7 @@ Bootstrap 5 HTML CSS Template
                         {% endfor %} End of the loop -->
                    <!--  </ul> -->
                     <!-- <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            {% if pagination.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="/?page={{ pagination.prev_num }}">Anterior</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-                            {% endif %}
-            
-                            {% for page_num in pagination.iter_pages() %}
-                            {% if page_num %}
-                            {% if page_num != pagination.page %}
-                            <li class="page-item"><a class="page-link" href="/?page={{ page_num }}">{{ page_num }}</a></li>
-                            {% else %}
-                            <li class="page-item active" aria-current="page">
-                                <span class="page-link">{{ page_num }}</span>
-                            </li>
-                            {% endif %}
-                            {% else %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                            {% endif %}
-                            {% endfor %}
-            
-                            {% if pagination.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="/?page={{ pagination.next_num }}">Próximo</a>
-                            </li>
-                            {% else %}
-                            <li class="page-item disabled"><span class="page-link">Próximo</span></li>
-                            {% endif %}
-                        </ul>
+                       
                     </nav> -->
                     
                 <!-- </div> -->

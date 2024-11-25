@@ -35,8 +35,8 @@ from app.model.client_address import ModelClientAddress
 from app.model.partner_product import ModelPartnerProduct
 from app.model.partner_client import ModelPartnerClient
 from app.model.partner_phone import ModelPartnerPhone
-from app.model.sale import ModelSale
-from app.model.sale_product import ModelSaleProduct
+from app.model.cart import ModelCart
+from app.model.cart_basket import ModelCartBasket
 from app.model.gifted import ModelClientGifted
 from app.model.users import ModelUser
 from app.model.category import ModelCategory

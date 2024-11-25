@@ -9,8 +9,8 @@ from app.model.validator import ModelValidator
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelSaleProduct(db.Model):
-    __tablename__ = 'sale_products'
+class ModelCartBasket(db.Model):
+    __tablename__ = 'cart_basket'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -20,19 +20,19 @@ class ModelSaleProduct(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('sale_product_id_seq'),
+        db.Sequence('cart_basket_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
     )
-    sale_id = db.Column(
+    cart_id = db.Column(
         INTEGER(unsigned=True),
-        db.ForeignKey('sales.id', onupdate='CASCADE'),
+        db.ForeignKey('cart.id', onupdate='CASCADE'),
         nullable=False
     )
-    product_id = db.Column(
+    basket_id = db.Column(
         INTEGER(unsigned=True),
-        db.ForeignKey('products.id', onupdate='CASCADE'),
+        db.ForeignKey('baskets.id', onupdate='CASCADE'),
         nullable=False
     )
     date_create = db.Column(
@@ -42,20 +42,20 @@ class ModelSaleProduct(db.Model):
     )
 
     # RelationShip
-    sale = db.relationship(
-        'ModelSale',
-        backref=db.backref('sale_product', lazy=True)
+    cart = db.relationship(
+        'ModelCart',
+        backref=db.backref('cart_basket', lazy=True)
     )
 
-    product = db.relationship(
-        'ModelProduct',
-        backref=db.backref('product_sale', lazy=True)
+    basket = db.relationship(
+        'ModelBasket',
+        backref=db.backref('basket_cart', lazy=True)
     )
 
     errors = None
 
-    # Create Sale Product
-    def create_sale_product(self, data):
+    # Create Cart Basket
+    def create_cart_basket(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -76,12 +76,12 @@ class ModelSaleProduct(db.Model):
     # validators
     def __val_create__(self):
         schema = '''
-        sale_id:
+        cart_id:
             min: 1
             required: true
             type: integer
             coerce: integer
-        product_id:
+        basket_id:
             min: 1
             required: true
             type: integer
@@ -90,4 +90,4 @@ class ModelSaleProduct(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<SaleProduct %r>" % self.id
+        return "<CartBasket %r>" % self.id
