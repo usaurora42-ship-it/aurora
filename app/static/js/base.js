@@ -42,13 +42,19 @@ function previewImagem(event) {
 function addBasket(qtdBasket){ 
     const countBasket = parseInt(qtdBasket) + 1;
     let qtdB = document.getElementById('qtdBasket');
-    qtdB.value = countBasket; 
-    document.getElementById('qtdCart').innerHTML = qtdB.value;                                                                
+    qtdB.value = countBasket;     
+                                                          
 };
 
 function remBasket(qtdBasket){ 
     const countBasket = parseInt(qtdBasket) - 1;
     let qtdB = document.getElementById('qtdBasket');    
     qtdB.value = countBasket; 
-    document.getElementById('qtdCart').innerHTML = qtdB.value;                                                              
 };
+
+function addCart(qtdBasket){
+    const countBasket = parseInt(qtdBasket);
+    let qtdB = document.getElementById('qtdBasket');    
+    qtdB.value = countBasket; 
+    document.getElementById('qtdCart').value = qtdB.value;   
+}

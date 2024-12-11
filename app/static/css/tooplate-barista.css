@@ -635,6 +635,24 @@ strong {
   padding: 40px;
 }
 
+.about-zip-code {
+  color: var(--secondary-color);
+  border-radius: var(--border-radius-medium);
+}
+
+.about-zip-code-bot {
+  color: var(--white-color);
+  border-radius: var(--border-radius-medium);
+}
+
+.circle {
+  background: rgb(228, 159, 98);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: menu-font-size;
+}
+
 .about-video-info h4 {
   color: var(--white-color);
 }
@@ -809,6 +827,14 @@ strong {
 
 .booking-form-wrap {
   background-color: rgba(0, 0, 0, 0.65);
+  border-radius: var(--border-radius-medium);
+  position: relative;
+  overflow: hidden;
+  margin-top: 100px;
+}
+
+.booking-form-wrap-breakfast-details {
+  background-color: rgba(255, 255, 255, 255);
   border-radius: var(--border-radius-medium);
   position: relative;
   overflow: hidden;

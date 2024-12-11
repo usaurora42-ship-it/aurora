@@ -43,163 +43,130 @@ Bootstrap 5 HTML CSS Template
     <body class="reservation-page">      
               
             <main>
-                <nav class="navbar navbar-expand-lg">                
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
-                            Amora
-                        </a>
-        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-        
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_1">Home</a>
-                                </li>
-        
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_2">Sobre Nós</a>
-                                </li>
+                <nav class="navbar navbar-expand-lg">   
+                                
+                        <div class="container">
+                            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                                <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                                Amora
+                            </a>
+            
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+            
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav ms-lg-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/#section_1">Home</a>
+                                    </li>
+            
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/#section_2">Sobre Nós</a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/baskets/breakfast_details">Nossas Cestas</a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/baskets/breakfast_details">Nossas Cestas</a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_4">Avaliações</a>
-                                </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/#section_4">Avaliações</a>
+                                    </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_5">Contato</a>
-                                </li>
-                            </ul>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/#section_5">Contato</a>
+                                    </li>
+                                </ul>
 
-                            <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="cadastro">
-                                    <strong class="small-text">Carrinho</strong>                                  
-                                    <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">
-                                    <label id="qtdCart"></label>
-                                    <!-- <i class="bi-arrow-up-right ms-2"></i> -->
-                                </a>                                
+                                <div class="ms-lg-3">
+                                    <a class="btn custom-btn custom-border-btn" href="cadastro">
+                                        <strong class="small-text">Carrinho</strong>                                  
+                                        <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                    
+                                        <input class="circle align-items-center" id="qtdCart" name="qtdCart"></input>                                    
+                                        <!-- <i class="bi-arrow-up-right ms-2"></i> -->
+                                    </a>                                
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </nav>
-                
-
-                <section class="booking-section section-padding">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-16 col-12 mx-auto">
-                            <div class="booking-form-wrap">
-                                <div class="row"> 
-                                    <div class="col-lg-20 col-20 p-0">
-                                        <form class="custom-form booking-form" name="form" action="/cart/cart" method="POST" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
-                                                <div class="text-center mb-6 pb-lg-4">
-                                                    <h4 class="small-text">Cestas de Café da Manhã</h4>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="booking-form-body">
-                                                        <!-- <div class="row">	
-                                                            <ul>                                                                                                                    
-                                                                <div class="col-lg-20 col-20">                                                                                                                                                                                      
-                                                                        {% for breakfast in breakfast_get %}                                                                                                                              
-                                                                            <img src="{{ breakfast.path }}" width="200px" style="width:200px;height:200px;" class="image"></img>
-                                                                            <a class="text-white">{{ breakfast.description }}</a>                                                                
-                                                                            <br>
-                                                                            <a class="text-white">R$ {{ breakfast.value }}</a>  
-                                                                            <br>
-                                                                        {% endfor %}                                                                                            
-                                                                </div>                                                       
-                                                            </ul>                                          
-                                                        </div> -->
-
-                                                        <!-- <ul class="list-group mb-4">     -->
-                                                            <!-- <div class="row">	                                                           -->
-                                                                    <div class="column">                                                                     
-                                                                        <!-- {% for post in items %}                                                                    -->
-                                                                            <img src="{{ post.path }}" width="200px" style="width:200px;height:200px;" class="image">                                                                        
-                                                                            <br>
-                                                                            <h8 class="small-text">{{ post.description }}</h8> 
+                    </nav>
+               
+                <section>
+                <footer class="site-footer">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-16 col-12 mx-auto">
+                                <div class="booking-form-wrap-breakfast-details">
+                                    <div class="row"> 
+                                        <div class="col-lg-20 col-20 p-0">
+                                            <form class="custom-form booking-form" name="form" action="/cart/cart" method="POST" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
+                                                
+                                                    <div class="row">
+                                                        <div class="booking-form-body">                                                      
+                                                                <div class="column">                                                                     
+                                                                    <!-- {% for post in items %}-->
+                                                                        <img src="{{ post.path }}" width="300px" style="width:300px;height:300px;" class="image">                                                                        
+                                                                        <br>                                                                                                                                        
                                                                                                                                     
-                                                                            <br>
-                                                                            <h8 class="small-text">R$ {{ post.value }}</h8>                                                                         
-                                                                            
-                                                                            <p>
-                                                                                <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="remBasket(document.form.qtdBasket.value)" type="button">                                                                 
-                                                                                <input class="small-text" value="0" maxlength="3" size="3" id="qtdBasket" name="qtdBasket"></input>                                                                            
-                                                                                <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="addBasket(document.form.qtdBasket.value)" type="button">                                                                                     
-                                                                            </p>
-                                                                            <a class="btn custom-btn custom-border-btn container__botao" href="/cart/cart" >
-                                                                                Compre
-                                                                            </a>                                                                          
-                                                                                                                                        
-                                                                        <!-- {% endfor %}  -->
-                                                                    </div>                                                       
-                                                                <!-- </ul>  -->
-                                                                <div class="column">  
-                                                                    <h8 class="small-text">Descrição Geral</h8>
-                                                                    <br> 
-                                                                    <h8 class="small-text">Contém:</h8>                                                                   
+                                                                    <!-- {% endfor %}  -->
+                                                                </div>                                                       
+                                                            <!-- </ul>  -->
+                                                            <div class="column">   
+                                                                <!-- {% for post in items %}  -->                                                         
+                                                                    <h5 class="small-text">{{ post.description }}</h5>
+
+                                                                    <h8 class="small-text">R$ {{ post.value }}</h8> 
+                                                                    <br>
+                                                                    <br>
+                                                                    <!-- {% endfor %}  -->
+                                                                    
+                                                                    
+                                                                    <h6 class="small-text">Contém:</h6>                                                                   
                                                                         {% for product in products %}                                                                         
                                                                             <br>
-                                                                            <h8 class="small-text">{{ product.name }}</h8> 
-                                                                            <h8 class="small-text">{{ product.description }}</h8> 
-                                                                            <h8 class="small-text">{{ product.size }}</h8>                                                                              
+                                                                            <h8 class="small-text">{{ product.description }} - </h8> 
+                                                                            <h8 class="small-text">{{ product.size }} - </h8>                                                                              
                                                                             <h8 class="small-text">{{ product.unit_description }}</h8> 
-                                                                        {% endfor %}                                                                      
-                                                                   
-                                                                    
-                                                                </div>
-                                                                                                        
-                                                            <!-- </div>                                              -->
-                                                        <!-- </ul> -->
-                                                        <!-- <nav aria-label="Page navigation example">
-                                                            <ul class="pagination">
-                                                            {% if pagination.has_prev %}
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="?page={{ pagination.prev_num }}">Anterior</a>
-                                                                    </li>
-                                                                {% else %}
-                                                                    <li class="page-item disabled"><span class="page-link">Anterior</span></li>
-                                                                {% endif %}
+                                                                        {% endfor %} 
+
+                                                                        <br>
+                                                                        <br>
+                                                                        <br>
                                                                 
-                                                                {% for page_num in pagination.iter_pages() %}                                                            
-                                                                    {% if page_num %}                                                            
-                                                                        {% if page_num != pagination.page %}                                                       
-                                                                            <li class="page-item"><a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a></li>
-                                                                        {% else %}                                                            
-                                                                            <li class="page-item active" aria-current="page">
-                                                                                <span class="page-link">{{ page_num }}</span>
-                                                                            </li>
-                                                                        {% endif %}
-                                                                    {% else %}
-                                                                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                                                                    {% endif %}
-                                                                {% endfor %}
-                                                                
-                                                                {% if pagination.has_next %}
-                                                                    <li class="page-item">
-                                                                        <a class="page-link" href="?page={{ pagination.next_num }}">Próximo</a>                                                                
-                                                                    </li>
-                                                                {% else %}
-                                                                    <li class="page-item disabled"><span class="page-link">Próximo</span></li>
-                                                                {% endif %}
-                                                            </ul>
-                                                        </nav>      -->
+                                                                <!-- <div class="row"> -->
+                                                                                                            
+                                                                    <p>
+                                                                        <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="remBasket(document.form.qtdBasket.value)" type="button">                                                                 
+                                                                        <input class="small-text" value="0" maxlength="3" size="3" id="qtdBasket" name="qtdBasket"></input>                                                                            
+                                                                        <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="addBasket(document.form.qtdBasket.value)" type="button">                                                                                     
+                                                                        <a class="btn custom-btn custom-border-btn" name="addCart" href="/cart/cart" onclick=addCart(document.form.qtdBasket.value)" type="button">
+                                                                            Adicione ao carrinho
+                                                                        </a>
+                                                                    </p>   
+                                                                    <!-- <p>     
+                                                                        <h6 class="about-zip-code">Calcule frete e prazo da entrega para o seu endereço.</h6>     
+                                                                        <div class="col-lg-6 col-12">                                                                        
+                                                                            <input class="about-zip-code" type="zip_code" name="zip_code" placeholder="CEP" value="">
+                                                                            <a class="btn custom-btn custom-border-btn about-zip-code-bot">
+                                                                                Calcular
+                                                                            </a>
+                                                                        </div>                                                           
+                                                                        
+                                                                    </p>                                                          -->
+                                                                                                                    
+                                                                <!-- </div>     -->
+                                                            </div>
+                                                                                                                
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </form>
-                                        
+                                                </form>
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </footer>
                 <!-- <div class="container mt-5">
                     <ul class="list-group mb-4">
                          Start looping through each post item provided to the template -->

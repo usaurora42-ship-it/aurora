@@ -10,7 +10,7 @@ ul {
 
 .column {
     float: left;
-    width: 30%;
+    width: 50%;
 }
   
   /* Clear floats after the columns */
