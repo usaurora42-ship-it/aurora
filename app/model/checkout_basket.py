@@ -9,8 +9,8 @@ from app.model.validator import ModelValidator
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelCartBasket(db.Model):
-    __tablename__ = 'cart_basket'
+class ModelCheckoutBasket(db.Model):
+    __tablename__ = 'checkout_basket'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -20,19 +20,19 @@ class ModelCartBasket(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('cart_basket_id_seq'),
+        db.Sequence('checkout_basket_id_seq'),
         primary_key=True,
         autoincrement=True,
-        nullable=False
-    )
-    cart_id = db.Column(
-        INTEGER(unsigned=True),
-        db.ForeignKey('cart.id', onupdate='CASCADE'),
         nullable=False
     )
     basket_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('baskets.id', onupdate='CASCADE'),
+        nullable=False
+    )
+    checkout_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('checkout.id', onupdate='CASCADE'),
         nullable=False
     )
     date_create = db.Column(
@@ -42,20 +42,20 @@ class ModelCartBasket(db.Model):
     )
 
     # RelationShip
-    cart = db.relationship(
-        'ModelCart',
-        backref=db.backref('cart_basket', lazy=True)
+    checkout = db.relationship(
+        'ModelCheckout',
+        backref=db.backref('checkout_basket', lazy=True)
     )
 
     basket = db.relationship(
         'ModelBasket',
-        backref=db.backref('basket_cart', lazy=True)
+        backref=db.backref('basket_checkout', lazy=True)
     )
 
     errors = None
 
-    # Create Cart Basket
-    def create_cart_basket(self, data):
+    # Create Checkout Basket
+    def create_checkout_basket(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -76,7 +76,7 @@ class ModelCartBasket(db.Model):
     # validators
     def __val_create__(self):
         schema = '''
-        cart_id:
+        id:
             min: 1
             required: true
             type: integer
@@ -90,4 +90,4 @@ class ModelCartBasket(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<CartBasket %r>" % self.id
+        return "<CheckoutBasket %r>" % self.id

@@ -42,14 +42,15 @@ function previewImagem(event) {
 function addBasket(qtdBasket){ 
     const countBasket = parseInt(qtdBasket) + 1;
     let qtdB = document.getElementById('qtdBasket');
-    qtdB.value = countBasket;     
-                                                          
+    qtdB.value = countBasket;
+    document.getElementById('qtdCart').value = qtdB.value;  
 };
 
 function remBasket(qtdBasket){ 
     const countBasket = parseInt(qtdBasket) - 1;
     let qtdB = document.getElementById('qtdBasket');    
     qtdB.value = countBasket; 
+    document.getElementById('qtdCart').value = qtdB.value;  
 };
 
 function addCart(qtdBasket){

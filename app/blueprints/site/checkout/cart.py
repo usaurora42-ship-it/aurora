@@ -9,7 +9,7 @@ from app.blueprints.site import SiteBlueprint
 from app import logging
 from app import environment
 from app.model.enum import StatusEnum
-from app.model.cart import ModelCart
+from app.model.checkout import ModelCheckout
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,51 +33,51 @@ LOGGER = logging.getLogger(__name__)
 #     data = request.form.to_dict() or {} 
 
     
-@SiteBlueprint.route('/cart/cart')
+@SiteBlueprint.route('/checkout/cart')
 def cart_get():
-    resp = make_response(render_template('cart/cart.html',
+    resp = make_response(render_template('checkout/cart.html',
         success=False,
         errors=None,
         data_input=None))
     resp.mimetype = 'text/html'
     return resp 
 
-@SiteBlueprint.route('/cart/cart', methods=['POST'])
+@SiteBlueprint.route('/checkout/cart', methods=['POST'])
 def cart_post():  
     data = request.form.to_dict() or {}    
 
-    # query cart
-    query_cart = ModelCart.query.with_entities(
-        ModelCart.id    
+    # query checkout
+    query_checkout = ModelCheckout.query.with_entities(
+        ModelCheckout.id    
     ).filter_by(
         status=StatusEnum.enabled
     )
   
     # instance models
-    model_cart = ModelCart()  
+    model_checkout = ModelCheckout()  
     
     
     try:       
         
         #
-        # GET OR CREATE CART
+        # GET OR CREATE CHECKOUT
         #
-        cart = query_cart.first()
+        checkout = query_checkout.first()
        
         
-    # create cart
-        #if cart is None:
-        data_cart = {
+    # create checkout
+        #if checkout is None:
+        data_checkout = {
             'value': data['value']               
         }        
 
-        cart = model_cart.create_cart(data_cart)
+        checkout = model_checkout.create_checkout(data_checkout)
 
         # errors
-        if cart is None:
-            resp = make_response(render_template('cart/cart.html',
+        if checkout is None:
+            resp = make_response(render_template('checkout/cart.html',
                         success=False,
-                        errors=model_cart.errors,
+                        errors=model_checkout.errors,
                         data_input=data))
             resp.mimetype = 'text/html'
             return resp 
@@ -113,7 +113,7 @@ def cart_post():
         #     return resp  
             
         # success response
-        resp = make_response(render_template('cart/cart.html',                            
+        resp = make_response(render_template('checkout/cart.html',                            
                                 success=True,
                                 errors=None))
         resp.mimetype = 'text/html'
