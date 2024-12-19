@@ -108,8 +108,6 @@ def baskets_post():
         string = directory_path      
         n = string.find(substring)
         path = string[n:].replace("\\","/")        
-        print("path")
-        print(path)
         
     # create basket
         #if basket is None:

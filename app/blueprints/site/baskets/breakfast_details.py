@@ -15,6 +15,7 @@ from app.model.enum import StatusEnum
 from app.model.basket_products import ModelBasketProduct
 
 
+
 LOGGER = logging.getLogger(__name__)
 
 # def breakfast_baskets_get():    
@@ -32,16 +33,12 @@ LOGGER = logging.getLogger(__name__)
 
 #     return breakfast_baskets
 
-# @SiteBlueprint.route('/baskets/breakfast_details', methods=['POST'])
-# def breakfast_details_post():    
-#     data = request.form.to_dict() or {} 
-
-    
-
 @SiteBlueprint.route('/baskets/<int:id_basket_breakfast>/breakfast_details', methods=['GET'])
 def breakfast_details_get(id_basket_breakfast):
     # breakfast_get = breakfast_baskets_get()
     
+    id_basket = id_basket_breakfast;
+
     #query basket breakfas
     query_breakfast_details = ModelBasket.query.with_entities(
         ModelBasket.id,
@@ -86,7 +83,7 @@ def breakfast_details_get(id_basket_breakfast):
     
     page = request.args.get('page', 1, type=int) 
     posts = query_breakfast_details.paginate(page=page, per_page=1, error_out=False)
-    return render_template('/baskets/breakfast_details.html', breakfast_get=breakfast_details, products=product, items=posts.items, pagination=posts)
+    return render_template('/baskets/breakfast_details.html', breakfast_get=breakfast_details, products=product, items=posts.items, pagination=posts,id_basket=id_basket)
 
 
 # @SiteBlueprint.route('/baskets/breakfast', methods=['POST'])	

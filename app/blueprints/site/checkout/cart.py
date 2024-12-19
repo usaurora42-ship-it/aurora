@@ -10,6 +10,9 @@ from app import logging
 from app import environment
 from app.model.enum import StatusEnum
 from app.model.checkout import ModelCheckout
+from app.model.checkout_basket import ModelCheckoutBasket
+from app.model.checkout import ModelCheckout
+from app.model.baskets import ModelBasket
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,7 +55,8 @@ def cart_post():
     ).filter_by(
         status=StatusEnum.enabled
     )
-  
+
+   
     # instance models
     model_checkout = ModelCheckout()  
     
@@ -68,8 +72,11 @@ def cart_post():
     # create checkout
         #if checkout is None:
         data_checkout = {
-            'value': data['value']               
-        }        
+            'amount': data['qtdBasket'],
+            'value': data['value_basket'],            
+            'total': float(data['qtdBasket']) * float(data['value_basket'])
+        }       
+      
 
         checkout = model_checkout.create_checkout(data_checkout)
 
@@ -82,7 +89,28 @@ def cart_post():
             resp.mimetype = 'text/html'
             return resp 
 
-       
+        id_basket = request.values.get("id_basket")
+
+        model_checkout_basket = ModelCheckoutBasket()
+
+
+        data_checkout_basket = {
+            'basket_id': id_basket,
+            'checkout_id': checkout.id
+        }
+        
+
+        checkout_basket = model_checkout_basket.create_checkout_basket(data_checkout_basket)
+        
+
+        # error to create checkout basket           
+        if checkout_basket is None:
+            resp = make_response(render_template('checkout/cart.html',
+                        success=False,
+                        errors=model_checkout_basket.errors,
+                        data_input=data))      
+            resp.mimetype = 'text/html'
+            return resp  
         
         # basket_products = query_basket.filter(
         #             ModelBasket.id == basket.id,

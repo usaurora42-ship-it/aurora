@@ -76,12 +76,12 @@ class ModelCheckoutBasket(db.Model):
     # validators
     def __val_create__(self):
         schema = '''
-        id:
+        basket_id:
             min: 1
             required: true
             type: integer
             coerce: integer
-        basket_id:
+        checkout_id:
             min: 1
             required: true
             type: integer

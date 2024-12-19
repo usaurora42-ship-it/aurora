@@ -27,46 +27,40 @@ class ModelCheckout(db.Model):
         autoincrement=True,
         nullable=False
     )  
-    uuid = db.Column(
-        db.String(36),
-        unique=True,
-        nullable=False
-    )  
+    # uuid = db.Column(
+    #     db.String(36),
+    #     unique=True,
+    #     nullable=False
+    # )  
     value = db.Column(
-        db.DECIMAL(15, 2),
-        nullable=False
+        db.DECIMAL(15, 2)
     )  
     amount = db.Column(
-        db.DECIMAL(15, 0),
-        nullable=False
+        db.DECIMAL(15, 0)
     ) 
     voucher = db.Column(
         db.DECIMAL(15, 2)
     ) 
     total = db.Column(
-        db.DECIMAL(15, 2),
-        nullable=False
+        db.DECIMAL(15, 2)
     ) 
     discount = db.Column(
         db.DECIMAL(15, 2)
     ) 
     subtotal = db.Column(
-        db.DECIMAL(15, 2),
-        nullable=False
+        db.DECIMAL(15, 2)
     ) 
     delivery = db.Column(
-        db.DECIMAL(15, 2),
-        nullable=False
+        db.DECIMAL(15, 2)
     ) 
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         default=StatusEnum.enabled,
-        server_default='enabled',
+        server_default='created',
         index=True
     )
     payment_code = db.Column(
-        db.String(40),
-        unique=True
+        db.String(40)
     )
     date_delivery = db.Column(
         db.DECIMAL(15, 3),
@@ -92,9 +86,22 @@ class ModelCheckout(db.Model):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
+            print("errors")
+            print(self.errors)
             return None
 
-        data = v.document        
+        data = v.document     
+   
+
+        for k in data:
+            setattr(self, k, data[k])  
+
+        try:
+            db.session.add(self)
+            db.session.commit()
+            return self
+        except Exception as e:
+            raise e 
         
 
     # Update Checkout
@@ -131,22 +138,29 @@ class ModelCheckout(db.Model):
     # Validators
     def __val_create__(self):
         schema = '''
-        checkout_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            required: true
-            type: integer        
+        value:
+            type: number
+            coerce: float
+        amount:
+            type: number
+            coerce: float
+        total:
+            type: number
+            coerce: float       
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __val_update__(self):
         schema = '''        
-        checkout_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            type: integer        
+        value:
+            type: number
+            coerce: float
+        amount:
+            type: number
+            coerce: float
+        total:
+            type: number
+            coerce: float         
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
