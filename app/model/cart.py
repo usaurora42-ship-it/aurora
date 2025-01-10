@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelCheckout(db.Model):
-    __tablename__ = 'checkout'
+class ModelCart(db.Model):
+    __tablename__ = 'cart'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -22,16 +22,16 @@ class ModelCheckout(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('checkout_id_seq'),
+        db.Sequence('cart_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
     )  
-    # uuid = db.Column(
-    #     db.String(36),
-    #     unique=True,
-    #     nullable=False
-    # )  
+    uuid = db.Column(
+         db.String(36),
+         unique=True,
+         nullable=False
+    )  
     value = db.Column(
         db.DECIMAL(15, 2)
     )  
@@ -56,7 +56,7 @@ class ModelCheckout(db.Model):
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         default=StatusEnum.enabled,
-        server_default='created',
+        server_default='enabled',
         index=True
     )
     payment_code = db.Column(
@@ -81,20 +81,21 @@ class ModelCheckout(db.Model):
 
     errors = None
 
-    # Create Checkout
-    def create_checkout(self, data):
+    # Create Cart
+    def create_cart(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
-            print("errors")
-            print(self.errors)
             return None
 
         data = v.document     
+
+        util = Util()
    
 
         for k in data:
             setattr(self, k, data[k])  
+            self.uuid = util.gen_uuid()
 
         try:
             db.session.add(self)
@@ -104,8 +105,8 @@ class ModelCheckout(db.Model):
             raise e 
         
 
-    # Update Checkout
-    def update_checkout(self, data):
+    # Update Cart
+    def update_cart(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_update__()):
             self.errors = v.errors
@@ -113,25 +114,25 @@ class ModelCheckout(db.Model):
 
         data = v.document
 
-        checkout_id = data.pop('id')
-        checkout = ModelCheckout.query.filter_by(
-            id=checkout_id,
+        cart_id = data.pop('id')
+        cart = ModelCart.query.filter_by(
+            id=cart_id,
             status=StatusEnum.enabled
         ).first()
 
-        if not checkout:
+        if not cart:
             self.errors = {
-                'checkout': ['checkout not found']
+                'cart': ['cart not found']
             }
             return None
 
         # pop data partner
         for k in data:
-            setattr(checkout, k, data[k])
+            setattr(cart, k, data[k])
 
         try:
             db.session.commit()
-            return checkout
+            return cart
         except Exception as e:
             raise e
     
@@ -165,4 +166,4 @@ class ModelCheckout(db.Model):
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Checkout %r>" % self.name
+        return "<Cart %r>" % self.name

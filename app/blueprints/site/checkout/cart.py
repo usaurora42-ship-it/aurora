@@ -1,18 +1,13 @@
 # encoding: utf-8
-import re
-import os 
-import base64
-import json
-from flask import Flask, render_template, make_response, send_file, request
+from flask import Flask, render_template, make_response, request
 from app.blueprints.site import SiteBlueprint
 
 from app import logging
 from app import environment
 from app.model.enum import StatusEnum
-from app.model.checkout import ModelCheckout
-from app.model.checkout_basket import ModelCheckoutBasket
-from app.model.checkout import ModelCheckout
+from app.model.cart import ModelCart
 from app.model.baskets import ModelBasket
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,78 +31,88 @@ LOGGER = logging.getLogger(__name__)
 #     data = request.form.to_dict() or {} 
 
     
-@SiteBlueprint.route('/checkout/cart')
+@SiteBlueprint.route('/cart/cart')
 def cart_get():
-    resp = make_response(render_template('checkout/cart.html',
+    resp = make_response(render_template('cart/cart.html',
         success=False,
         errors=None,
         data_input=None))
     resp.mimetype = 'text/html'
     return resp 
 
-@SiteBlueprint.route('/checkout/cart', methods=['POST'])
-def cart_post():  
+@SiteBlueprint.route('/cart/cart', methods=['POST'])
+def cart_post(cart_uuid):  
     data = request.form.to_dict() or {}    
 
-    # query checkout
-    query_checkout = ModelCheckout.query.with_entities(
-        ModelCheckout.id    
+    # query cart
+    query_cart = ModelCart.query.with_entities(
+        ModelCart.id    
     ).filter_by(
-        status=StatusEnum.enabled
+        status=StatusEnum.enabled,
+        uuid = cart_uuid
     )
 
-   
+    print("uuid_cart ")
+    print(cart_uuid)
     # instance models
-    model_checkout = ModelCheckout()  
+    model_cart = ModelCart()  
     
     
     try:       
         
         #
-        # GET OR CREATE CHECKOUT
+        # GET OR CREATE CART
         #
-        checkout = query_checkout.first()
-       
+        cart = query_cart.first()
+        print("cart")
+        print(cart)
         
-    # create checkout
-        #if checkout is None:
-        data_checkout = {
-            'amount': data['qtdBasket'],
-            'value': data['value_basket'],            
-            'total': float(data['qtdBasket']) * float(data['value_basket'])
-        }       
-      
-
-        checkout = model_checkout.create_checkout(data_checkout)
+    # create cart
+        if cart is None:
+            data_cart = {
+                'amount': data['qtdBasket'],
+                'value': data['value_basket'],            
+                'total': float(data['qtdBasket']) * float(data['value_basket'])
+            }   
+            cart = model_cart.create_cart(data_cart)
+        else:
+            data_cart = {
+                'amount': data['qtdBasket'],
+                'value': data['value_basket'],            
+                'total': float(data['qtdBasket']) * float(data['value_basket'])
+            }   
+            print("entrei aqui agora")
+            print(data_cart)
+            cart = model_cart.update_cart(data_cart)
 
         # errors
-        if checkout is None:
-            resp = make_response(render_template('checkout/cart.html',
+        if cart is None:
+            resp = make_response(render_template('cart/cart.html',
                         success=False,
-                        errors=model_checkout.errors,
+                        errors=model_cart.errors,
                         data_input=data))
             resp.mimetype = 'text/html'
             return resp 
 
         id_basket = request.values.get("id_basket")
 
-        model_checkout_basket = ModelCheckoutBasket()
+        model_cart_basket = ModelcartBasket()
 
 
-        data_checkout_basket = {
+        data_cart_basket = {
             'basket_id': id_basket,
-            'checkout_id': checkout.id
+            'cart_id': cart.id
         }
         
 
-        checkout_basket = model_checkout_basket.create_checkout_basket(data_checkout_basket)
+        cart_basket = model_cart_basket.create_cart_basket(data_cart_basket)
         
 
-        # error to create checkout basket           
-        if checkout_basket is None:
-            resp = make_response(render_template('checkout/cart.html',
+        # error to create cart basket           
+        if cart_basket is None:
+            resp = make_response(render_template('cart/cart.html',
                         success=False,
-                        errors=model_checkout_basket.errors,
+                        errors=model_cart_basket.errors,
                         data_input=data))      
             resp.mimetype = 'text/html'
             return resp  
@@ -141,7 +146,7 @@ def cart_post():
         #     return resp  
             
         # success response
-        resp = make_response(render_template('checkout/cart.html',                            
+        resp = make_response(render_template('cart/cart.html',                            
                                 success=True,
                                 errors=None))
         resp.mimetype = 'text/html'
