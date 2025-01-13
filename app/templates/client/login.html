@@ -1,8 +1,12 @@
-<html>
-    <head>
-        <title>LOGIN</title>
-    </head>
-    <body>
-        <h1>LOGIN</h1>
-    </body>
-</html>
+{% extends "layout.html" %}
+
+{% block y %}
+
+<h1> REGISTER </h1>
+
+<form action="/client/login" method="POST">
+	<input placeholder="Name" autocomplete="off" type="text" name="name">
+	<input type="submit" name="Register">
+</form>
+
+{% endblock %}

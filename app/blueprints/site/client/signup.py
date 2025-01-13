@@ -1,6 +1,6 @@
 # encoding: utf-8
 import re
-from flask import render_template, make_response, request
+from flask import render_template, make_response, request, session
 
 from app.blueprints.site import SiteBlueprint
 
@@ -15,6 +15,7 @@ from app.model.client_address import ModelClientAddress
 from app.model.users import ModelUser
 from app.model.countries import ModelCountry
 from app.model.enum import StatusEnum
+from flask_session import Session
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,6 +33,9 @@ def signup_get():
 @SiteBlueprint.route('/client/signup', methods=['POST'])
 def signup_post():
     data = request.form.to_dict() or {}
+
+    # record the user name
+    session["name"] = data['name']
 
     # query client
     query_client = ModelClient.query.with_entities(

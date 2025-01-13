@@ -3,6 +3,9 @@
 		{
 			"name": "amora-backend",
 			"path": "."
+		},
+		{
+			"path": "../tutorial_sessao"
 		}
 	],
 	"settings": {}

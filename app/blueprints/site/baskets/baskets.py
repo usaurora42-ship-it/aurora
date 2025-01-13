@@ -3,7 +3,7 @@ import re
 import os 
 import base64
 import json
-from flask import Flask, render_template, make_response, send_file, request, jsonify
+from flask import Flask, render_template, make_response, send_file, request, jsonify, session, redirect
 from app.blueprints.site import SiteBlueprint
 from os.path import join, dirname, realpath
 from werkzeug.utils import secure_filename
@@ -54,6 +54,16 @@ def baskets_get():
     products = products_get()
     return render_template('/baskets/baskets.html', descriptions=descriptions, products=products)
 
+
+# @SiteBlueprint.route('/baskets/baskets',  methods=['GET', 'POST'])
+# def login():
+#     if request.method == 'POST':
+
+#         session['username'] = request.form['username']
+        
+#         print("session['username'] ")
+#         print(session['username'] )
+#         return render_template('/baskets/baskets.html')
 
 @SiteBlueprint.route('/baskets/baskets', methods=['POST'])	
 def baskets_post():  

@@ -3,6 +3,8 @@ import os
 import yaml
 import sys
 import pytest
+import redis
+from os import environ
 from flask import Flask, request, jsonify, render_template
 from flask_cachebuster import CacheBuster
 from flask_restful import Api
@@ -23,7 +25,11 @@ from jwt.exceptions import ExpiredSignatureError, DecodeError, InvalidTokenError
 from functools import wraps
 import logging
 import logging.config
+from flask_session import Session
 from flask_cors import CORS
+# from flask_login import LoginManager
+from redis import Redis
+
 
 # APP
 environment = os.environ.get('FLASK_ENV', 'local-testing')
@@ -31,6 +37,14 @@ FlaskApp = Flask(__name__, static_folder='static')
 FlaskApp.wsgi_app = ReverseProxied(FlaskApp.wsgi_app)
 FlaskApp.wsgi_app = ProxyFix(FlaskApp.wsgi_app, x_for=1, x_host=1)
 CORS(FlaskApp)
+
+FlaskApp.config["SESSION_PERMANENT"] = False
+FlaskApp.config['SESSION_TYPE'] = 'redis'
+FlaskApp.config['SESSION_REDIS'] = Redis.from_url('redis://localhost:6379')
+# #SESSION_REDIS = redis.from_url(os.environ.get('SESSION_REDIS'))
+# #sess = Session()
+Session(FlaskApp)
+
 
 # Config
 FlaskApp.config.from_pyfile('config/default.cfg')
@@ -52,6 +66,11 @@ mail = Mail(FlaskApp)
 cache = Cache()
 cache.init_app(FlaskApp)
 
+
+# Session
+# login_manager = LoginManager(FlaskApp)
+# login_manager.init_app(FlaskApp)
+#sess.init_app(FlaskApp)
 
 # @FlaskApp.after_request
 # def add_header(response):

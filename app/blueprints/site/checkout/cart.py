@@ -6,7 +6,7 @@ from app import logging
 from app import environment
 from app.model.enum import StatusEnum
 from app.model.cart import ModelCart
-from app.model.baskets import ModelBasket
+from app.model.cart_basket import ModelCartBasket
 
 
 LOGGER = logging.getLogger(__name__)
@@ -96,7 +96,7 @@ def cart_post(cart_uuid):
 
         id_basket = request.values.get("id_basket")
 
-        model_cart_basket = ModelcartBasket()
+        model_cart_basket = ModelCartBasket()
 
 
         data_cart_basket = {
