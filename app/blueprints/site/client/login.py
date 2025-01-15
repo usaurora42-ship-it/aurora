@@ -1,11 +1,10 @@
 # encoding: utf-8
 import os
+import redis
 from flask import Flask, render_template, make_response, request, redirect, session
 from app.blueprints.site import SiteBlueprint
-from app import logging
 
 app = Flask(__name__)
-
 
 @SiteBlueprint.route("/")
 def index_login():
@@ -27,6 +26,13 @@ def login_get():
 def login_post():
     session["name"] = request.form.get("name")
     print(session["name"])
+    print(session)
+    r = redis.Redis("localhost", 6379)
+    for key in r.scan_iter():
+        print(key)
+
+ 
+
     resp = make_response(render_template('client/login.html',
         success=False,
         errors=None,
