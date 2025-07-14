@@ -56,6 +56,7 @@ def breakfast_details_get(id_basket_breakfast):
         ModelProduct.name,
         ModelProduct.description,
         ModelProduct.size,
+        ModelProduct.path,
         ModelUnit.description.label('unit_description')
     ).join(ModelBasketProduct).join(ModelBasket).filter_by(
         status=StatusEnum.enabled,

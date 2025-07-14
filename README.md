@@ -15,3 +15,5 @@ FLASK_ENV=development flask run
 
 # revisões pendentes
 https://www.arundhaj.com/blog/multiple-head-revisions-present-error-flask-migrate.html
+
+# pip list --outdated serve para listar todos os pacotes instalados em um ambiente Python que possuem versões mais recentes disponíveis no repositório do PyPI

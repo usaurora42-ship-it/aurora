@@ -47,7 +47,7 @@ def breakfast_get():
         ModelBasket.id
     ).filter_by(
         status=StatusEnum.enabled,
-        category_id=8 #reference basket
+        category_id=2 #reference basket
     ).order_by(ModelBasket.description)
 
     breakfast_baskets = query_breakfast.all()    

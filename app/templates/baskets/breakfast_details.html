@@ -124,7 +124,8 @@ Bootstrap 5 HTML CSS Template
                                                                     <h6 class="small-text">Contém:</h6>                                                                   
                                                                         {% for product in products %}                                                                       
                                                                             <br>
-                                                                            <h8 class="small-text">{{ product.description }} - </h8> 
+                                                                            <img src="{{ product.path }}" width="300px" style="width:300px;height:300px;" class="image"> 
+                                                                            <h8 class="small-text">{{ product.description }} - </h8>
                                                                             <h8 class="small-text">{{ product.size }} - </h8>                                                                              
                                                                             <h8 class="small-text">{{ product.unit_description }}</h8> 
                                                                         {% endfor %} 
