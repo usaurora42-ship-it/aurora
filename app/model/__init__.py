@@ -42,3 +42,5 @@ from app.model.users import ModelUser
 from app.model.category import ModelCategory
 from app.model.baskets import ModelBasket
 from app.model.basket_products import ModelBasketProduct
+from app.model.order import ModelOrder
+from app.model.order_item import ModelOrderItem
