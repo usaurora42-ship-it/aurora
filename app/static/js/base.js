@@ -59,3 +59,19 @@ function addCart(qtdBasket){
     qtdB.value = countBasket; 
     document.getElementById('qtdCart').value = qtdB.value;   
 }
+
+//Adiciona item ao carrinho (cookie)
+function addCart(idProduct, quantity = 1){ 
+      let cart = JSON.parse(getCookie('cart') || '{}');
+      if (cart[idProduct]){
+        cart[idProduct] += quantity;
+      } else {
+        cart[idProduct] = quantity;
+      }
+      document.cookie = `cart=${JSON.stringify(cart)};path=`;
+};
+
+function getCookie(name){
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+}

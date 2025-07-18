@@ -35,7 +35,7 @@ class ModelCart(db.Model):
     value = db.Column(
         db.DECIMAL(15, 2)
     )  
-    amount = db.Column(
+    quantity = db.Column(
         db.DECIMAL(15, 0)
     ) 
     voucher = db.Column(
