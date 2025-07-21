@@ -44,3 +44,4 @@ from app.model.baskets import ModelBasket
 from app.model.basket_products import ModelBasketProduct
 from app.model.order import ModelOrder
 from app.model.order_item import ModelOrderItem
+from app.model.session import ModelSession

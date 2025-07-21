@@ -27,57 +27,68 @@ class ModelCart(db.Model):
         autoincrement=True,
         nullable=False
     )  
-    uuid = db.Column(
-         db.String(36),
-         unique=True,
-         nullable=False
-    )  
-    value = db.Column(
-        db.DECIMAL(15, 2)
-    )  
+    # uuid = db.Column(
+    #      db.String(36),
+    #      unique=True,
+    #      nullable=False
+    # )  
+    product_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('products.id', onupdate='CASCADE'),
+        nullable=False
+    )
+    # value = db.Column(
+    #     db.DECIMAL(15, 2)
+    # )  
     quantity = db.Column(
         db.DECIMAL(15, 0)
     ) 
-    voucher = db.Column(
-        db.DECIMAL(15, 2)
-    ) 
-    total = db.Column(
-        db.DECIMAL(15, 2)
-    ) 
-    discount = db.Column(
-        db.DECIMAL(15, 2)
-    ) 
-    subtotal = db.Column(
-        db.DECIMAL(15, 2)
-    ) 
-    delivery = db.Column(
-        db.DECIMAL(15, 2)
-    ) 
+    # voucher = db.Column(
+    #     db.DECIMAL(15, 2)
+    # ) 
+    # total = db.Column(
+    #     db.DECIMAL(15, 2)
+    # ) 
+    # discount = db.Column(
+    #     db.DECIMAL(15, 2)
+    # ) 
+    # subtotal = db.Column(
+    #     db.DECIMAL(15, 2)
+    # ) 
+    # delivery = db.Column(
+    #     db.DECIMAL(15, 2)
+    # ) 
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         default=StatusEnum.enabled,
         server_default='enabled',
         index=True
     )
-    payment_code = db.Column(
-        db.String(40)
+    # payment_code = db.Column(
+    #     db.String(40)
+    # )
+    # date_delivery = db.Column(
+    #     db.DECIMAL(15, 3),
+    #     nullable=False,
+    #     default=lambda : format(datetime.now().timestamp(), '.3f')
+    # )
+    # time_slot = db.Column(
+    #     db.String(20),
+    #     unique=True,
+    #     nullable=False,
+    #     default=lambda : format(datetime.now().timestamp(), '.3f')
+    # )
+    # date_create = db.Column(
+    #     db.DECIMAL(15, 3),
+    #     nullable=False,
+    #     default=lambda : format(datetime.now().timestamp(), '.3f')
+    # ) 
+
+     # RelationShip
+    product = db.relationship(
+        'ModelProduct',
+        backref=db.backref('cart_product', lazy=True)
     )
-    date_delivery = db.Column(
-        db.DECIMAL(15, 3),
-        nullable=False,
-        default=lambda : format(datetime.now().timestamp(), '.3f')
-    )
-    time_slot = db.Column(
-        db.String(20),
-        unique=True,
-        nullable=False,
-        default=lambda : format(datetime.now().timestamp(), '.3f')
-    )
-    date_create = db.Column(
-        db.DECIMAL(15, 3),
-        nullable=False,
-        default=lambda : format(datetime.now().timestamp(), '.3f')
-    ) 
 
     errors = None
 

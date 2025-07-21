@@ -51,15 +51,16 @@ def cart_get():
               'value': product.value,
               'quantity': cart[str(product.id)],
               'subtotal': cart[str(product.id)] * product.value
-         })
+         })    
 
+    return jsonify(itens)
     
-    resp = make_response(render_template('cart/cart.html',
-        success=False,
-        errors=None,
-        data_input=None))
-    resp.mimetype = 'text/html'
-    return resp 
+    # resp = make_response(render_template('cart/cart.html',
+    #     success=False,
+    #     errors=None,
+    #     data_input=None))
+    # resp.mimetype = 'text/html'
+    # return resp 
 
 @SiteBlueprint.route('/cart/cart', methods=['POST'])
 def cart_post(cart_uuid):  
