@@ -19,7 +19,6 @@ class ModelOrderItem(db.Model):
         'mysql_collate': 'utf8mb4_unicode_ci',
         'sqlite_autoincrement': True
     }
-
     id = db.Column(
         INTEGER(unsigned=True),
         db.Sequence('order_item_id_seq'),
@@ -37,12 +36,12 @@ class ModelOrderItem(db.Model):
         db.ForeignKey('orders.id', onupdate='CASCADE'),
         nullable=False
     )
-    uuid = db.Column(
-          db.String(36),
-          unique=True,
-          nullable=False
-    ) 
-    qtd = db.Column(
+    # uuid = db.Column(
+    #       db.String(36),
+    #       unique=True,
+    #       nullable=False
+    # ) 
+    quantity = db.Column(
         db.Numeric,
         nullable=False,
     )  

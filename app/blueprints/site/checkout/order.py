@@ -7,13 +7,13 @@ from app import logging
 import json
 from app.model.enum import StatusEnum
 from app.model.order import ModelOrder
+from app.model.order_item import ModelOrderItem
 from app.model.session import ModelSession
-from app.model.cart import ModelCart
 
 LOGGER = logging.getLogger(__name__)
 
   
-@SiteBlueprint.route('/cart/checkout', methods=['POST'])
+@SiteBlueprint.route('/cart/order', methods=['POST'])
 def checkout_cart():
     data = request.form.to_dict() or {} 
 
@@ -31,9 +31,16 @@ def checkout_cart():
         status=StatusEnum.enabled
     )
 
-    # query cart
-    query_cart = ModelCart.query.with_entities(
-        ModelCart.id
+    # query order
+    query_order = ModelOrder.query.with_entities(
+        ModelOrder.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    )
+
+    # query order itens
+    query_order_item = ModelOrderItem.query.with_entities(
+        ModelOrderItem.id
     ).filter_by(
         status=StatusEnum.enabled
     )
@@ -41,7 +48,8 @@ def checkout_cart():
 
     #instance model session
     model_session = ModelSession()
-    model_cart = ModelCart() 
+    model_order = ModelOrder() 
+    model_order_item = ModelOrderItem() 
 
     try:
          # create session
@@ -51,37 +59,38 @@ def checkout_cart():
         session = ModelSession(user_id=session['user_id'], date_create=datetime.now())
 
         #
-        # GET OR CREATE CART
+        # GET OR CREATE ORDER
         #
-        cart = query_cart.first()
+        order = query_order.first()
+        order_item = query_order_item.first()
 
        
-    # create cart
-        #if cart is None:
+    # create order
+        #if order is None:
         for product_id, quantity in cart.itens():
-            data_cart = {
+            data_order_item = {
                 'product_id': data['product_id'],
                 'quantity': data['quantity']
             }        
            
         
-        product = model_product.create_product(data_product)
+        order_item = model_order_item.create_order_item(data_order_item)
 
-        # error to create product
+        # error to create order item
            
-        if product is None:
-            resp = make_response(render_template('products/products.html',
+        if order_item is None:
+            resp = make_response(render_template('orders/orders.html',
                         success=False,
-                        errors=model_product.errors,
+                        errors=model_order_item.errors,
                         data_input=data))      
             resp.mimetype = 'text/html'
             return resp  
             
             
         # success response
-        resp = make_response(render_template('products/products.html',                            
+        resp = make_response(render_template('orders/orders.html',                            
                                 success=True,
-                                errors=None,descriptions=descriptions, units=units))
+                                errors=None))
         resp.mimetype = 'text/html'
         return resp
         

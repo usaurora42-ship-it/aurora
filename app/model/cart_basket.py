@@ -30,9 +30,9 @@ class ModelCartBasket(db.Model):
         db.ForeignKey('baskets.id', onupdate='CASCADE'),
         nullable=False
     )
-    cart_id = db.Column(
+    order_id = db.Column(
         INTEGER(unsigned=True),
-        db.ForeignKey('cart.id', onupdate='CASCADE'),
+        db.ForeignKey('orders.id', onupdate='CASCADE'),
         nullable=False
     )
     date_create = db.Column(
