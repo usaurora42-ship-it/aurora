@@ -75,16 +75,23 @@ Bootstrap 5 HTML CSS Template
                                     <li class="nav-item">
                                         <a class="nav-link" href="/#section_5">Contato</a>
                                     </li>
-                                </ul>
+                                
 
-                                <div class="ms-lg-3">
-                                    <a class="btn custom-btn custom-border-btn" href="cadastro">
-                                        <strong class="small-text">Carrinho</strong>                                  
-                                        <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                    
-                                        <input class="circle align-items-center" id="qtdCart" name="qtdCart"></input>                                    
-                                        <!-- <i class="bi-arrow-up-right ms-2"></i> -->
-                                    </a>                                
-                                </div>
+
+                                    <div class="ms-lg-3">
+                                        <a class="btn custom-btn custom-border-btn" href="cadastro">
+                                            <strong class="small-text">Carrinho</strong>                                  
+                                            <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color" width="20" height="20">                                    
+                                            <input class="circle align-items-center" id="qtdCart" name="qtdCart"></input>                                    
+                                            <!-- <i class="bi-arrow-up-right ms-2"></i> -->
+                                        </a>                                
+                                    </div>   
+                                    <div class="mx-auto">
+                                        <a class="nav-link" href="/cadastro">Cadastro</a>
+                                        <a class="nav-link" href="/login">Login</a>
+                                        <a class="nav-link" href="/logout">Logout</a> 
+                                </div>    
+                                </ul>                         
                             </div>
                         </div>
                     </nav>
@@ -92,12 +99,12 @@ Bootstrap 5 HTML CSS Template
                 <section>
                 <footer class="site-footer">
                     <div class="container">
-                        <div class="row">
+                        <div class="row">                            
                             <div class="col-lg-16 col-12 mx-auto">
                                 <div class="booking-form-wrap-breakfast-details">
                                     <div class="row"> 
                                         <div class="col-lg-20 col-20 p-0">
-                                            <form class="custom-form booking-form" name="form" action="/checkout/cart" method="POST" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
+                                            <form class="custom-form booking-form" name="form" role="form" enctype="multipart/form-data" id="breakfast_details">                                            
                                                 
                                                     <div class="row">
                                                         <div class="booking-form-body">                                                      
@@ -128,6 +135,11 @@ Bootstrap 5 HTML CSS Template
                                                                             <h8 class="small-text">{{ product.description }} - </h8>
                                                                             <h8 class="small-text">{{ product.size }} - </h8>                                                                              
                                                                             <h8 class="small-text">{{ product.unit_description }}</h8> 
+                                                                            <h8 class="small-text">{{ product.value }}</h8>   
+                                                                            <h8 class="small-text">{{ product.id }}</h8>
+                                                                            <button class="btn btn-primary" onclick="addCart('{{ product.id }}')">                                                                                 
+                                                                                Adicione ao carrinho
+                                                                            </button>                                                                          
                                                                         {% endfor %} 
 
                                                                         <br>
@@ -136,15 +148,15 @@ Bootstrap 5 HTML CSS Template
                                                                 
                                                                 <!-- <div class="row"> -->
                                                                                                             
-                                                                    <p>
+                                                               <!--      <p>
                                                                         <img src="{{ url_for('static', filename='images/shopping/minus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="remBasket(document.form.qtdBasket.value)" type="button">                                                                 
                                                                         <input class="small-text" value="0" maxlength="3" size="3" id="qtdBasket" name="qtdBasket"></input>                                                                            
                                                                         <img src="{{ url_for('static', filename='images/shopping/plus.png') }}" class="custom-btn-bg-hover-color" width="20" height="20" onclick="addBasket(document.form.qtdBasket.value)" type="button">                                                                                     
-                                                                        <!-- <button type="submit" class="btn custom-btn custom-border-btn" onclick="getProducts();">Enviar</button>  -->
-                                                                        <button class="btn custom-btn custom-border-btn" name="addCart" href="/checkout/cart" onclick="addCart(document.form.qtdBasket.value);" type="submit">
+                                                                         <button type="submit" class="btn custom-btn custom-border-btn" onclick="getProducts();">Enviar</button>  -->
+                                                                       <!--  <button class="btn custom-btn custom-border-btn" name="addCart" href="/checkout/cart" onclick="addCart(document.form.qtdBasket.value);" type="submit">
                                                                             Adicione ao carrinho
                                                                         </button>
-                                                                    </p>   
+                                                                    </p>   -->  
                                                                     <!-- <p>     
                                                                         <h6 class="about-zip-code">Calcule frete e prazo da entrega para o seu endereço.</h6>     
                                                                         <div class="col-lg-6 col-12">                                                                        
@@ -158,7 +170,8 @@ Bootstrap 5 HTML CSS Template
                                                                                                                     
                                                                 <!-- </div>     -->
                                                             </div>
-                                                                                                                
+                                                            <button class="btn btn-success" onclick="showCart()">Ver Carrinho</button>
+                                                            <div id="cart" class="mt-3"></div>                                                
                                                         </div>
                                                     </div>
                                                 </form>
@@ -320,6 +333,5 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/base.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-        <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
     </body>
 </html>
