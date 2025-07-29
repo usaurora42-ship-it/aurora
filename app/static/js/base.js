@@ -62,7 +62,6 @@ function remBasket(qtdBasket){
 
 //Adiciona item ao carrinho (cookie)
 function addCart(id, quantity = 1){ 
-      alert(id);
       let cart = JSON.parse(getCookie('cart') || '{}');
       cart[id] = (cart[id] || 0) + 1; 
       /* if (cart[idProduct]){
@@ -80,24 +79,26 @@ function getCookie(name){
 }
 
 function showCart(){
-    fetch('/cart')
+    fetch('/cart/cart')
     .then(resp => resp.json())
     .then(data => {
         const cart = document.getElementById('cart');
+        alert(data.length)
         if (data.length === 0){
             cart.innerHTML = '<div class="alert alert-warning">Carrinho vazio</div>';
             return;
         }
 
-        let html = '<h3>Carrinho</h><ul class="list-group">';
+        let html = '<h3>Carrinho</h3><ul class="list-group">';
         let total = 0;
         data.forEach(item => {
-            html += `<li class="list-group-item d-flex justify-content-between aling-items-center">
-            ${item.name} x ${item.quantity}
-            <span class="badge bg-primary">R$ ${item.subtotal.toFixed(2)}</span>
-            </li>`;
+            html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+              ${item.name} x ${item.quantity};  
+              <span class="badge bg-primary">R$ ${item.subtotal.toFixed(2)}</span>  
+            </li>`;            
             total += item.subtotal;
         });
+        alert(total);
         html += `</ul><h4 class="mt-3">Total: R$ ${total.toFixed(2)}</h4>`;
         cart.innerHTML = html;
     });
