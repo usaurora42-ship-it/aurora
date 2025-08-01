@@ -33,8 +33,7 @@ def descriptions_get():
         ModelCategory.id,
         ModelCategory.description
     ).filter_by(
-        status=StatusEnum.enabled#,
-        #category_type=1
+        status=StatusEnum.enabled
     ).order_by(ModelCategory.description)
 
     descriptions = query_category.all()
@@ -54,11 +53,26 @@ def units_get():
 
     return units
 
+def products_get():    
+    # query products    
+    query_products = ModelProduct.query.with_entities(
+        ModelProduct.id,
+        ModelProduct.name
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).order_by(ModelProduct.description)
+
+    products = query_products.all()
+
+    return products
+
+
 @SiteBlueprint.route('/products/products', methods=['GET'])
-def products_get():
+def product_get():
     descriptions = descriptions_get()
     units = units_get()
-    return render_template('/products/products.html', descriptions=descriptions, units=units)
+    products = products_get()
+    return render_template('/products/products.html', descriptions=descriptions, units=units, products=products)
     # print(descriptions)
         #return render_template('product/product.html',descriptions=descriptions)
 
@@ -86,6 +100,7 @@ def products_post():
     directory_path = os.path.join(app.config['UPLOAD_PATH'], file.filename)
 
     descriptions = descriptions_get()
+    products = products_get()  
     units = units_get()
     #print(descriptions)
     #print(units)
@@ -93,7 +108,8 @@ def products_post():
 
     # query product
     query_product = ModelProduct.query.with_entities(
-        ModelProduct.description
+        ModelProduct.description,
+        ModelProduct.id
     ).filter_by(
         status=StatusEnum.enabled
     )
@@ -127,6 +143,11 @@ def products_post():
         #
         product = query_product.first()
 
+        substring = "\static"
+        string = directory_path      
+        n = string.find(substring)
+        path = string[n:].replace("\\","/") 
+
        
     # create product
         #if product is None:
@@ -136,7 +157,7 @@ def products_post():
             'category_id': data['category'],                
             'value': data['value'],
             'size': data['size'],
-            'unit_id': data['unit'],
+            'unit_id': data['unit'],            
             'path': directory_path
         }        
            
@@ -157,7 +178,7 @@ def products_post():
         # success response
         resp = make_response(render_template('products/products.html',                            
                                 success=True,
-                                errors=None,descriptions=descriptions, units=units))
+                                errors=None,descriptions=descriptions, units=units, products=products))
         resp.mimetype = 'text/html'
         return resp
         

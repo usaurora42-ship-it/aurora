@@ -32,11 +32,6 @@ class ModelCategory(db.Model):
         unique=True,
         nullable=False
     )  
-    category_type = db.Column(
-        INTEGER(unsigned=True), #1 products - 2 basket
-        default=1,
-        nullable=False
-    )
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         server_default='enabled',

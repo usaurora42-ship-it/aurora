@@ -28,6 +28,29 @@
             function RefreshPage() {
                 window.open("/products/products", "_self");
             }
+            function addProducts(){                  
+                var div = '';               
+                div =  '<select class="form-control" name="product" id="product">'
+                        + '<option value="product" selected>Produto</option>'
+                        + '{% for product in products %}'
+                        + '<option value="{{ product.id }}">{{ product.name }}</option>'
+                        + '{% endfor %}' 
+                        + '</select>';
+                        
+                $('#listBaskets').append(div);              
+          
+            };
+            function getProducts(){
+                let inputs = document.getElementsByName("product");
+                let dados = [];
+                for (i = 0; i < inputs.length; i++) {
+                    dados += inputs[i].value; 
+                    if (i < inputs.length - 1) {
+                        dados += ',';
+                    }                     
+                }           
+       
+           };   
         </script>
 
         <!--

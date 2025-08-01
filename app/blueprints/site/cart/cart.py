@@ -12,7 +12,7 @@ from app.model.products import ModelProduct
 LOGGER = logging.getLogger(__name__)
 
     
-@SiteBlueprint.route('/cart/cart')
+@SiteBlueprint.route('/cart')
 def cart_get():
     cart_cookie = request.cookies.get('cart')
     if not cart_cookie:

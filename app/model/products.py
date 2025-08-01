@@ -37,7 +37,7 @@ class ModelProduct(db.Model):
         db.ForeignKey('units.id', onupdate='CASCADE'),
         nullable=False
     )
-    category_id = db.Column(
+    cateory_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('categories.id', onupdate='CASCADE'),
         nullable=False
