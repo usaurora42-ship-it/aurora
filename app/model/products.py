@@ -37,11 +37,6 @@ class ModelProduct(db.Model):
         db.ForeignKey('units.id', onupdate='CASCADE'),
         nullable=False
     )
-    cateory_id = db.Column(
-        INTEGER(unsigned=True),
-        db.ForeignKey('categories.id', onupdate='CASCADE'),
-        nullable=False
-    )
     description = db.Column(
         db.String(80),
         nullable=False
@@ -73,12 +68,7 @@ class ModelProduct(db.Model):
     unit = db.relationship(
         'ModelUnit',
         backref=db.backref('unit_product', lazy=True)
-    )    
-
-    category = db.relationship(
-        'ModelCategory',
-        backref=db.backref('category_product', lazy=True)
-    )   
+    )         
   
     # Create Product    
     def create_product(self, data):              
@@ -142,12 +132,6 @@ class ModelProduct(db.Model):
             min: 1
             required: true
             type: integer
-        category_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            required: true
-            type: integer  
         name:
             maxlength: 40
             required: true
@@ -176,12 +160,6 @@ class ModelProduct(db.Model):
             max: 65535
             min: 1
             type: integer  
-        category_id:
-            coerce: integer
-            max: 65535
-            min: 1
-            required: true
-            type: integer 
         name:
             maxlength: 40
             required: true

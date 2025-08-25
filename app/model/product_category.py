@@ -25,10 +25,6 @@ class ModelProductCategory(db.Model):
         autoincrement=True,
         nullable=False
     )
-    description = db.Column(
-        db.String(80),
-        nullable=False
-    )
     product_id = db.Column(
         INTEGER(unsigned=True),
         db.ForeignKey('products.id', onupdate='CASCADE'),
@@ -90,10 +86,6 @@ class ModelProductCategory(db.Model):
             required: true
             type: integer
             coerce: integer
-        description:
-            maxlength: 80
-            required: true
-            type: string
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 

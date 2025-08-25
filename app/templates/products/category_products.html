@@ -64,7 +64,7 @@ Bootstrap 5 HTML CSS Template
                                 </li>
 
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/baskets/breakfast">Nossas Cestas</a>
+                                    <a class="nav-link" href="/products/category_products">Nossos Produtos</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -95,10 +95,10 @@ Bootstrap 5 HTML CSS Template
                             <div class="booking-form-wrap">
                                 <div class="row"> 
                                     <div class="col-lg-20 col-20 p-0">
-                                        <form class="custom-form booking-form" action="/baskets/breakfast_details" method="POST" role="form" enctype="multipart/form-data" id="breakfast">
+                                        <form class="custom-form booking-form" action="/products/category_products" method="POST" role="form" enctype="multipart/form-data" id="category_products">
                                             
                                                 <div class="text-center mb-6 pb-lg-4">
-                                                    <h4 class="small-text">Cestas de Café da Manhã</h4>
+                                                    <h4 class="small-text">Lista de Produtos</h4>
                                                 </div>
                                                 <div class="booking-form-body">
                                                     <!-- <div class="row">	
@@ -120,7 +120,7 @@ Bootstrap 5 HTML CSS Template
                                                             <ul>
                                                                 <div class="col-lg-20 col-20">                                                                     
                                                                     {% for post in items %}    
-                                                                        <a class="nav-link" style="width:200px;height:250;" href="/baskets/{{ post.id }}/breakfast_details">  
+                                                                        <a class="nav-link" style="width:200px;height:250;" href="/products/category_products">  
                                                                             <img src="{{ post.path }}" style="width:200px;height:200px;" class="image">   
                                                                                                                                                 
                                                                             <h8 class="small-text" >{{ post.description }}</h8>                                                                
@@ -296,6 +296,5 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/base.js') }}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-        <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
     </body>
 </html>

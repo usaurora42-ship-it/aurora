@@ -11,6 +11,7 @@ from app import logging
 from app import environment
 from app.model.products import ModelProduct
 from app.model.category import ModelCategory
+from app.model.product_category import ModelProductCategory
 from app.model.units import ModelUnit
 from app.model.enum import StatusEnum
 
@@ -27,7 +28,7 @@ app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\products'
 # print(os.path.dirname(os.path.abspath(__file__)))
 # print(dirname(dirname(dirname(os.path.abspath(__file__)))))
 
-def descriptions_get():    
+def categories_get():    
     # query categories    
     query_category = ModelCategory.query.with_entities(
         ModelCategory.id,
@@ -36,9 +37,9 @@ def descriptions_get():
         status=StatusEnum.enabled
     ).order_by(ModelCategory.description)
 
-    descriptions = query_category.all()
+    categories = query_category.all()
 
-    return descriptions
+    return categories
 
 def units_get():    
     # query units
@@ -69,10 +70,10 @@ def products_get():
 
 @SiteBlueprint.route('/products/products', methods=['GET'])
 def product_get():
-    descriptions = descriptions_get()
+    categories = categories_get()
     units = units_get()
     products = products_get()
-    return render_template('/products/products.html', descriptions=descriptions, units=units, products=products)
+    return render_template('/products/products.html', categories=categories, units=units, products=products)
     # print(descriptions)
         #return render_template('product/product.html',descriptions=descriptions)
 
@@ -99,7 +100,7 @@ def products_post():
     file.save(os.path.join(app.config['UPLOAD_PATH'], file.filename))
     directory_path = os.path.join(app.config['UPLOAD_PATH'], file.filename)
 
-    descriptions = descriptions_get()
+    categories = categories_get()
     products = products_get()  
     units = units_get()
     #print(descriptions)
@@ -109,6 +110,13 @@ def products_post():
     # query product
     query_product = ModelProduct.query.with_entities(
         ModelProduct.description,
+        ModelProduct.id
+    ).filter_by(
+        status=StatusEnum.enabled
+    )
+
+    # query categories
+    query_categories = ModelProductCategory.query.with_entities(
         ModelProduct.id
     ).filter_by(
         status=StatusEnum.enabled
@@ -134,6 +142,7 @@ def products_post():
     
     # instance models
     model_product = ModelProduct()  
+    model_product_category = ModelProductCategory()
     
     try:
         
@@ -142,26 +151,27 @@ def products_post():
         # GET OR CREATE PRODUCT
         #
         product = query_product.first()
-
+        product_category = query_categories.first()
+        
         substring = "\static"
         string = directory_path      
         n = string.find(substring)
-        path = string[n:].replace("\\","/") 
+        directory_path = string[n:].replace("\\","/") 
+        
 
        
     # create product
         #if product is None:
         data_product = {
             'name': data['name'],
-            'description': data['description'],
-            'category_id': data['category'],                
+            'description': data['description'],                           
             'value': data['value'],
             'size': data['size'],
             'unit_id': data['unit'],            
             'path': directory_path
-        }        
-           
-        
+        }     
+
+
         product = model_product.create_product(data_product)
 
         # error to create product
@@ -173,12 +183,32 @@ def products_post():
                         data_input=data))      
             resp.mimetype = 'text/html'
             return resp  
-            
+
+        print('entrei')
+        print(product.id)
+        print(data['category'])
+        print("pathh01")
+        print(directory_path)
+
+        data_product_category = {
+             'product_id': product.id,
+             'category_id': data['category']
+        }           
+
+        product_category = model_product_category.create_product_category(data_product_category) 
+        
+        if product_category is None:
+            resp = make_response(render_template('products/products.html',
+                        success=False,
+                        errors=model_product_category.errors,
+                        data_input=data))      
+            resp.mimetype = 'text/html'
+            return resp  
             
         # success response
         resp = make_response(render_template('products/products.html',                            
                                 success=True,
-                                errors=None,descriptions=descriptions, units=units, products=products))
+                                errors=None,categories=categories, units=units, products=products))
         resp.mimetype = 'text/html'
         return resp
         
