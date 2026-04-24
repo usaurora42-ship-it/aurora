@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Amora Platter Box - Carrinho</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
+
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
+
+        <style>
+            /* ── Gradiente elegante de fundo ── */
+            html, body {
+                min-height: 100%;
+            }
+            body.reservation-page {
+                background:
+                    radial-gradient(ellipse at 0% 0%, rgba(180,120,60,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(120,70,30,0.22) 0%, transparent 55%),
+                    radial-gradient(ellipse at 60% 30%, rgba(80,40,15,0.15) 0%, transparent 50%),
+                    linear-gradient(160deg, #1a1208 0%, #12100a 40%, #0e0c08 70%, #16110a 100%) !important;
+                background-attachment: fixed !important;
+                background-size: cover !important;
+                background-repeat: no-repeat !important;
+            }
+            /* Remove imagem de fundo injetada pelo vegas/custom.js */
+            body.reservation-page::before {
+                display: none !important;
+            }
+            .booking-section {
+                background: transparent !important;
+            }
+            /* Textura sutil de grain */
+            body.reservation-page::after {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0.5;
+            }
+            main { position: relative; z-index: 1; }
+
+            .cart-badge {
+                position: absolute;
+                top: -6px; right: -8px;
+                background: #e74c3c;
+                color: #fff;
+                font-size: 0.65rem;
+                font-weight: 700;
+                border-radius: 50%;
+                width: 18px; height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .cart-btn-wrap { position: relative; display: inline-block; }
+
+            .cart-wrap {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 16px;
+                overflow: hidden;
+            }
+            .cart-table { width: 100%; border-collapse: collapse; }
+            .cart-table th {
+                background: rgba(255,255,255,0.07);
+                color: rgba(255,255,255,0.5);
+                font-size: 0.72rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                padding: 14px 20px;
+                border: none;
+                text-align: left;
+            }
+            .cart-table th.text-end { text-align: right; }
+            .cart-table th.text-center { text-align: center; }
+            .cart-table td {
+                padding: 16px 20px;
+                border-top: 1px solid rgba(255,255,255,0.06);
+                color: #ccc;
+                vertical-align: middle;
+            }
+            .cart-table tbody tr:hover { background: rgba(255,255,255,0.025); }
+
+            .cart-product-img {
+                width: 68px; height: 68px;
+                object-fit: cover;
+                border-radius: 10px;
+                flex-shrink: 0;
+            }
+            .cart-product-img-ph {
+                width: 68px; height: 68px;
+                background: rgba(255,255,255,0.07);
+                border-radius: 10px;
+                display: flex; align-items: center; justify-content: center;
+                color: rgba(255,255,255,0.2);
+                font-size: 1.4rem;
+                flex-shrink: 0;
+            }
+            .cart-product-name { color: #fff; font-weight: 600; font-size: 0.92rem; }
+            .cart-product-desc { color: #777; font-size: 0.76rem; margin-top: 2px; }
+
+            .qty-control {
+                display: inline-flex;
+                align-items: center;
+                background: rgba(255,255,255,0.07);
+                border: 1px solid rgba(255,255,255,0.12);
+                border-radius: 8px;
+                overflow: hidden;
+            }
+            .qty-btn {
+                background: none; border: none; color: #fff;
+                width: 32px; height: 34px;
+                cursor: pointer; font-size: 1rem;
+                display: flex; align-items: center; justify-content: center;
+                transition: background 0.15s;
+            }
+            .qty-btn:hover { background: rgba(255,255,255,0.1); }
+            .qty-input {
+                width: 40px; background: none; border: none;
+                color: #fff; text-align: center;
+                font-size: 0.88rem; font-weight: 600;
+                padding: 0;
+                -moz-appearance: textfield;
+            }
+            .qty-input::-webkit-outer-spin-button,
+            .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+            .qty-input:focus { outline: none; }
+
+            .btn-remove {
+                background: none; border: none;
+                color: rgba(255,100,100,0.5);
+                padding: 6px 8px; border-radius: 6px;
+                cursor: pointer; font-size: 0.95rem;
+                transition: color 0.2s, background 0.2s;
+            }
+            .btn-remove:hover { color: #ff6b6b; background: rgba(255,100,100,0.1); }
+
+            .cart-footer {
+                padding: 14px 20px;
+                border-top: 1px solid rgba(255,255,255,0.06);
+                display: flex; justify-content: flex-end;
+            }
+            .btn-clear {
+                background: none;
+                border: 1px solid rgba(255,100,100,0.25);
+                color: rgba(255,100,100,0.6);
+                border-radius: 8px; padding: 6px 16px;
+                font-size: 0.8rem; cursor: pointer;
+                transition: all 0.2s;
+            }
+            .btn-clear:hover { background: rgba(255,100,100,0.1); border-color: #ff6b6b; color: #ff6b6b; }
+
+            .cart-summary {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 16px;
+                padding: 26px;
+                position: sticky; top: 20px;
+            }
+            .summary-title {
+                color: rgba(255,255,255,0.5);
+                font-size: 0.72rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                padding-bottom: 16px;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+                margin-bottom: 18px;
+            }
+            .summary-row {
+                display: flex; justify-content: space-between;
+                color: #888; font-size: 0.85rem; margin-bottom: 8px;
+            }
+            .summary-row span:last-child { color: #bbb; }
+            .summary-total {
+                display: flex; justify-content: space-between;
+                color: #fff; font-weight: 700; font-size: 1.1rem;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-top: 16px; margin-top: 10px;
+            }
+            .btn-checkout {
+                display: block; width: 100%;
+                background: #fff; color: #111;
+                border: none; border-radius: 10px;
+                padding: 13px; font-weight: 700; font-size: 0.92rem;
+                text-align: center; text-decoration: none;
+                margin-top: 20px;
+                transition: background 0.2s, transform 0.15s;
+            }
+            .btn-checkout:hover { background: #eee; transform: translateY(-1px); color: #111; }
+            .btn-continue {
+                display: block; width: 100%;
+                background: rgba(255,255,255,0.06);
+                color: #aaa; border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 10px; padding: 11px; font-size: 0.85rem;
+                text-align: center; text-decoration: none; margin-top: 10px;
+                transition: background 0.2s;
+            }
+            .btn-continue:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+            .empty-cart { text-align: center; padding: 80px 20px; }
+            .empty-cart i { font-size: 3.5rem; color: rgba(255,255,255,0.1); display: block; margin-bottom: 20px; }
+            .empty-cart h5 { color: #fff; margin-bottom: 8px; }
+            .empty-cart p { color: #666; font-size: 0.88rem; }
+
+            .page-title { color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+            .page-subtitle { color: #666; font-size: 0.85rem; margin-bottom: 32px; }
+        </style>
+    </head>
+    
+    <body class="reservation-page">
+        <main>
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                        Amora
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item"><a class="nav-link" href="/#section_1">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_2">Sobre Nós</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_4">Avaliações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_5">Contato</a></li>
+                        </ul>
+                        <div class="ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
+                                <strong class="small-text">Carrinho</strong>
+                                <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
+                                {% set total_items = items | sum(attribute='quantity') %}
+                                {% if total_items > 0 %}
+                                <span class="cart-badge">{{ total_items }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <section class="booking-section section-padding">
+                <div class="container">
+                    <div class="text-center">
+                        <h4 class="page-title">Meu Carrinho</h4>
+                        <p class="page-subtitle">
+                            {% if items %}{{ items | sum(attribute='quantity') }} item(ns) selecionado(s)
+                            {% else %}Nenhum item adicionado ainda{% endif %}
+                        </p>
+                    </div>
+
+                    {% if items %}
+                    <div class="row g-4 align-items-start">
+                        <div class="col-lg-8 col-12">
+                            <div class="cart-wrap">
+                                <table class="cart-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th class="text-center">Preço</th>
+                                            <th class="text-center">Qtd.</th>
+                                            <th class="text-end">Subtotal</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-3">
+                                                    {% if item.path %}
+                                                    <img src="{{ item.path }}" class="cart-product-img" alt="{{ item.name }}">
+                                                    {% else %}
+                                                    <div class="cart-product-img-ph"><i class="bi-box"></i></div>
+                                                    {% endif %}
+                                                    <div>
+                                                        <div class="cart-product-name">{{ item.name }}</div>
+                                                        <div class="cart-product-desc">{{ item.description }}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">R$ {{ "%.2f"|format(item.value) }}</td>
+                                            <td class="text-center">
+                                                <form action="/cart/update/{{ item.id }}" method="POST" id="form-{{ item.id }}">
+                                                    <div class="qty-control">
+                                                        <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, -1)">−</button>
+                                                        <input type="number" name="quantity" value="{{ item.quantity }}"
+                                                               min="1" max="99" class="qty-input" id="qty-{{ item.id }}"
+                                                               onchange="submitQty({{ item.id }})">
+                                                        <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, 1)">+</button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="text-end"><strong style="color:#fff;">R$ {{ "%.2f"|format(item.subtotal) }}</strong></td>
+                                            <td class="text-center">
+                                                <form action="/cart/remove/{{ item.id }}" method="POST" class="d-inline">
+                                                    <button type="submit" class="btn-remove" title="Remover">
+                                                        <i class="bi-x-lg"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <div class="cart-footer">
+                                    <form action="/cart/clear" method="POST">
+                                        <button type="submit" class="btn-clear"
+                                            onclick="return confirm('Deseja limpar todo o carrinho?')">
+                                            <i class="bi-trash me-1"></i> Limpar carrinho
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <a href="/products/category_products" style="color:#666;font-size:0.82rem;text-decoration:none;">
+                                    <i class="bi-arrow-left me-1"></i> Continuar comprando
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-12">
+                            <div class="cart-summary">
+                                <div class="summary-title">Resumo do Pedido</div>
+                                {% for item in items %}
+                                <div class="summary-row">
+                                    <span>{{ item.name }} <span style="color:#555;">×{{ item.quantity }}</span></span>
+                                    <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
+                                </div>
+                                {% endfor %}
+                                <div class="summary-total">
+                                    <span>Total</span>
+                                    <span>R$ {{ "%.2f"|format(total) }}</span>
+                                </div>
+                                <a href="/cart/checkout" class="btn-checkout">
+                                    Finalizar Pedido <i class="bi-arrow-right ms-1"></i>
+                                </a>
+                                <a href="/products/category_products" class="btn-continue">
+                                    Continuar Comprando
+                                </a>
+                                <div class="text-center mt-3">
+                                    <small style="color:#444;font-size:0.75rem;">
+                                        <i class="bi-shield-check me-1"></i> Compra segura
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="empty-cart">
+                        <i class="bi-cart-x"></i>
+                        <h5>Seu carrinho está vazio</h5>
+                        <p>Adicione produtos para continuar</p>
+                        <a href="/products/category_products" class="btn custom-btn mt-4">
+                            Ver Produtos <i class="bi-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-12 me-auto">
+                            <em class="text-white d-block mb-4">Onde nos encontrar?</em>
+                            <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
+                            <ul class="social-icon mt-4">
+                                <li class="social-icon-item"><a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a></li>
+                                <li class="social-icon-item"><a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a></li>
+                                <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                            <em class="text-white d-block mb-4">Contato</em>
+                            <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a></p>
+                            <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a></p>
+                        </div>
+                        <div class="col-lg-5 col-12">
+                            <em class="text-white d-block mb-4">Horário de funcionamento.</em>
+                            <ul class="opening-hours-list">
+                                <li class="d-flex">Segunda - Sexta<span class="underline"></span><strong>7:00 - 19:00</strong></li>
+                                <li class="d-flex">Sábado<span class="underline"></span><strong>8:00 - 12:00</strong></li>
+                                <li class="d-flex">Domingo<span class="underline"></span><strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-8 col-12 mt-4">
+                            <p class="copyright-text mb-0">Copyright © Amora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+
+        <script>
+            function changeQty(productId, delta) {
+                const input = document.getElementById('qty-' + productId);
+                let val = parseInt(input.value) + delta;
+                if (val < 1) val = 1;
+                if (val > 99) val = 99;
+                input.value = val;
+                submitQty(productId);
+            }
+            function submitQty(productId) {
+                document.getElementById('form-' + productId).submit();
+            }
+        </script>
+    </body>
+</html>

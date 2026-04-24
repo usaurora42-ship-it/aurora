@@ -36,11 +36,12 @@ environment = os.environ.get('FLASK_ENV', 'local-testing')
 FlaskApp = Flask(__name__, static_folder='static')
 FlaskApp.wsgi_app = ReverseProxied(FlaskApp.wsgi_app)
 FlaskApp.wsgi_app = ProxyFix(FlaskApp.wsgi_app, x_for=1, x_host=1)
+FlaskApp.secret_key = 'igor1008'
 CORS(FlaskApp)
 
 FlaskApp.config["SESSION_PERMANENT"] = False
-FlaskApp.config['SESSION_TYPE'] = 'redis'
-FlaskApp.config['SESSION_REDIS'] = Redis.from_url('redis://localhost:6379')
+FlaskApp.config['SESSION_TYPE'] = 'filesystem'
+#FlaskApp.config['SESSION_REDIS'] = Redis.from_url('redis://localhost:6379')
 # #SESSION_REDIS = redis.from_url(os.environ.get('SESSION_REDIS'))
 # #sess = Session()
 Session(FlaskApp)

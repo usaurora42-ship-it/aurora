@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Amora Platter Box - Finalizar Pedido</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
+
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
+
+        <style>
+            /* ── Gradiente de fundo ── */
+            html, body { min-height: 100%; }
+            body.reservation-page {
+                background:
+                    radial-gradient(ellipse at 0% 0%, rgba(180,120,60,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(120,70,30,0.22) 0%, transparent 55%),
+                    radial-gradient(ellipse at 60% 30%, rgba(80,40,15,0.15) 0%, transparent 50%),
+                    linear-gradient(160deg, #1a1208 0%, #12100a 40%, #0e0c08 70%, #16110a 100%) !important;
+                background-attachment: fixed !important;
+            }
+            body.reservation-page::before { display: none !important; }
+            .booking-section { background: transparent !important; }
+            main { position: relative; z-index: 1; }
+
+            /* ── Badge carrinho ── */
+            .cart-badge {
+                position: absolute; top: -6px; right: -8px;
+                background: #e74c3c; color: #fff;
+                font-size: 0.65rem; font-weight: 700;
+                border-radius: 50%; width: 18px; height: 18px;
+                display: flex; align-items: center; justify-content: center;
+            }
+            .cart-btn-wrap { position: relative; display: inline-block; }
+
+            /* ── Steps ── */
+            .checkout-steps {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                margin-bottom: 40px;
+            }
+            .step {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.82rem;
+                color: #555;
+            }
+            .step.active { color: #c8922a; }
+            .step.done { color: #4caf50; }
+            .step-num {
+                width: 28px; height: 28px;
+                border-radius: 50%;
+                border: 2px solid #444;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 0.75rem; font-weight: 700;
+                flex-shrink: 0;
+            }
+            .step.active .step-num { border-color: #c8922a; background: rgba(200,146,42,0.15); color: #c8922a; }
+            .step.done .step-num { border-color: #4caf50; background: rgba(76,175,80,0.15); color: #4caf50; }
+            .step-line { width: 50px; height: 1px; background: #333; margin: 0 8px; }
+
+            /* ── Painel formulário ── */
+            .checkout-panel {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 16px;
+                padding: 32px;
+            }
+            .panel-title {
+                color: rgba(255,255,255,0.5);
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                margin-bottom: 22px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .panel-title i { color: #c8922a; font-size: 0.9rem; }
+
+            /* ── Inputs ── */
+            .form-group { margin-bottom: 18px; }
+            .form-label {
+                color: rgba(255,255,255,0.55);
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 6px;
+                display: block;
+            }
+            .form-input {
+                width: 100%;
+                background: rgba(255,255,255,0.06);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 10px;
+                padding: 11px 14px;
+                color: #fff;
+                font-size: 0.9rem;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                transition: border-color 0.2s, background 0.2s;
+                outline: none;
+            }
+            .form-input::placeholder { color: rgba(255,255,255,0.2); }
+            .form-input:focus {
+                border-color: rgba(200,146,42,0.5);
+                background: rgba(255,255,255,0.08);
+            }
+            .form-input option {
+                background: #1a1208;
+                color: #fff;
+            }
+            .form-input.is-invalid {
+                border-color: rgba(255,100,100,0.5);
+                background: rgba(255,50,50,0.05);
+            }
+            .error-msg {
+                color: #ff6b6b;
+                font-size: 0.75rem;
+                margin-top: 4px;
+                display: block;
+            }
+            .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+            @media (max-width: 576px) { .form-row { grid-template-columns: 1fr; } }
+
+            textarea.form-input { resize: vertical; min-height: 90px; }
+
+            /* ── Resumo lateral ── */
+            .order-summary {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 16px;
+                padding: 26px;
+                position: sticky;
+                top: 20px;
+            }
+            .summary-title {
+                color: rgba(255,255,255,0.5);
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                padding-bottom: 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                margin-bottom: 18px;
+            }
+            .summary-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 14px;
+                padding-bottom: 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.05);
+            }
+            .summary-item:last-of-type { border-bottom: none; }
+            .summary-item img {
+                width: 50px; height: 50px;
+                object-fit: cover; border-radius: 8px; flex-shrink: 0;
+            }
+            .summary-item-ph {
+                width: 50px; height: 50px;
+                background: rgba(255,255,255,0.07);
+                border-radius: 8px; flex-shrink: 0;
+                display: flex; align-items: center; justify-content: center;
+                color: rgba(255,255,255,0.2); font-size: 1.1rem;
+            }
+            .summary-item-name { color: #ddd; font-size: 0.85rem; font-weight: 600; }
+            .summary-item-qty { color: #777; font-size: 0.75rem; }
+            .summary-item-price { color: #aaa; font-size: 0.82rem; margin-left: auto; white-space: nowrap; }
+
+            .summary-total-row {
+                display: flex; justify-content: space-between;
+                color: #fff; font-weight: 700; font-size: 1.05rem;
+                border-top: 1px solid rgba(255,255,255,0.1);
+                padding-top: 14px; margin-top: 4px;
+            }
+
+            /* ── Botão finalizar ── */
+            .btn-finish {
+                display: block; width: 100%;
+                background: #c8922a;
+                color: #fff; border: none;
+                border-radius: 10px; padding: 14px;
+                font-weight: 700; font-size: 0.95rem;
+                cursor: pointer; margin-top: 20px;
+                transition: background 0.2s, transform 0.15s;
+                display: flex; align-items: center; justify-content: center; gap: 8px;
+            }
+            .btn-finish:hover { background: #b8821a; transform: translateY(-1px); }
+            .btn-finish:active { transform: scale(0.98); }
+
+            .btn-back {
+                display: flex; align-items: center; gap: 6px;
+                color: #666; font-size: 0.82rem; text-decoration: none;
+                margin-bottom: 24px;
+                transition: color 0.2s;
+            }
+            .btn-back:hover { color: #aaa; }
+
+            /* ── Erro geral ── */
+            .alert-error {
+                background: rgba(255,80,80,0.1);
+                border: 1px solid rgba(255,80,80,0.25);
+                border-radius: 10px;
+                padding: 12px 16px;
+                color: #ff6b6b;
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+                display: flex; align-items: center; gap: 8px;
+            }
+
+            /* ── Título ── */
+            .page-title { color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+            .page-subtitle { color: #666; font-size: 0.85rem; margin-bottom: 36px; }
+        </style>
+    </head>
+    
+    <body class="reservation-page">
+        <main>
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                        Amora
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item"><a class="nav-link" href="/#section_1">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_2">Sobre Nós</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_4">Avaliações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_5">Contato</a></li>
+                        </ul>
+                        <div class="ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
+                                <strong class="small-text">Carrinho</strong>
+                                <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
+                                {% set total_items = items | sum(attribute='quantity') %}
+                                {% if total_items > 0 %}
+                                <span class="cart-badge">{{ total_items }}</span>
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <section class="booking-section section-padding">
+                <div class="container">
+
+                    <!-- Título -->
+                    <div class="text-center">
+                        <h4 class="page-title">Finalizar Pedido</h4>
+                        <p class="page-subtitle">Preencha os dados para concluir sua compra</p>
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="checkout-steps">
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Carrinho</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step active">
+                            <div class="step-num">2</div>
+                            <span>Dados</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <span>Confirmação</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-4 align-items-start">
+
+                        <!-- ── Formulário ── -->
+                        <div class="col-lg-7 col-12">
+                            <a href="/cart" class="btn-back">
+                                <i class="bi-arrow-left"></i> Voltar ao carrinho
+                            </a>
+
+                            {% if errors and errors.geral %}
+                            <div class="alert-error">
+                                <i class="bi-exclamation-circle"></i> {{ errors.geral }}
+                            </div>
+                            {% endif %}
+
+                            <form action="/cart/checkout" method="POST" id="checkoutForm">
+
+                                <!-- Dados pessoais -->
+                                <div class="checkout-panel mb-4">
+                                    <div class="panel-title">
+                                        <i class="bi-person"></i> Dados Pessoais
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Nome completo *</label>
+                                            <input type="text" name="name" class="form-input {% if errors and errors.name %}is-invalid{% endif %}"
+                                                   placeholder="Seu nome" value="{{ form_data.name if form_data else '' }}">
+                                            {% if errors and errors.name %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.name }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Telefone / WhatsApp *</label>
+                                            <input type="tel" name="phone" id="phone" class="form-input {% if errors and errors.phone %}is-invalid{% endif %}"
+                                                   placeholder="(34) 99999-9999" value="{{ form_data.phone if form_data else '' }}">
+                                            {% if errors and errors.phone %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.phone }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Endereço -->
+                                <div class="checkout-panel mb-4">
+                                    <div class="panel-title">
+                                        <i class="bi-geo-alt"></i> Endereço de Entrega
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Endereço completo *</label>
+                                        <input type="text" name="address" class="form-input {% if errors and errors.address %}is-invalid{% endif %}"
+                                               placeholder="Rua, número, bairro, cidade" value="{{ form_data.address if form_data else '' }}">
+                                        {% if errors and errors.address %}
+                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.address }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <!-- Data e horário -->
+                                <div class="checkout-panel mb-4">
+                                    <div class="panel-title">
+                                        <i class="bi-calendar3"></i> Data e Horário
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Data de entrega *</label>
+                                            <input type="date" name="delivery_date" class="form-input {% if errors and errors.delivery_date %}is-invalid{% endif %}"
+                                                   value="{{ form_data.delivery_date if form_data else '' }}"
+                                                   min="{{ '' }}">
+                                            {% if errors and errors.delivery_date %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.delivery_date }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Horário desejado *</label>
+                                            <select name="delivery_time" class="form-input {% if errors and errors.delivery_time %}is-invalid{% endif %}">
+                                                <option value="">Selecione...</option>
+                                                <option value="07:00 - 09:00" {% if form_data and form_data.delivery_time == '07:00 - 09:00' %}selected{% endif %}>07:00 - 09:00</option>
+                                                <option value="09:00 - 11:00" {% if form_data and form_data.delivery_time == '09:00 - 11:00' %}selected{% endif %}>09:00 - 11:00</option>
+                                                <option value="11:00 - 13:00" {% if form_data and form_data.delivery_time == '11:00 - 13:00' %}selected{% endif %}>11:00 - 13:00</option>
+                                                <option value="13:00 - 15:00" {% if form_data and form_data.delivery_time == '13:00 - 15:00' %}selected{% endif %}>13:00 - 15:00</option>
+                                                <option value="15:00 - 17:00" {% if form_data and form_data.delivery_time == '15:00 - 17:00' %}selected{% endif %}>15:00 - 17:00</option>
+                                                <option value="17:00 - 19:00" {% if form_data and form_data.delivery_time == '17:00 - 19:00' %}selected{% endif %}>17:00 - 19:00</option>
+                                            </select>
+                                            {% if errors and errors.delivery_time %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.delivery_time }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Observações -->
+                                <div class="checkout-panel mb-4">
+                                    <div class="panel-title">
+                                        <i class="bi-chat-text"></i> Observações
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0">
+                                        <label class="form-label">Alguma observação? (opcional)</label>
+                                        <textarea name="notes" class="form-input"
+                                                  placeholder="Ex: deixar na portaria, presente para alguém, restrições alimentares...">{{ form_data.notes if form_data else '' }}</textarea>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-finish">
+                                    <i class="bi-whatsapp"></i>
+                                    Confirmar e Enviar pelo WhatsApp
+                                </button>
+
+                                <p style="text-align:center;color:#555;font-size:0.75rem;margin-top:12px;">
+                                    <i class="bi-shield-check me-1"></i>
+                                    Ao confirmar, você será redirecionado ao WhatsApp para concluir o pedido
+                                </p>
+                            </form>
+                        </div>
+
+                        <!-- ── Resumo do pedido ── -->
+                        <div class="col-lg-5 col-12">
+                            <div class="order-summary">
+                                <div class="summary-title">Resumo do Pedido</div>
+
+                                {% for item in items %}
+                                <div class="summary-item">
+                                    {% if item.path %}
+                                    <img src="{{ item.path }}" alt="{{ item.name }}">
+                                    {% else %}
+                                    <div class="summary-item-ph"><i class="bi-box"></i></div>
+                                    {% endif %}
+                                    <div>
+                                        <div class="summary-item-name">{{ item.name }}</div>
+                                        <div class="summary-item-qty">× {{ item.quantity }}</div>
+                                    </div>
+                                    <div class="summary-item-price">R$ {{ "%.2f"|format(item.subtotal) }}</div>
+                                </div>
+                                {% endfor %}
+
+                                <div class="summary-total-row">
+                                    <span>Total</span>
+                                    <span>R$ {{ "%.2f"|format(total) }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-12 me-auto">
+                            <em class="text-white d-block mb-4">Onde nos encontrar?</em>
+                            <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
+                            <ul class="social-icon mt-4">
+                                <li class="social-icon-item"><a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a></li>
+                                <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                            <em class="text-white d-block mb-4">Contato</em>
+                            <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a></p>
+                            <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a></p>
+                        </div>
+                        <div class="col-lg-5 col-12">
+                            <em class="text-white d-block mb-4">Horário de funcionamento.</em>
+                            <ul class="opening-hours-list">
+                                <li class="d-flex">Segunda - Sexta<span class="underline"></span><strong>7:00 - 19:00</strong></li>
+                                <li class="d-flex">Sábado<span class="underline"></span><strong>8:00 - 12:00</strong></li>
+                                <li class="d-flex">Domingo<span class="underline"></span><strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-8 col-12 mt-4">
+                            <p class="copyright-text mb-0">Copyright © Amora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+        <script>
+            // Máscara de telefone
+            $('#phone').mask('(00) 00000-0000');
+
+            // Data mínima = hoje
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="delivery_date"]').setAttribute('min', today);
+        </script>
+    </body>
+</html>

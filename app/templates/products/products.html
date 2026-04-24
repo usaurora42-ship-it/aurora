@@ -1,310 +1,414 @@
 <!doctype html>
-<html lang="en">
-    <head>
+<html lang="pt-BR">
+    <head>        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- <meta http-equiv="refresh" content="50" /> -->
-        <meta name="description" content="static.js">
-        <meta name="author" content="">
+        <title>Amora Platter Box - Produtos</title>
 
-        <title>Amora Platter Box - HTML Reservation Form</title>
-
-        <!-- CSS FILES -->                
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
 
         <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
-        
         <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
-
         <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">  
-
         <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
 
-        <script>
-            function RefreshPage() {
-                window.open("/products/products", "_self");
+        <style>
+            /* ── Gradiente elegante de fundo ── */
+            html, body { min-height: 100%; }
+            body.reservation-page {
+                background:
+                    radial-gradient(ellipse at 0% 0%, rgba(180,120,60,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(120,70,30,0.22) 0%, transparent 55%),
+                    radial-gradient(ellipse at 60% 30%, rgba(80,40,15,0.15) 0%, transparent 50%),
+                    linear-gradient(160deg, #1a1208 0%, #12100a 40%, #0e0c08 70%, #16110a 100%) !important;
+                background-attachment: fixed !important;
+                background-size: cover !important;
+                background-repeat: no-repeat !important;
             }
-            /* function addProducts(){                  
-                var div = '';               
-                div =  '<select class="form-control" name="product" id="product">'
-                        + '<option value="product" selected>Produto</option>'
-                        + '{% for product in products %}'
-                        + '<option value="{{ product.id }}">{{ product.name }}</option>'
-                        + '{% endfor %}' 
-                        + '</select>';
-                        
-                $('#listProducts').append(div);              
-          
-            };
-            function getProducts(){
-                let inputs = document.getElementsByName("product");
-                let dados = [];
-                for (i = 0; i < inputs.length; i++) {
-                    dados += inputs[i].value; 
-                    if (i < inputs.length - 1) {
-                        dados += ',';
-                    }                     
-                }           
-       
-           };    */
-        </script>
+            body.reservation-page::before { display: none !important; }
+            .booking-section { background: transparent !important; }
+            body.reservation-page::after {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0.5;
+            }
+            main { position: relative; z-index: 1; }
 
-        <!--
+            /* ── Carrinho badge ── */
+            .cart-badge {
+                position: absolute;
+                top: -6px;
+                right: -8px;
+                background: #e74c3c;
+                color: #fff;
+                font-size: 0.65rem;
+                font-weight: 700;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
+            }
+            .cart-badge.bump {
+                transform: scale(1.5);
+            }
+            .cart-btn-wrap {
+                position: relative;
+                display: inline-block;
+            }
 
-Tooplate 2137 Barista
+            /* ── Cards de produto ── */
+            .product-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 24px;
+                padding: 10px 0 40px;
+            }
+            .product-card {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 14px;
+                overflow: hidden;
+                transition: transform 0.25s ease, box-shadow 0.25s ease;
+                display: flex;
+                flex-direction: column;
+            }
+            .product-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+            }
+            .product-card-img {
+                width: 100%;
+                height: 180px;
+                object-fit: cover;
+                display: block;
+            }
+            .product-card-img-placeholder {
+                width: 100%;
+                height: 180px;
+                background: rgba(255,255,255,0.07);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: rgba(255,255,255,0.2);
+                font-size: 2.5rem;
+            }
+            .product-card-body {
+                padding: 14px 16px 16px;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+            .product-card-name {
+                color: #fff;
+                font-weight: 600;
+                font-size: 0.95rem;
+                margin-bottom: 4px;
+                line-height: 1.3;
+            }
+            .product-card-desc {
+                color: #aaa;
+                font-size: 0.78rem;
+                margin-bottom: 10px;
+                flex: 1;
+            }
+            .product-card-price {
+                color: #fff;
+                font-weight: 700;
+                font-size: 1.05rem;
+                margin-bottom: 12px;
+            }
+            .btn-add-cart {
+                width: 100%;
+                background: rgba(255,255,255,0.1);
+                border: 1px solid rgba(255,255,255,0.2);
+                color: #fff;
+                border-radius: 8px;
+                padding: 8px 0;
+                font-size: 0.85rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.15s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+            }
+            .btn-add-cart:hover {
+                background: rgba(255,255,255,0.2);
+            }
+            .btn-add-cart:active {
+                transform: scale(0.97);
+            }
+            .btn-add-cart.adding {
+                background: rgba(46, 213, 115, 0.25);
+                border-color: rgba(46, 213, 115, 0.5);
+                color: #2ed573;
+                pointer-events: none;
+            }
 
-https://www.tooplate.com/view/2137-barista-cafe
+            /* ── Toast ── */
+            .amora-toast {
+                position: fixed;
+                bottom: 28px;
+                right: 28px;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                pointer-events: none;
+            }
+            .amora-toast-item {
+                background: rgba(20,20,20,0.95);
+                border: 1px solid rgba(255,255,255,0.12);
+                color: #fff;
+                border-radius: 10px;
+                padding: 12px 18px;
+                font-size: 0.88rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+                backdrop-filter: blur(10px);
+                opacity: 0;
+                transform: translateY(16px);
+                animation: toastIn 0.35s ease forwards, toastOut 0.35s ease 2.8s forwards;
+                pointer-events: auto;
+                min-width: 260px;
+            }
+            .amora-toast-item i {
+                font-size: 1.1rem;
+                color: #2ed573;
+                flex-shrink: 0;
+            }
+            @keyframes toastIn {
+                to { opacity: 1; transform: translateY(0); }
+            }
+            @keyframes toastOut {
+                to { opacity: 0; transform: translateY(10px); }
+            }
 
-Bootstrap 5 HTML CSS Template
-
--->
+            /* ── Título da seção ── */
+            .section-title {
+                color: #fff;
+                font-size: 1.6rem;
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+            .section-subtitle {
+                color: #888;
+                font-size: 0.9rem;
+                margin-bottom: 32px;
+            }
+        </style>
     </head>
     
-    <body class="reservation-page">
-              
-            <main>
-                <nav class="navbar navbar-expand-lg">                
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
-                            Amora
-                        </a>
-        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-        
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_1">Home</a>
-                                </li>
-        
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_2">Sobre Nós</a>
-                                </li>
+    <body class="reservation-page">      
+        <!-- Toast container -->
+        <div class="amora-toast" id="toastContainer"></div>
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="/products/products" id="navbarDropdownMenuProducts" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produtos</a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuProducts">
-                                        <li><a class="dropdown-item" href="#">Cestas</a></li>
-                                        <li><a class="dropdown-item" href="#">Bebidas</a></li>
-                                        <li><a class="dropdown-item" href="#">Alimentos</a></li>
-                                    </ul>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_4">Avaliações</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_5">Contato</a>
-                                </li>
-                            </ul>
-
-                            <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="cadastro">
-                                    Carrinho
-                                    <i class="bi-arrow-up-right ms-2"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                
-
-                <section class="booking-section section-padding">
+        <main>
+            <nav class="navbar navbar-expand-lg">                
                 <div class="container">
-                    <div class="row">
-                        <div class="col-lg-16 col-12 mx-auto">
-                            <div class="booking-form-wrap">
-                                <div class="row">
-                                    <div class="col-lg-8 col-12 p-0">
-                                        <form class="custom-form booking-form" action="/products/products" method="POST" role="form" enctype="multipart/form-data" id="products">
-                                            <div class="text-center mb-6 pb-lg-4">
-                                                <h6 class="text-white">Cadastro de Produtos</h6>
-                                            </div>
-                                            <div class="booking-form-body">
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" name="name" id="name" class="form-control" placeholder="Nome" required>
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="description" id="description" class="form-control" placeholder="Descrição" required>
-                                                    </div>
-													
-                                                    <div class="col-lg-6 col-12">
-														<select class="form-control" name="category" id="category">
-														  <option value="category" selected>Categoria</option>
-                                                            {% for categorie in categories %}
-                                                                <option value="{{ categorie.id }}">{{ categorie.description }}</option>
-                                                            {% endfor %} 
-                                                        </select>
-                                                    </div>
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                        Amora
+                    </a>
+    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="/#section_1">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/#section_2">Sobre Nós</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" href="/products/category_products">Nossos Produtos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/#section_4">Avaliações</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/#section_5">Contato</a>
+                            </li>
+                        </ul>
 
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" name="value" id="value" class="form-control" placeholder="Valor" required>
-                                                    </div>	
-
-                                                    <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="text" name="size" id="size" placeholder="Tamanho" value="">
-                                                    </div>													
-													
-                                                    <div class="col-lg-6 col-12">
-														<select class="form-control" name="unit" id="unit">
-														  <option value="unit" selected>Unidade</option>
-                                                          {% for unit in units %}
-                                                            <option value="{{ unit.id }}">{{ unit.description }}</option>
-                                                          {% endfor %} 
-                                                        </select>
-                                                    </div> 
-                                                    
-                                                    <!-- <div class="col-lg-8 col-12" id="listProducts">
-                                                        <select class="form-control" name="product" id="product">
-                                                            <option value="product" selected>Produto</option>
-                                                            {% for product in products %}
-                                                                <option value="{{ product.id }}">{{ product.name }}</option>
-                                                            {% endfor %}                                                                                                                     
-                                                        </select>                                                            
-                                                    </div>
-
-                                                    <div class="col-lg-2 col-12">
-                                                        <button class="btn" onclick="addProducts();return false;">
-                                                            <img src="{{url_for('static', filename='images/mais/sinal-de-mais.png')}}" class="navbar-brand-image img-fluid" alt="" onclick="addProducts()" type="button">
-                                                        </button> 
-                                                    </div> 
- -->
-                                                    <div>
-                                                        <input class="form-control" type="file" name="file" id="file" onchange="previewImagem(event)">                                             
-                                                    </div>
-                                                    <div class="col-lg-12 col-12">
-                                                        <img id="imagem-preview" style="width:200px;height:200px;display: none;">
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                        <button type="submit" class="form-control" onclick="RefreshPage()">Enviar</button>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="col-lg-4 col-12 p-0">
-                                        <div class="booking-form-image-wrap">
-                                            
-                                            <img src="{{url_for('static', filename='images/barman-with-fruits.jpg')}}" class="booking-form-image img-fluid" alt="">
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
+                                <strong class="small-text">Carrinho</strong>
+                                <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
+                                <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-                </section>
+            </nav>
 
-
-                <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-4 col-12 me-auto">
-                                <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-
-                                <strong class="text-white">
-                                    <i class="bi-geo-alt me-2"></i>
-                                    
-                                </strong>
-
-                                <ul class="social-icon mt-4">
-                                    <li class="social-icon-item">
-                                        <a href="https://www.instagram.com/amoraplatterbox/" class="bi bi-instagram">
-                                        </a>
-                                    </li>
-        
-                                    <li class="social-icon-item">
-                                        <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter">
-                                        </a>
-                                    </li>
-
-                                    <li class="social-icon-item">
-                                        <a href="https://api.whatsapp.com/send?phone=5534998002691" class="social-icon-link bi-whatsapp">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                                <em class="text-white d-block mb-4">Contact</em>
-
-                                <p class="d-flex mb-1">
-                                    <strong class="me-2">Telefone:</strong>
-                                    <a href="tel: 99800-2691" class="site-footer-link">
-                                        (34) 
-                                        998002691
-                                    </a>
-                                </p>
-
-                                <p class="d-flex">
-                                    <strong class="me-2">Email:</strong>
-
-                                    <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">
-                                        amoraplatterbox@gmail.com
-                                    </a>
-                                </p>
-                            </div>
-
-
-                            <div class="col-lg-5 col-12">
-                                <em class="text-white d-block mb-4">Horário de funcionamento.</em>
-
-                                <ul class="opening-hours-list">
-                                    <li class="d-flex">
-                                        Segunda - Sexta
-                                        <span class="underline"></span>
-
-                                        <strong>7:00 - 19:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Sábado
-                                        <span class="underline"></span>
-
-                                        <strong>8:00 - 12:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Domingo
-                                        <span class="underline"></span>
-
-                                        <strong>Fechado</strong>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-8 col-12 mt-4">
-                                <p class="copyright-text mb-0">Copyright © Amora 2024 
-                                    - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                            </div>
-
+            <section class="booking-section section-padding">
+                <div class="container">
+                    <div class="text-center mb-2">
+                        <h4 class="section-title">Nossos Produtos</h4>
+                        <p class="section-subtitle">Escolha os itens para montar sua cesta</p>
                     </div>
-                </footer>
-            </main>
 
+                    <div class="product-grid">
+                        {% for post in items %}
+                        <div class="product-card">
+                            {% if post.path %}
+                                <img src="{{ post.path }}" class="product-card-img" alt="{{ post.description }}">
+                            {% else %}
+                                <div class="product-card-img-placeholder">
+                                    <i class="bi-box"></i>
+                                </div>
+                            {% endif %}
 
-        <!-- JAVASCRIPT FILES -->
+                            <div class="product-card-body">
+                                <div class="product-card-name">{{ post.description }}</div>
+                                <div class="product-card-price">R$ {{ "%.2f"|format(post.value|float) }}</div>
+
+                                <button 
+                                    class="btn-add-cart" 
+                                    onclick="addToCart({{ post.id }}, '{{ post.description }}', this)">
+                                    <i class="bi-cart-plus"></i>
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if not items %}
+                    <div class="text-center py-5">
+                        <i class="bi-box" style="font-size:3rem;color:#555;"></i>
+                        <p class="text-white mt-3">Nenhum produto disponível no momento.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-12 me-auto">
+                            <em class="text-white d-block mb-4">Onde nos encontrar?</em>
+                            <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
+                            <ul class="social-icon mt-4">
+                                <li class="social-icon-item">
+                                    <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a>
+                                </li>
+                                <li class="social-icon-item">
+                                    <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a>
+                                </li>
+                                <li class="social-icon-item">
+                                    <a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
+                            <em class="text-white d-block mb-4">Contato</em>
+                            <p class="d-flex mb-1">
+                                <strong class="me-2">Telefone:</strong>
+                                <a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a>
+                            </p>
+                            <p class="d-flex">
+                                <strong class="me-2">Email:</strong>
+                                <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a>
+                            </p>
+                        </div>
+                        <div class="col-lg-5 col-12">
+                            <em class="text-white d-block mb-4">Horário de funcionamento.</em>
+                            <ul class="opening-hours-list">
+                                <li class="d-flex">Segunda - Sexta<span class="underline"></span><strong>7:00 - 19:00</strong></li>
+                                <li class="d-flex">Sábado<span class="underline"></span><strong>8:00 - 12:00</strong></li>
+                                <li class="d-flex">Domingo<span class="underline"></span><strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-8 col-12 mt-4">
+                            <p class="copyright-text mb-0">Copyright © Amora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+
+        <script>
+            // ── Atualiza o badge do carrinho ──
+            function updateCartBadge(count) {
+                const badge = document.getElementById('cartBadge');
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.style.display = 'flex';
+                    badge.classList.add('bump');
+                    setTimeout(() => badge.classList.remove('bump'), 300);
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            // ── Mostra toast de confirmação ──
+            function showToast(message) {
+                const container = document.getElementById('toastContainer');
+                const item = document.createElement('div');
+                item.className = 'amora-toast-item';
+                item.innerHTML = `<i class="bi-check-circle-fill"></i><span>${message}</span>`;
+                container.appendChild(item);
+                setTimeout(() => item.remove(), 3300);
+            }
+
+            // ── Adiciona produto ao carrinho via fetch ──
+            function addToCart(productId, productName, btn) {
+                btn.classList.add('adding');
+                btn.innerHTML = '<i class="bi-check2"></i> Adicionado!';
+
+                fetch(`/cart/add/${productId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'quantity=1'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        updateCartBadge(data.cart_count);
+                        showToast(`"${productName}" adicionado ao carrinho!`);
+                    }
+                })
+                .catch(() => {
+                    showToast('Erro ao adicionar. Tente novamente.');
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        btn.classList.remove('adding');
+                        btn.innerHTML = '<i class="bi-cart-plus"></i> Adicionar';
+                    }, 1800);
+                });
+            }
+
+            // ── Carrega contagem atual do carrinho ao entrar na página ──
+            fetch('/cart/count')
+                .then(res => res.json())
+                .then(data => updateCartBadge(data.count))
+                .catch(() => {});
+        </script>
     </body>
 </html>

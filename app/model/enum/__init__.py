@@ -289,3 +289,15 @@ class PlanFeatureValueTypeEnum(Enum):
     float = 3
     string = 4
     date = 5
+
+class PaymentMethodEnum(Enum):
+    pix         = 'pix'
+    credit_card = 'credit_card'
+    debit_card  = 'debit_card'
+
+
+class PaymentStatusEnum(Enum):
+    pending   = 'pending'    # aguardando pagamento
+    approved  = 'approved'   # pagamento aprovado
+    rejected  = 'rejected'   # pagamento recusado/negado
+    cancelled = 'cancelled'  # cancelado pelo cliente

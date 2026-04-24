@@ -5,8 +5,7 @@ from sqlalchemy.dialects.mysql import INTEGER
 
 from app import db, logging
 from app.model.validator import ModelValidator
-from app.model.enum import StatusEnum, AddressTypeEnum, BooleanEnum
-from app.lib.util import Util
+from app.model.enum import StatusEnum
 
 LOGGER = logging.getLogger(__name__)
 
@@ -36,38 +35,33 @@ class ModelOrderItem(db.Model):
         db.ForeignKey('orders.id', onupdate='CASCADE'),
         nullable=False
     )
-    # uuid = db.Column(
-    #       db.String(36),
-    #       unique=True,
-    #       nullable=False
-    # ) 
     quantity = db.Column(
         db.Numeric,
         nullable=False,
-    )  
+    )
     status = db.Column(
-         db.Enum(StatusEnum, validate_strings=True),
-         server_default='enabled',
-         default=StatusEnum.enabled,
-         index=True
-     )
+        db.Enum(StatusEnum, validate_strings=True),
+        server_default='enabled',
+        default=StatusEnum.enabled,
+        index=True
+    )
     date_create = db.Column(
-          db.DECIMAL(15, 3),
-          nullable=False,
-          default=lambda : format(datetime.now().timestamp(), '.3f')
+        db.DECIMAL(15, 3),
+        nullable=False,
+        default=lambda: format(datetime.now().timestamp(), '.3f')
     )
 
-    # RelationShip
+    # RelationShips
     order = db.relationship(
         'ModelOrder',
         backref=db.backref('order_item', lazy=True)
     )
-
-    # RelationShip
     product = db.relationship(
         'ModelProduct',
         backref=db.backref('order_item_product', lazy=True)
     )
+
+    errors = None
 
     # Create Order Item
     def create_order_item(self, data):
@@ -75,22 +69,11 @@ class ModelOrderItem(db.Model):
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
             return None
-            
+
         data = v.document
 
-        util = Util()
-
-        
-
-        # # if exists
-        # exists = self.query.filter_by(document=data['document']).first()
-        # if exists:
-        #     return exists
-        
-        for k in data:            
+        for k in data:
             setattr(self, k, data[k])
-            self.uuid = util.gen_uuid()
-            
 
         try:
             db.session.add(self)
@@ -98,8 +81,7 @@ class ModelOrderItem(db.Model):
             return self
         except Exception as e:
             raise e
-        
-    
+
     # Validators
     def __val_create__(self):
         schema = '''
@@ -107,29 +89,38 @@ class ModelOrderItem(db.Model):
             min: 1
             required: true
             type: integer
-            coerce: integer   
+            coerce: integer
         order_id:
             min: 1
             required: true
             type: integer
-            coerce: integer   
+            coerce: integer
+        quantity:
+            min: 1
+            required: true
+            type: number
+            coerce: float
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __val_update__(self):
-        schema = '''        
+        schema = '''
         product_id:
             min: 1
             required: true
             type: integer
-            coerce: integer   
+            coerce: integer
         order_id:
             min: 1
             required: true
             type: integer
-            coerce: integer   
+            coerce: integer
+        quantity:
+            min: 1
+            type: number
+            coerce: float
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
-   
+
     def __repr__(self):
-        return "<OrderItem %r>" % self.name
+        return "<OrderItem %r>" % self.id

@@ -37,9 +37,7 @@ class ModelClient(db.Model):
         nullable=False
     )
     type = db.Column(
-          db.String(2),
-          unique=True,
-          nullable=False
+          db.String(2)
     )
     email = db.Column(
           db.String(50),
