@@ -82,10 +82,10 @@ def category_product_get():
 
     #query products
     query_products = ModelProduct.query.with_entities(
-        ModelProduct.description,
+        ModelProduct.id,
+        ModelProduct.description, 
         ModelProduct.path,
         ModelProduct.value,
-        ModelProduct.id
     ).filter_by(
         status=StatusEnum.enabled
     ).order_by(ModelProduct.description)

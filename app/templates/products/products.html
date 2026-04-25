@@ -3,7 +3,7 @@
     <head>        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Amora Platter Box - Produtos</title>
+        <title>Amora Platter Box - Cadastro de Produtos</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +16,7 @@
         <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
 
         <style>
-            /* ── Gradiente elegante de fundo ── */
+            /* ── Fundo ── */
             html, body { min-height: 100%; }
             body.reservation-page {
                 background:
@@ -25,197 +25,198 @@
                     radial-gradient(ellipse at 60% 30%, rgba(80,40,15,0.15) 0%, transparent 50%),
                     linear-gradient(160deg, #1a1208 0%, #12100a 40%, #0e0c08 70%, #16110a 100%) !important;
                 background-attachment: fixed !important;
-                background-size: cover !important;
-                background-repeat: no-repeat !important;
             }
             body.reservation-page::before { display: none !important; }
             .booking-section { background: transparent !important; }
-            body.reservation-page::after {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-                pointer-events: none;
-                z-index: 0;
-                opacity: 0.5;
-            }
             main { position: relative; z-index: 1; }
 
-            /* ── Carrinho badge ── */
-            .cart-badge {
-                position: absolute;
-                top: -6px;
-                right: -8px;
-                background: #e74c3c;
-                color: #fff;
-                font-size: 0.65rem;
-                font-weight: 700;
-                border-radius: 50%;
-                width: 18px;
-                height: 18px;
+            /* ── Painel ── */
+            .cadastro-wrap {
+                max-width: 700px;
+                margin: 0 auto;
+                padding: 10px 0 60px;
+            }
+            .cadastro-panel {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 20px;
+                overflow: hidden;
+            }
+            .cadastro-header {
+                background: rgba(255,255,255,0.05);
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                padding: 22px 28px;
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
+                gap: 12px;
             }
-            .cart-badge.bump {
-                transform: scale(1.5);
+            .cadastro-header-icon {
+                width: 40px; height: 40px;
+                background: rgba(200,146,42,0.2);
+                border: 1px solid rgba(200,146,42,0.3);
+                border-radius: 10px;
+                display: flex; align-items: center; justify-content: center;
+                color: #c8922a; font-size: 1.1rem;
             }
-            .cart-btn-wrap {
-                position: relative;
-                display: inline-block;
+            .cadastro-header h5 {
+                color: #fff; font-weight: 700;
+                font-size: 1rem; margin: 0 0 2px;
+            }
+            .cadastro-header p {
+                color: #666; font-size: 0.78rem; margin: 0;
             }
 
-            /* ── Cards de produto ── */
-            .product-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 24px;
-                padding: 10px 0 40px;
+            .cadastro-body { padding: 28px; }
+
+            /* ── Seção dentro do form ── */
+            .form-section {
+                margin-bottom: 24px;
             }
-            .product-card {
-                background: rgba(255,255,255,0.05);
-                border: 1px solid rgba(255,255,255,0.08);
-                border-radius: 14px;
-                overflow: hidden;
-                transition: transform 0.25s ease, box-shadow 0.25s ease;
+            .form-section-title {
+                color: rgba(255,255,255,0.35);
+                font-size: 0.68rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                margin-bottom: 14px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid rgba(255,255,255,0.06);
                 display: flex;
-                flex-direction: column;
+                align-items: center;
+                gap: 8px;
             }
-            .product-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 16px 40px rgba(0,0,0,0.4);
-            }
-            .product-card-img {
-                width: 100%;
-                height: 180px;
-                object-fit: cover;
+            .form-section-title i { color: #c8922a; font-size: 0.85rem; }
+
+            /* ── Inputs ── */
+            .form-group { margin-bottom: 14px; }
+            .form-label {
+                color: rgba(255,255,255,0.45);
+                font-size: 0.72rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                margin-bottom: 6px;
                 display: block;
             }
-            .product-card-img-placeholder {
+            .form-input {
                 width: 100%;
-                height: 180px;
-                background: rgba(255,255,255,0.07);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: rgba(255,255,255,0.2);
-                font-size: 2.5rem;
-            }
-            .product-card-body {
-                padding: 14px 16px 16px;
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-            }
-            .product-card-name {
+                background: rgba(255,255,255,0.06);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 10px;
+                padding: 11px 14px;
                 color: #fff;
-                font-weight: 600;
-                font-size: 0.95rem;
-                margin-bottom: 4px;
-                line-height: 1.3;
+                font-size: 0.9rem;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                transition: border-color 0.2s, background 0.2s;
+                outline: none;
             }
-            .product-card-desc {
-                color: #aaa;
-                font-size: 0.78rem;
-                margin-bottom: 10px;
-                flex: 1;
+            .form-input::placeholder { color: rgba(255,255,255,0.2); }
+            .form-input:focus {
+                border-color: rgba(200,146,42,0.5);
+                background: rgba(255,255,255,0.08);
             }
-            .product-card-price {
+            .form-input option {
+                background: #1a1208;
                 color: #fff;
-                font-weight: 700;
-                font-size: 1.05rem;
-                margin-bottom: 12px;
             }
-            .btn-add-cart {
+            .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+            @media (max-width: 576px) { .form-row { grid-template-columns: 1fr; } }
+
+            /* ── Upload de imagem ── */
+            .upload-area {
+                border: 2px dashed rgba(255,255,255,0.12);
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                cursor: pointer;
+                transition: border-color 0.2s, background 0.2s;
+                position: relative;
+            }
+            .upload-area:hover {
+                border-color: rgba(200,146,42,0.4);
+                background: rgba(200,146,42,0.04);
+            }
+            .upload-area input[type="file"] {
+                position: absolute;
+                inset: 0;
+                opacity: 0;
+                cursor: pointer;
                 width: 100%;
-                background: rgba(255,255,255,0.1);
-                border: 1px solid rgba(255,255,255,0.2);
+                height: 100%;
+            }
+            .upload-icon { font-size: 2rem; color: rgba(255,255,255,0.15); margin-bottom: 8px; }
+            .upload-text { color: #666; font-size: 0.82rem; }
+            .upload-text strong { color: #c8922a; }
+
+            /* Preview da imagem */
+            .preview-wrap {
+                display: none;
+                margin-top: 14px;
+                position: relative;
+                text-align: center;
+            }
+            .preview-wrap img {
+                width: 160px; height: 160px;
+                object-fit: cover;
+                border-radius: 12px;
+                border: 2px solid rgba(255,255,255,0.1);
+            }
+            .preview-remove {
+                position: absolute;
+                top: -8px; right: calc(50% - 88px);
+                background: #e74c3c;
+                border: none;
+                border-radius: 50%;
+                width: 24px; height: 24px;
                 color: #fff;
-                border-radius: 8px;
-                padding: 8px 0;
+                font-size: 0.75rem;
+                cursor: pointer;
+                display: flex; align-items: center; justify-content: center;
+            }
+
+            /* ── Alertas ── */
+            .alert-success {
+                background: rgba(46,213,115,0.1);
+                border: 1px solid rgba(46,213,115,0.25);
+                border-radius: 10px;
+                padding: 12px 16px;
+                color: #2ed573;
                 font-size: 0.85rem;
-                font-weight: 600;
+                margin-bottom: 20px;
+                display: flex; align-items: center; gap: 8px;
+            }
+            .alert-error {
+                background: rgba(255,80,80,0.1);
+                border: 1px solid rgba(255,80,80,0.25);
+                border-radius: 10px;
+                padding: 12px 16px;
+                color: #ff6b6b;
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+                display: flex; align-items: center; gap: 8px;
+            }
+
+            /* ── Botão enviar ── */
+            .btn-submit {
+                width: 100%;
+                background: #c8922a;
+                color: #fff; border: none;
+                border-radius: 10px; padding: 13px;
+                font-weight: 700; font-size: 0.95rem;
                 cursor: pointer;
                 transition: background 0.2s, transform 0.15s;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
+                display: flex; align-items: center; justify-content: center; gap: 8px;
             }
-            .btn-add-cart:hover {
-                background: rgba(255,255,255,0.2);
-            }
-            .btn-add-cart:active {
-                transform: scale(0.97);
-            }
-            .btn-add-cart.adding {
-                background: rgba(46, 213, 115, 0.25);
-                border-color: rgba(46, 213, 115, 0.5);
-                color: #2ed573;
-                pointer-events: none;
-            }
+            .btn-submit:hover { background: #b8821a; transform: translateY(-1px); }
+            .btn-submit:active { transform: scale(0.98); }
 
-            /* ── Toast ── */
-            .amora-toast {
-                position: fixed;
-                bottom: 28px;
-                right: 28px;
-                z-index: 9999;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-                pointer-events: none;
-            }
-            .amora-toast-item {
-                background: rgba(20,20,20,0.95);
-                border: 1px solid rgba(255,255,255,0.12);
-                color: #fff;
-                border-radius: 10px;
-                padding: 12px 18px;
-                font-size: 0.88rem;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-                backdrop-filter: blur(10px);
-                opacity: 0;
-                transform: translateY(16px);
-                animation: toastIn 0.35s ease forwards, toastOut 0.35s ease 2.8s forwards;
-                pointer-events: auto;
-                min-width: 260px;
-            }
-            .amora-toast-item i {
-                font-size: 1.1rem;
-                color: #2ed573;
-                flex-shrink: 0;
-            }
-            @keyframes toastIn {
-                to { opacity: 1; transform: translateY(0); }
-            }
-            @keyframes toastOut {
-                to { opacity: 0; transform: translateY(10px); }
-            }
-
-            /* ── Título da seção ── */
-            .section-title {
-                color: #fff;
-                font-size: 1.6rem;
-                font-weight: 700;
-                margin-bottom: 6px;
-            }
-            .section-subtitle {
-                color: #888;
-                font-size: 0.9rem;
-                margin-bottom: 32px;
-            }
+            /* ── Título ── */
+            .page-title { color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+            .page-subtitle { color: #666; font-size: 0.85rem; margin-bottom: 28px; }
         </style>
     </head>
     
-    <body class="reservation-page">      
-        <!-- Toast container -->
-        <div class="amora-toast" id="toastContainer"></div>
-
+    <body class="reservation-page">
         <main>
             <nav class="navbar navbar-expand-lg">                
                 <div class="container">
@@ -223,35 +224,27 @@
                         <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
                         Amora
                     </a>
-    
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-    
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item"><a class="nav-link" href="/#section_1">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_2">Sobre Nós</a></li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/#section_1">Home</a>
+                                <a class="nav-link dropdown-toggle" href="/products/products" id="navbarDropdownMenuProducts" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produtos</a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuProducts">
+                                    <li><a class="dropdown-item" href="#">Cestas</a></li>
+                                    <li><a class="dropdown-item" href="#">Bebidas</a></li>
+                                    <li><a class="dropdown-item" href="#">Alimentos</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/#section_2">Sobre Nós</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="/products/category_products">Nossos Produtos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/#section_4">Avaliações</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/#section_5">Contato</a>
-                            </li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_4">Avaliações</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_5">Contato</a></li>
                         </ul>
-
                         <div class="ms-lg-3">
-                            <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
-                                <strong class="small-text">Carrinho</strong>
-                                <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
-                                <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                            <a class="btn custom-btn custom-border-btn" href="/cart">
+                                Carrinho <i class="bi-cart ms-2"></i>
                             </a>
                         </div>
                     </div>
@@ -260,43 +253,143 @@
 
             <section class="booking-section section-padding">
                 <div class="container">
-                    <div class="text-center mb-2">
-                        <h4 class="section-title">Nossos Produtos</h4>
-                        <p class="section-subtitle">Escolha os itens para montar sua cesta</p>
+                    <div class="text-center">
+                        <h4 class="page-title">Cadastro de Produtos</h4>
+                        <p class="page-subtitle">Adicione novos produtos ao catálogo</p>
                     </div>
 
-                    <div class="product-grid">
-                        {% for post in items %}
-                        <div class="product-card">
-                            {% if post.path %}
-                                <img src="{{ post.path }}" class="product-card-img" alt="{{ post.description }}">
-                            {% else %}
-                                <div class="product-card-img-placeholder">
-                                    <i class="bi-box"></i>
+                    <div class="cadastro-wrap">
+
+                        <!-- Alertas de sucesso/erro -->
+                        {% if success is defined and success == true %}
+                        <div class="alert-success">
+                            <i class="bi-check-circle-fill"></i> Produto cadastrado com sucesso!
+                        </div>
+                        {% endif %}
+
+                        {% if errors is defined and errors %}
+                        <div class="alert-error">
+                            <i class="bi-exclamation-circle-fill"></i>
+                            Verifique os campos e tente novamente.
+                        </div>
+                        {% endif %}
+
+                        <div class="cadastro-panel">
+                            <div class="cadastro-header">
+                                <div class="cadastro-header-icon">
+                                    <i class="bi-box-seam"></i>
                                 </div>
-                            {% endif %}
+                                <div>
+                                    <h5>Novo Produto</h5>
+                                    <p>Preencha todos os campos obrigatórios</p>
+                                </div>
+                            </div>
 
-                            <div class="product-card-body">
-                                <div class="product-card-name">{{ post.description }}</div>
-                                <div class="product-card-price">R$ {{ "%.2f"|format(post.value|float) }}</div>
+                            <div class="cadastro-body">
+                                <form action="/products/products" method="POST" enctype="multipart/form-data" id="products">
 
-                                <button 
-                                    class="btn-add-cart" 
-                                    onclick="addToCart({{ post.id }}, '{{ post.description }}', this)">
-                                    <i class="bi-cart-plus"></i>
-                                    Adicionar
-                                </button>
+                                    <!-- Informações básicas -->
+                                    <div class="form-section">
+                                        <div class="form-section-title">
+                                            <i class="bi-info-circle"></i> Informações Básicas
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Nome *</label>
+                                                <input type="text" name="name" id="name"
+                                                       class="form-input"
+                                                       placeholder="Nome do produto"
+                                                       value="{{ data_input.name if data_input else '' }}"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Descrição *</label>
+                                                <input type="text" name="description" id="description"
+                                                       class="form-input"
+                                                       placeholder="Breve descrição"
+                                                       value="{{ data_input.description if data_input else '' }}"
+                                                       required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Categoria *</label>
+                                                <select class="form-input" name="category" id="category">
+                                                    <option value="">Selecione...</option>
+                                                    {% for categorie in categories %}
+                                                        <option value="{{ categorie.id }}">{{ categorie.description }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Unidade *</label>
+                                                <select class="form-input" name="unit" id="unit">
+                                                    <option value="">Selecione...</option>
+                                                    {% for unit in units %}
+                                                        <option value="{{ unit.id }}">{{ unit.description }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Preço e tamanho -->
+                                    <div class="form-section">
+                                        <div class="form-section-title">
+                                            <i class="bi-tag"></i> Preço e Tamanho
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Valor (R$) *</label>
+                                                <input type="text" name="value" id="value"
+                                                       class="form-input"
+                                                       placeholder="0,00"
+                                                       value="{{ data_input.value if data_input else '' }}"
+                                                       required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Tamanho</label>
+                                                <input type="text" name="size" id="size"
+                                                       class="form-input"
+                                                       placeholder="Ex: 500g, 1L, P/M/G"
+                                                       value="{{ data_input.size if data_input else '' }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Imagem -->
+                                    <div class="form-section">
+                                        <div class="form-section-title">
+                                            <i class="bi-image"></i> Imagem do Produto
+                                        </div>
+                                        <div class="upload-area" id="uploadArea">
+                                            <input type="file" name="file" id="file"
+                                                   accept="image/*"
+                                                   onchange="previewImagem(event)">
+                                            <div class="upload-icon"><i class="bi-cloud-arrow-up"></i></div>
+                                            <div class="upload-text">
+                                                <strong>Clique para selecionar</strong> ou arraste a imagem aqui<br>
+                                                <small style="color:#555;">PNG, JPG, WEBP — máx. 5MB</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="preview-wrap" id="previewWrap">
+                                            <img id="imagem-preview" src="" alt="Preview">
+                                            <button type="button" class="preview-remove" onclick="removerImagem()" title="Remover">
+                                                <i class="bi-x"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Botão -->
+                                    <button type="submit" class="btn-submit">
+                                        <i class="bi-plus-circle"></i> Cadastrar Produto
+                                    </button>
+
+                                </form>
                             </div>
                         </div>
-                        {% endfor %}
                     </div>
-
-                    {% if not items %}
-                    <div class="text-center py-5">
-                        <i class="bi-box" style="font-size:3rem;color:#555;"></i>
-                        <p class="text-white mt-3">Nenhum produto disponível no momento.</p>
-                    </div>
-                    {% endif %}
                 </div>
             </section>
 
@@ -307,27 +400,15 @@
                             <em class="text-white d-block mb-4">Onde nos encontrar?</em>
                             <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
                             <ul class="social-icon mt-4">
-                                <li class="social-icon-item">
-                                    <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a>
-                                </li>
-                                <li class="social-icon-item">
-                                    <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a>
-                                </li>
-                                <li class="social-icon-item">
-                                    <a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a>
-                                </li>
+                                <li class="social-icon-item"><a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a></li>
+                                <li class="social-icon-item"><a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a></li>
+                                <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
                             <em class="text-white d-block mb-4">Contato</em>
-                            <p class="d-flex mb-1">
-                                <strong class="me-2">Telefone:</strong>
-                                <a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a>
-                            </p>
-                            <p class="d-flex">
-                                <strong class="me-2">Email:</strong>
-                                <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a>
-                            </p>
+                            <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a></p>
+                            <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a></p>
                         </div>
                         <div class="col-lg-5 col-12">
                             <em class="text-white d-block mb-4">Horário de funcionamento.</em>
@@ -351,64 +432,33 @@
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
         <script>
-            // ── Atualiza o badge do carrinho ──
-            function updateCartBadge(count) {
-                const badge = document.getElementById('cartBadge');
-                if (count > 0) {
-                    badge.textContent = count > 99 ? '99+' : count;
-                    badge.style.display = 'flex';
-                    badge.classList.add('bump');
-                    setTimeout(() => badge.classList.remove('bump'), 300);
-                } else {
-                    badge.style.display = 'none';
-                }
+            // Máscara de valor monetário
+            $('#value').mask('##0,00', { reverse: true });
+
+            // Preview da imagem
+            function previewImagem(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagem-preview').src = e.target.result;
+                    document.getElementById('previewWrap').style.display = 'block';
+                    document.getElementById('uploadArea').style.borderColor = 'rgba(200,146,42,0.5)';
+                };
+                reader.readAsDataURL(file);
             }
 
-            // ── Mostra toast de confirmação ──
-            function showToast(message) {
-                const container = document.getElementById('toastContainer');
-                const item = document.createElement('div');
-                item.className = 'amora-toast-item';
-                item.innerHTML = `<i class="bi-check-circle-fill"></i><span>${message}</span>`;
-                container.appendChild(item);
-                setTimeout(() => item.remove(), 3300);
+            // Remove a imagem selecionada
+            function removerImagem() {
+                document.getElementById('file').value = '';
+                document.getElementById('imagem-preview').src = '';
+                document.getElementById('previewWrap').style.display = 'none';
+                document.getElementById('uploadArea').style.borderColor = 'rgba(255,255,255,0.12)';
             }
-
-            // ── Adiciona produto ao carrinho via fetch ──
-            function addToCart(productId, productName, btn) {
-                btn.classList.add('adding');
-                btn.innerHTML = '<i class="bi-check2"></i> Adicionado!';
-
-                fetch(`/cart/add/${productId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'quantity=1'
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        updateCartBadge(data.cart_count);
-                        showToast(`"${productName}" adicionado ao carrinho!`);
-                    }
-                })
-                .catch(() => {
-                    showToast('Erro ao adicionar. Tente novamente.');
-                })
-                .finally(() => {
-                    setTimeout(() => {
-                        btn.classList.remove('adding');
-                        btn.innerHTML = '<i class="bi-cart-plus"></i> Adicionar';
-                    }, 1800);
-                });
-            }
-
-            // ── Carrega contagem atual do carrinho ao entrar na página ──
-            fetch('/cart/count')
-                .then(res => res.json())
-                .then(data => updateCartBadge(data.count))
-                .catch(() => {});
         </script>
     </body>
 </html>

@@ -38,7 +38,9 @@ def categories_get():
     ).order_by(ModelCategory.description)
 
     categories = query_category.all()
-
+    
+    print("CATEGORIAS ENCONTRADAS:", categories)  # ← adicione esta linha
+    
     return categories
 
 def units_get():    
@@ -67,13 +69,16 @@ def products_get():
 
     return products
 
-
 @SiteBlueprint.route('/products/products', methods=['GET'])
 def product_get():
     categories = categories_get()
     units = units_get()
     products = products_get()
-    return render_template('/products/products.html', categories=categories, units=units, products=products)
+    return render_template('/products/products.html', 
+                           categories=categories,  
+                           units=units,            
+                           products=products)
+
     # print(descriptions)
         #return render_template('product/product.html',descriptions=descriptions)
 
@@ -178,9 +183,11 @@ def products_post():
            
         if product is None:
             resp = make_response(render_template('products/products.html',
-                        success=False,
-                        errors=model_product.errors,
-                        data_input=data))      
+                success=False,
+                errors=model_product.errors,
+                data_input=data,
+                categories=categories,   
+                units=units))           
             resp.mimetype = 'text/html'
             return resp  
 
@@ -199,9 +206,11 @@ def products_post():
         
         if product_category is None:
             resp = make_response(render_template('products/products.html',
-                        success=False,
-                        errors=model_product_category.errors,
-                        data_input=data))      
+                success=False,
+                errors=model_product_category.errors,
+                data_input=data,
+                categories=categories,  
+                units=units))            
             resp.mimetype = 'text/html'
             return resp  
             
