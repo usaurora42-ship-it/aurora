@@ -34,6 +34,8 @@ def checkout_get():
 @SiteBlueprint.route('/cart/checkout', methods=['POST'])
 def checkout_post():
     """Processa o pedido: salva no banco e redireciona pro WhatsApp."""
+    if not session.get('client_id'):
+        return redirect('/client/login')
     cart = get_cart()
 
     if not cart:

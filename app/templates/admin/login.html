@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aurora Semijóias — Login</title>
+    <title>Aurora — Painel Admin</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +15,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background: #0a0a0a;
+            background: #080806;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -25,26 +25,27 @@
             overflow: hidden;
         }
 
+        /* Decorative grid background */
         body::before {
             content: '';
             position: absolute;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-            border: 0.5px solid #1e1a0e;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            inset: 0;
+            background-image:
+                linear-gradient(#1a1608 1px, transparent 1px),
+                linear-gradient(90deg, #1a1608 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.3;
             pointer-events: none;
         }
 
+        /* Center glow */
         body::after {
             content: '';
             position: absolute;
-            width: 900px;
-            height: 900px;
+            width: 500px;
+            height: 500px;
             border-radius: 50%;
-            border: 0.5px solid #14110a;
+            background: radial-gradient(circle, #c9a84c08 0%, transparent 70%);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -55,57 +56,72 @@
             position: relative;
             z-index: 2;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             padding: 0 20px;
-            animation: fadeUp 0.8s ease forwards;
+            animation: fadeUp 0.7s ease forwards;
             opacity: 0;
         }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(24px); }
+            from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
+        /* Badge admin */
+        .admin-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .admin-badge-line {
+            flex: 1;
+            height: 0.5px;
+            background: #2a2010;
+        }
+
+        .admin-badge-text {
+            font-size: 9px;
+            letter-spacing: 5px;
+            color: #5a4a28;
+        }
+
+        /* Logo */
         .login-logo {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 36px;
         }
 
         .login-logo-circle {
-            width: 64px;
-            height: 64px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             border: 1px solid #c9a84c;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-family: 'Cormorant Garamond', serif;
-            font-size: 32px;
+            font-size: 28px;
             font-style: italic;
             color: #c9a84c;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .login-logo-name {
             display: block;
-            font-size: 11px;
+            font-size: 10px;
             letter-spacing: 8px;
             color: #e8d5a3;
             font-weight: 300;
         }
 
-        .login-logo-sub {
-            display: block;
-            font-size: 9px;
-            letter-spacing: 3px;
-            color: #5a4a30;
-            margin-top: 4px;
-        }
-
+        /* Card */
         .login-card {
-            background: #0f0d09;
+            background: #0c0a06;
             border: 0.5px solid #2a2414;
-            padding: 44px 40px;
+            padding: 40px 36px;
             position: relative;
         }
 
@@ -113,8 +129,8 @@
         .login-card::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-color: #c9a84c;
             border-style: solid;
         }
@@ -127,33 +143,40 @@
             border-width: 0 1px 1px 0;
         }
 
+        /* Corner extras via spans */
+        .corner-tr, .corner-bl {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-color: #c9a84c;
+            border-style: solid;
+        }
+        .corner-tr { top: -1px; right: -1px; border-width: 1px 1px 0 0; }
+        .corner-bl { bottom: -1px; left: -1px; border-width: 0 0 1px 1px; }
+
         .login-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 300;
             color: #f0e6c8;
             margin-bottom: 4px;
-        }
-
-        .login-title em {
-            color: #c9a84c;
-            font-style: italic;
         }
 
         .login-subtitle {
             font-size: 9px;
             letter-spacing: 3px;
             color: #4a3a20;
+            margin-bottom: 0;
         }
 
         .login-divider {
-            width: 28px;
+            width: 24px;
             height: 0.5px;
             background: #c9a84c;
             margin: 16px 0 28px;
         }
 
-        /* Alerta de erro geral */
+        /* Error alert */
         .alert-login {
             background: #1a0a0a;
             border: 0.5px solid #5a1a1a;
@@ -164,17 +187,7 @@
             margin-bottom: 20px;
         }
 
-        /* Alerta de sucesso */
-        .alert-success {
-            background: #0a1a0a;
-            border: 0.5px solid #1a5a1a;
-            color: #7ac97a;
-            font-size: 10px;
-            letter-spacing: 1px;
-            padding: 10px 14px;
-            margin-bottom: 20px;
-        }
-
+        /* Labels */
         .form-label-custom {
             display: block;
             font-size: 9px;
@@ -183,9 +196,10 @@
             margin-bottom: 8px;
         }
 
+        /* Inputs */
         .form-input-custom {
             width: 100%;
-            background: #0a0a0a;
+            background: #080806;
             border: 0.5px solid #2a2414;
             border-radius: 0;
             color: #e8d5a3;
@@ -204,75 +218,51 @@
         }
 
         .form-input-custom::placeholder {
-            color: #3a3020;
+            color: #2a2010;
             font-size: 12px;
         }
 
+        /* Error input */
         .form-input-custom.input-error {
             border-color: #5a1a1a;
-            margin-bottom: 6px;
         }
 
         .field-error {
-            display: block;
             font-size: 9px;
             color: #c97a7a;
             letter-spacing: 1px;
-            margin-bottom: 14px;
-        }
-
-        .forgot-link {
+            margin-top: -16px;
+            margin-bottom: 16px;
             display: block;
-            text-align: right;
-            font-size: 9px;
-            letter-spacing: 2px;
-            color: #5a4a30;
-            text-decoration: none;
-            margin-top: -14px;
-            margin-bottom: 28px;
-            transition: color 0.2s;
         }
-        .forgot-link:hover { color: #c9a84c; }
 
+        /* Submit */
         .btn-login {
             width: 100%;
             background: #c9a84c;
-            color: #0a0a0a;
+            color: #080806;
             border: none;
             font-family: 'Montserrat', sans-serif;
             font-size: 10px;
             font-weight: 500;
             letter-spacing: 4px;
-            padding: 16px;
+            padding: 15px;
             cursor: pointer;
             transition: background 0.2s, opacity 0.2s;
+            margin-top: 8px;
         }
         .btn-login:hover { background: #d4b55a; }
         .btn-login:active { opacity: 0.85; }
 
-        .register-link {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 10px;
-            letter-spacing: 1px;
-            color: #4a3a20;
-        }
-        .register-link a {
-            color: #c9a84c;
-            text-decoration: none;
-            border-bottom: 0.5px solid #c9a84c;
-            padding-bottom: 1px;
-        }
-        .register-link a:hover { color: #d4b55a; }
-
+        /* Back link */
         .back-link {
             text-align: center;
-            margin-top: 32px;
+            margin-top: 28px;
         }
         .back-link a {
             font-size: 9px;
             letter-spacing: 3px;
-            color: #3a2e1a;
+            color: #2a2010;
             text-decoration: none;
             transition: color 0.2s;
         }
@@ -283,23 +273,24 @@
 
     <div class="login-wrapper">
 
+        <div class="admin-badge">
+            <div class="admin-badge-line"></div>
+            <span class="admin-badge-text">ÁREA RESTRITA</span>
+            <div class="admin-badge-line"></div>
+        </div>
+
         <div class="login-logo">
             <div class="login-logo-circle">A</div>
             <span class="login-logo-name">AURORA</span>
-            <span class="login-logo-sub">SEMIJÓIAS</span>
         </div>
 
         <div class="login-card">
+            <span class="corner-tr"></span>
+            <span class="corner-bl"></span>
 
-            <h1 class="login-title">Bem-vinda de <em>volta</em></h1>
-            <p class="login-subtitle">ACESSE SUA CONTA</p>
+            <h1 class="login-title">Painel Admin</h1>
+            <p class="login-subtitle">ACESSO ADMINISTRATIVO</p>
             <div class="login-divider"></div>
-
-            {% if success %}
-                <div class="alert-success">
-                    Login realizado com sucesso!
-                </div>
-            {% endif %}
 
             {% if errors and errors.login %}
                 <div class="alert-login">
@@ -307,7 +298,7 @@
                 </div>
             {% endif %}
 
-            <form action="/client/login" method="post">
+            <form action="/admin/login" method="post">
 
                 <label class="form-label-custom" for="user_name">USUÁRIO</label>
                 <input
@@ -315,7 +306,7 @@
                     type="text"
                     id="user_name"
                     name="user_name"
-                    placeholder="seu usuário"
+                    placeholder="admin"
                     value="{{ data_input.user_name if data_input else '' }}"
                     required
                     autocomplete="username">
@@ -336,19 +327,13 @@
                     <span class="field-error">{{ errors.pwd[0] }}</span>
                 {% endif %}
 
-                <a class="forgot-link" href="/esqueci-senha">Esqueci minha senha</a>
-
                 <button class="btn-login" type="submit">ENTRAR</button>
 
             </form>
-
-            <p class="register-link">
-                Ainda não tem conta? <a href="/client/signup">Criar conta</a>
-            </p>
         </div>
 
         <div class="back-link">
-            <a href="/">← VOLTAR PARA O INÍCIO</a>
+            <a href="/">← VOLTAR PARA O SITE</a>
         </div>
 
     </div>

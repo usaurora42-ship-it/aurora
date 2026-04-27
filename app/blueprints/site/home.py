@@ -27,7 +27,7 @@ def products_list_get():
     return render_template('/home.html', products_list_get=products, items=posts.items, pagination=posts)
 
 @SiteBlueprint.route('/')
-def index():       
+def index():           
     resp = make_response(
         render_template('/home.html', success=False, email_error=False, environment=environment))
     resp.mimetype = 'text/html'
