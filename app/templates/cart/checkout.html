@@ -3,7 +3,7 @@
     <head>        
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Amora Platter Box - Finalizar Pedido</title>
+        <title>Aurora Semijóias - Finalizar Pedido</title>
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -234,7 +234,7 @@
                 <div class="container">
                     <a class="navbar-brand d-flex align-items-center" href="/">
                         <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
-                        Amora
+                        Aurora
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span class="navbar-toggler-icon"></span>
@@ -330,20 +330,23 @@
                                     </div>
                                 </div>
 
-                                <!-- Endereço -->
+                                <!-- Endereço (vindo do cadastro do cliente) -->
+                                {% if client_address %}
                                 <div class="checkout-panel mb-4">
                                     <div class="panel-title">
                                         <i class="bi-geo-alt"></i> Endereço de Entrega
                                     </div>
-                                    <div class="form-group">
-                                        <label class="form-label">Endereço completo *</label>
-                                        <input type="text" name="address" class="form-input {% if errors and errors.address %}is-invalid{% endif %}"
-                                               placeholder="Rua, número, bairro, cidade" value="{{ form_data.address if form_data else '' }}">
-                                        {% if errors and errors.address %}
-                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.address }}</span>
-                                        {% endif %}
+                                    <div class="form-group" style="margin-bottom:0">
+                                        <p class="form-label" style="color:rgba(255,255,255,0.7); font-size:0.9rem; text-transform:none; letter-spacing:0;">
+                                            {{ client_address.street }}, {{ client_address.street_number }}
+                                            {% if client_address.complement %} — {{ client_address.complement }}{% endif %}<br>
+                                            {{ client_address.district }}, {{ client_address.city }}/{{ client_address.state }}<br>
+                                            CEP {{ client_address.zip_code }}
+                                        </p>
+                                        <a href="/client/signup" style="color:#c8922a; font-size:0.78rem;">Alterar endereço</a>
                                     </div>
                                 </div>
+                                {% endif %}
 
                                 <!-- Data e horário -->
                                 <div class="checkout-panel mb-4">
@@ -438,16 +441,16 @@
                     <div class="row">
                         <div class="col-lg-4 col-12 me-auto">
                             <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-                            <a href="https://api.whatsapp.com/send?phone=5534998002691">Send Message</a>
+                            <a href="https://api.whatsapp.com/send?phone=5534984104546">Send Message</a>
                             <ul class="social-icon mt-4">
-                                <li class="social-icon-item"><a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a></li>
-                                <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534998002691" class="social-icon-link bi-whatsapp"></a></li>
+                                <li class="social-icon-item"><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram"></a></li>
+                                <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534984104546" class="social-icon-link bi-whatsapp"></a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
                             <em class="text-white d-block mb-4">Contato</em>
-                            <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:99800-2691" class="site-footer-link">(34) 998002691</a></p>
-                            <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a></p>
+                            <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:98410-4546" class="site-footer-link">(34) 984104546</a></p>
+                            <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com" class="site-footer-link">aurorasemijoiasudi@gmail.com</a></p>
                         </div>
                         <div class="col-lg-5 col-12">
                             <em class="text-white d-block mb-4">Horário de funcionamento.</em>
@@ -458,7 +461,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-8 col-12 mt-4">
-                            <p class="copyright-text mb-0">Copyright © Amora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                            <p class="copyright-text mb-0">Copyright © Aurora 2026 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
                         </div>
                     </div>
                 </div>

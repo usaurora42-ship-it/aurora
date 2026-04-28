@@ -11,7 +11,7 @@ from app.model.enum import StatusEnum
 
 LOGGER = logging.getLogger(__name__)
 
-# Número do WhatsApp da Amora (com DDI, sem símbolos)
+# Número do WhatsApp da Aurora (com DDI, sem símbolos)
 WHATSAPP_NUMBER = '5534984104546'
 
 
@@ -28,14 +28,53 @@ def checkout_get():
         return redirect(url_for('SiteBlueprint.cart_get'))
 
     items, total = _build_items(cart)
-    return render_template('cart/checkout.html', items=items, total=total)
+
+    client_address = None
+    client_data = {}
+
+    if session.get('client_id'):
+        # busca dados do cliente
+        client = ModelClient.query.filter_by(
+            id=session['client_id'],
+            status=StatusEnum.enabled
+        ).first()
+
+        if client:
+            # busca telefone do cliente
+            from app.model.phones import ModelPhone
+            from app.model.client_phone import ModelClientPhone
+            phone = ModelPhone.query.join(ModelClientPhone).filter(
+                ModelClientPhone.client_id == client.id,
+                ModelPhone.status == StatusEnum.enabled
+            ).first()
+
+            phone_str = ''
+            if phone:
+                phone_str = f'({phone.code_area}) {phone.number[:5]}-{phone.number[5:]}'
+
+            client_data = {
+                'name': client.name,
+                'phone': phone_str
+            }
+
+        # busca endereço do cliente
+        from app.model.address import ModelAddress
+        from app.model.client_address import ModelClientAddress
+        client_address = ModelAddress.query.join(ModelClientAddress).filter(
+            ModelClientAddress.client_id == session['client_id'],
+            ModelAddress.status == StatusEnum.enabled
+        ).first()
+
+    return render_template('cart/checkout.html',
+                           items=items,
+                           total=total,
+                           client_address=client_address,
+                           form_data=client_data)
 
 
 @SiteBlueprint.route('/cart/checkout', methods=['POST'])
 def checkout_post():
-    """Processa o pedido: salva no banco e redireciona pro WhatsApp."""
-    if not session.get('client_id'):
-        return redirect('/client/login')
+    """Processa o pedido: salva na sessão e redireciona para login se necessário."""
     cart = get_cart()
 
     if not cart:
@@ -44,7 +83,7 @@ def checkout_post():
     data = request.form.to_dict()
 
     # ── Valida campos obrigatórios ──
-    required = ['name', 'phone', 'address', 'delivery_date', 'delivery_time']
+    required = ['name', 'phone', 'delivery_date', 'delivery_time']
     errors = {}
     for field in required:
         if not data.get(field, '').strip():
@@ -55,6 +94,13 @@ def checkout_post():
         return render_template('cart/checkout.html',
                                items=items, total=total,
                                errors=errors, form_data=data)
+
+    # ── Salva dados do checkout na sessão para reaproveitar no signup/login ──
+    session['checkout_data'] = data
+
+    # ── Se não logado, redireciona para login ──
+    if not session.get('client_id'):
+        return redirect('/client/login?next=/cart/checkout/confirm')
 
     # ── Monta itens do carrinho ──
     items, total = _build_items(cart)
@@ -124,6 +170,59 @@ def checkout_post():
     return redirect(url_for('site_bp.pix_get', order_id=order.id))
 
 
+# ── Confirmação após login ──
+
+@SiteBlueprint.route('/cart/checkout/confirm', methods=['GET'])
+def checkout_confirm():
+    """Chamado após login — finaliza o pedido com dados salvos na sessão."""
+    if not session.get('client_id'):
+        return redirect('/client/login?next=/cart/checkout/confirm')
+
+    cart = get_cart()
+    if not cart:
+        return redirect(url_for('SiteBlueprint.cart_get'))
+
+    data = session.get('checkout_data')
+    if not data:
+        return redirect(url_for('SiteBlueprint.checkout_get'))
+
+    items, total = _build_items(cart)
+    if not items:
+        return redirect(url_for('SiteBlueprint.cart_get'))
+
+    try:
+        model_order = ModelOrder()
+        order = model_order.create_order({'client_id': session['client_id']})
+        if order is None:
+            raise Exception('Erro ao criar pedido')
+
+        for item in items:
+            model_item = ModelOrderItem()
+            result = model_item.create_order_item({
+                'order_id': order.id,
+                'product_id': item['id'],
+                'quantity': item['quantity']
+            })
+            if result is None:
+                raise Exception(f'Erro ao salvar item {item["name"]}')
+
+        msg = _build_whatsapp_message(data, items, total)
+        whatsapp_url = f'https://api.whatsapp.com/send?phone={WHATSAPP_NUMBER}&text={quote(msg)}'
+
+        session.pop('cart', None)
+        session.pop('checkout_data', None)
+        session['pix_total'] = total
+        session['pix_order_name'] = data['name']
+        session['pix_whatsapp_url'] = whatsapp_url
+
+        return redirect(url_for('site_bp.pix_get', order_id=order.id))
+
+    except Exception as e:
+        LOGGER.exception(e)
+        db.session.rollback()
+        return redirect(url_for('SiteBlueprint.checkout_get'))
+
+
 # ── Helpers ──
 
 def _build_items(cart):
@@ -157,7 +256,9 @@ def _build_whatsapp_message(data, items, total):
     lines.append('')
     lines.append(f'👤 *Nome:* {data["name"]}')
     lines.append(f'📱 *Telefone:* {data["phone"]}')
-    lines.append(f'📍 *Endereço:* {data["address"]}')
+    endereco = f'{data.get("street","")}, {data.get("street_number","")} {data.get("complement","")}'.strip(", ")
+    endereco += f' — {data.get("district","")}, {data.get("city","")}/{data.get("state","")}, CEP {data.get("zip_code","")}'
+    lines.append(f'📍 *Endereço:* {endereco}')
     lines.append(f'📅 *Data de entrega:* {data["delivery_date"]}')
     lines.append(f'🕐 *Horário:* {data["delivery_time"]}')
 
@@ -173,6 +274,6 @@ def _build_whatsapp_message(data, items, total):
     lines.append('')
     lines.append(f'💰 *Total: R$ {total:.2f}*')
     lines.append('')
-    lines.append('_Pedido realizado pelo site Amora Platter Box_')
+    lines.append('_Pedido realizado pelo site Aurora Semijóias')
 
     return '\n'.join(lines)

@@ -11,7 +11,7 @@ import base64
 # ── Configurações da loja (edite aqui) ──
 PIX_KEY       = '05883206689'  # sua chave PIX
 PIX_KEY_TYPE  = 'cpf'                       # cpf | cnpj | telefone | email | aleatoria
-PIX_NAME      = 'Amora Platter Box'           # nome do recebedor (max 25 chars)
+PIX_NAME      = 'Aurora'           # nome do recebedor (max 25 chars)
 PIX_CITY      = 'Uberlandia'                  # cidade do recebedor (sem acentos, max 15 chars)
 
 

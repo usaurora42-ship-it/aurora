@@ -15,14 +15,11 @@ LOGGER = logging.getLogger(__name__)
 @SiteBlueprint.route('/client/login')
 def login_get():
     if session.get('client_id'):
-        next_url = request.args.get('next', '/')
-        return redirect(next_url)
-    next_url = request.args.get('next', '')
+        return redirect('/')
     resp = make_response(render_template('client/login.html',
         success=False,
         errors=None,
-        data_input=None,
-        next_url=next_url))
+        data_input=None))
     resp.mimetype = 'text/html'
     return resp
 
@@ -83,8 +80,7 @@ def login_post():
         session['user_id'] = user.id
         session['role'] = 'client'
 
-        next_url = request.args.get('next') or request.form.get('next') or '/'
-        return redirect(next_url)
+        return redirect('/')
 
     except Exception as e:
         LOGGER.exception(e)

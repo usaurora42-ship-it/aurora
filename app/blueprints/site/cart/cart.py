@@ -92,7 +92,7 @@ def cart_remove(product_id):
         del cart[key]
         save_cart(cart)
 
-    return redirect(url_for('SiteBlueprint.cart_get'))
+    return redirect(url_for('site_bp.cart_get'))
 
 
 @SiteBlueprint.route('/cart/update/<int:product_id>', methods=['POST'])
@@ -109,14 +109,14 @@ def cart_update(product_id):
         cart[key] = quantity
 
     save_cart(cart)
-    return redirect(url_for('SiteBlueprint.cart_get'))
+    return redirect(url_for('site_bp.cart_get'))
 
 
 @SiteBlueprint.route('/cart/clear', methods=['POST'])
 def cart_clear():
     """Limpa todo o carrinho."""
     session.pop('cart', None)
-    return redirect(url_for('SiteBlueprint.cart_get'))
+    return redirect(url_for('site_bp.cart_get'))
 
 
 @SiteBlueprint.route('/cart/count', methods=['GET'])

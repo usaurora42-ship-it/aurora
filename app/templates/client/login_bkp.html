@@ -304,7 +304,6 @@
             {% endif %}
 
             <form action="/client/login" method="post">
-                <input type="hidden" name="next" value="{{ next_url }}">
 
                 <label class="form-label-custom" for="user_name">USUÁRIO</label>
                 <input
@@ -340,7 +339,7 @@
             </form>
 
             <p class="register-link">
-                Ainda não tem conta? <a href="/client/signup{% if next_url %}?next={{ next_url }}{% endif %}">Criar conta</a>
+                Ainda não tem conta? <a href="/client/signup">Criar conta</a>
             </p>
         </div>
 

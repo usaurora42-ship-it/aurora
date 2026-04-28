@@ -22,7 +22,7 @@ def pix_get(order_id):
     pix = gerar_pix(
         valor=total,
         txid=str(order_id),
-        descricao='Amora Platter Box'
+        descricao='Aurora Semijóias'
     )
 
     return render_template(

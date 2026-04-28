@@ -1,379 +1,499 @@
 <!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aurora Semijóias — Criar Conta</title>
 
-        <meta name="description" content="static.js">
-        <meta name="author" content="">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 
-        <title>Amora Platter Box - HTML Reservation Form</title>
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
-        <!-- CSS FILES -->                
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            padding: 40px 0;
+        }
 
-        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
-        
-        <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
+        body::before {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            border: 0.5px solid #1e1a0e;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
 
-        <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">  
+        body::after {
+            content: '';
+            position: fixed;
+            width: 900px;
+            height: 900px;
+            border-radius: 50%;
+            border: 0.5px solid #14110a;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
 
-        <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
-<!--
+        .signup-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 560px;
+            padding: 0 20px;
+            animation: fadeUp 0.8s ease forwards;
+            opacity: 0;
+        }
 
-Tooplate 2137 Barista
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
 
-https://www.tooplate.com/view/2137-barista-cafe
+        /* Logo */
+        .login-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
-Bootstrap 5 HTML CSS Template
+        .login-logo img {
+            display: block;
+            margin: 0 auto;
+        }
 
--->
-    </head>
-    
-    <body class="reservation-page">
-              
-            <main>
-                <nav class="navbar navbar-expand-lg">                
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
-                            Amora
-                        </a>
-        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-        
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_1">Home</a>
-                                </li>
-        
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_2">Sobre Nós</a>
-                                </li>
+        .login-logo-sub {
+            display: block;
+            font-size: 13px;
+            letter-spacing: 5px;
+            color: #5a4a30;
+            margin-top: 6px;
+        }
 
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="/products/products" id="navbarDropdownMenuProducts" role="button" data-bs-toggle="dropdown" aria-expanded="false">Produtos</a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuProducts">
-                                        <li><a class="dropdown-item" href="#">Cestas</a></li>
-                                        <li><a class="dropdown-item" href="#">Bebidas</a></li>
-                                        <li><a class="dropdown-item" href="#">Alimentos</a></li>
-                                    </ul>
-                                </li>
+        /* Card */
+        .signup-card {
+            background: #0f0d09;
+            border: 0.5px solid #2a2414;
+            padding: 60px 56px;
+            position: relative;
+        }
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_4">Avaliações</a>
-                                </li>
+        .signup-card::before,
+        .signup-card::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: #c9a84c;
+            border-style: solid;
+        }
+        .signup-card::before {
+            top: -1px; left: -1px;
+            border-width: 1px 0 0 1px;
+        }
+        .signup-card::after {
+            bottom: -1px; right: -1px;
+            border-width: 0 1px 1px 0;
+        }
 
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/#section_5">Contato</a>
-                                </li>
-                            </ul>
+        .signup-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 40px;
+            font-weight: 300;
+            color: #f0e6c8;
+            margin-bottom: 4px;
+        }
 
-                            <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="cadastro">
-                                    Carrinho
-                                    <i class="bi-arrow-up-right ms-2"></i>
-                                </a>
-                            </div>
-                        </div>
+        .signup-title em {
+            color: #c9a84c;
+            font-style: italic;
+        }
+
+        .signup-subtitle {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #4a3a20;
+        }
+
+        .signup-divider {
+            width: 28px;
+            height: 0.5px;
+            background: #c9a84c;
+            margin: 16px 0 32px;
+        }
+
+        /* Section separator */
+        .section-label {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: #c9a84c;
+            margin-bottom: 20px;
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 0.5px;
+            background: #2a2414;
+        }
+
+        /* Alerts */
+        .alert-login {
+            background: #1a0a0a;
+            border: 0.5px solid #5a1a1a;
+            color: #c97a7a;
+            font-size: 13px;
+            letter-spacing: 1px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+
+        .alert-success {
+            background: #0a1a0a;
+            border: 0.5px solid #1a5a1a;
+            color: #7ac97a;
+            font-size: 13px;
+            letter-spacing: 1px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Labels */
+        .form-label-custom {
+            display: block;
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #7a6a50;
+            margin-bottom: 8px;
+        }
+
+        /* Inputs */
+        .form-input-custom {
+            width: 100%;
+            background: #0a0a0a;
+            border: 0.5px solid #2a2414;
+            border-radius: 0;
+            color: #e8d5a3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            padding: 16px 20px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 24px;
+        }
+
+        .form-input-custom:focus {
+            border-color: #c9a84c;
+            background: #0d0b07;
+        }
+
+        .form-input-custom::placeholder {
+            color: #3a3020;
+            font-size: 15px;
+        }
+
+        .form-input-custom.input-error {
+            border-color: #5a1a1a;
+            margin-bottom: 6px;
+        }
+
+        .field-error {
+            display: block;
+            font-size: 11px;
+            color: #c97a7a;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        /* Select */
+        .form-select-custom {
+            width: 100%;
+            background: #0a0a0a;
+            border: 0.5px solid #2a2414;
+            border-radius: 0;
+            color: #e8d5a3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            padding: 16px 20px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 24px;
+            appearance: none;
+            cursor: pointer;
+        }
+        .form-select-custom:focus { border-color: #c9a84c; background: #0d0b07; }
+        .form-select-custom option { background: #0f0d09; }
+
+        /* Two columns */
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Button */
+        .btn-signup {
+            width: 100%;
+            background: #c9a84c;
+            color: #0a0a0a;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            padding: 20px;
+            cursor: pointer;
+            transition: background 0.2s, opacity 0.2s;
+            margin-top: 8px;
+        }
+        .btn-signup:hover { background: #d4b55a; }
+        .btn-signup:active { opacity: 0.85; }
+
+        /* Login link */
+        .login-link {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 14px;
+            letter-spacing: 1px;
+            color: #4a3a20;
+        }
+        .login-link a {
+            color: #c9a84c;
+            text-decoration: none;
+            border-bottom: 0.5px solid #c9a84c;
+            padding-bottom: 1px;
+        }
+        .login-link a:hover { color: #d4b55a; }
+
+        /* Back link */
+        .back-link {
+            text-align: center;
+            margin-top: 32px;
+            margin-bottom: 20px;
+        }
+        .back-link a {
+            font-size: 13px;
+            letter-spacing: 3px;
+            color: #3a2e1a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .back-link a:hover { color: #7a6a50; }
+    </style>
+</head>
+<body>
+
+    <div class="signup-wrapper">
+
+        <div class="login-logo">
+            <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                style="height: 130px; width: auto;"
+                alt="Aurora Semijóias">
+            <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
+                style="height: 65px; width: auto; margin-top: 14px;"
+                alt="Aurora">
+            <span class="login-logo-sub">SEMIJÓIAS</span>
+        </div>
+
+        <div class="signup-card">
+
+            <h1 class="signup-title">Criar <em>conta</em></h1>
+            <p class="signup-subtitle">PREENCHA SEUS DADOS</p>
+            <div class="signup-divider"></div>
+
+            {% if success %}
+                <div class="alert-success">
+                    Conta criada com sucesso! <a href="/client/login" style="color:#c9a84c;">Faça login</a>
+                </div>
+            {% endif %}
+
+            {% if errors and errors.login %}
+                <div class="alert-login">{{ errors.login[0] }}</div>
+            {% endif %}
+
+            <form action="/client/signup{% if next_url %}?next={{ next_url }}{% endif %}" method="post">
+                <input type="hidden" name="next" value="{{ next_url }}">
+
+                <!-- DADOS PESSOAIS -->
+                <p class="section-label">DADOS PESSOAIS</p>
+
+                <label class="form-label-custom" for="name">NOME COMPLETO</label>
+                <input class="form-input-custom {% if errors and errors.name %}input-error{% endif %}"
+                    type="text" id="name" name="name" placeholder="Seu nome completo"
+                    value="{{ data_input.name if data_input else '' }}" required>
+                {% if errors and errors.name %}
+                    <span class="field-error">{{ errors.name[0] }}</span>
+                {% endif %}
+
+                <div class="row-2">
+                    <div>
+                        <label class="form-label-custom" for="email">EMAIL</label>
+                        <input class="form-input-custom {% if errors and errors.email %}input-error{% endif %}"
+                            type="email" id="email" name="email" placeholder="seu@email.com"
+                            value="{{ data_input.email if data_input else '' }}" required>
+                        {% if errors and errors.email %}
+                            <span class="field-error">{{ errors.email[0] }}</span>
+                        {% endif %}
                     </div>
-                </nav>
-                
-
-                <section class="booking-section section-padding">
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-lg-16 col-12 mx-auto">
-                            <div class="booking-form-wrap">
-                                <div class="row">
-                                    <div class="col-lg-8 col-12 p-0">
-                                        <form class="custom-form booking-form" action="/client/signup" method="POST" role="form">
-                                            <div class="text-center mb-6 pb-lg-4">
-                                                <h6 class="text-white">Seus Dados</h6>
-
-                                                <em class="text-white">Detalhes de Faturamento</em>
-                                            </div>
-                                            <div class="booking-form-body">
-                                                <div class="row">
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="text" name="name" id="name" class="form-control" placeholder="Nome Completo" required>
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" required>
-                                                    </div>
-													
-                                                    <div class="col-lg-6 col-12">
-                                                        <input type="phone" id="phone" class="form-control" name="phone" placeholder="Telefone" required="">
-                                                        
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-														<select class="form-control" name="typeperson" id="typeperson">
-														  <option value="tp" selected>Tipo de Pessoa</option>
-														  <option value="pf">Pessoa Física</option>
-														  <option value="pj">Pessoa Jurídica</option>
-														</select>
-													</div>
-
-                                                    <div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="document" name="document" id="document" placeholder="CPF/CNPJ" value="">
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input class="form-control" type="zip_code" name="zip_code" placeholder="CEP" value="">
-                                                    </div>
-													
-													<div class="col-lg-9 col-12">
-                                                        <input type="text" name="street" value="Endereço" id="street" class="form-control" placeholder="Endereço" required>
-                                                    </div>
-													
-													<div class="col-lg-3 col-12">
-                                                        <input class="form-control" type="text" name="street_number" value="Número">
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="complement" id="complement" class="form-control" placeholder="Complemento" required>
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="district" id="district" class="form-control" placeholder="Bairro" required>
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-                                                        <input type="text" name="city" id="city" class="form-control" placeholder="Cidade" required>
-                                                    </div>
-													
-													<div class="col-lg-6 col-12">
-														<select class="form-control" name="state">
-														  <option value="estado" selected>Estado</option>
-														    <option value="ac">AC</option>
-															<option value="al">AL</option>
-															<option value="ap">AP</option>
-															<option value="am">AM</option>
-															<option value="ba">BA</option>
-															<option value="ce">CE</option>
-															<option value="df">DF</option>
-															<option value="es">ES</option>
-															<option value="go">GO</option>
-															<option value="ma">MA</option>
-															<option value="mt">MT</option>
-															<option value="ms">MS</option>
-															<option value="mg">MG</option>
-															<option value="pa">PA</option>
-															<option value="pb">PB</option>
-															<option value="pr">PR</option>
-															<option value="pe">PE</option>
-															<option value="pi">PI</option>
-															<option value="rj">RJ</option>
-															<option value="rn">RN</option>
-															<option value="rs">RS</option>
-															<option value="ro">RO</option>
-															<option value="rr">RR</option>
-															<option value="sc">SC</option>
-															<option value="sp">SP</option>
-															<option value="se">SE</option>
-															<option value="to">TO</option>
-														</select>
-													</div>
-													
-													<div class="col-lg-4 col-12">
-                                                        <input type="text" name="country" id="country" class="form-control" placeholder="País" value="Brasil" required>
-                                                    </div>	
-													<p>
-													
-                                                    <div>
-                                                        <input type="checkbox" id="msgcheck" name="msgcheck" onclick="msgcheckFunction()"  />
-                                                        <label for="scales" class="text-white">Escrever mensagem para o presenteado</label>
-                                                    </div>
-                                                    <p>                                                         
-                                                    
-                                                    <div id="div_gifted_data" name="div_gifted_data" style="display: none;">
-                                                        <div type="text" class="text-center mb-6 pb-lg-4" id="gifted_data" name="gifted_data">
-                                                            <h6 class="text-white" >Dados do Presenteado</h6>
-                                                        </div>
-                                                        
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-12">
-                                                                <input type="gifted_name" name="gifted_name" id="gifted_name" class="form-control" placeholder="Nome do Presenteado">
-                                                            </div>
-                                                            
-                                                            <div class="col-lg-6 col-12">
-                                                                <input type="gifted_phone" id="gifted_phone" class="form-control" name="gifted_phone" placeholder="Telefone do Presenteado">
-                                                            </div>													
-                                                        </div>
-
-                                                        <div class="col-lg-12 col-12">
-                                                            <input type="text" name="gifted_ocasion" id="gifted_ocasion" class="form-control" placeholder="Ocasião do Presente">
-                                                        </div>
-                                                        
-                                                        <div class="col-lg-12 col-12">
-                                                            <textarea name="gifted_message" rows="3" class="form-control" id="gifted_message" placeholder="Texto para o Cartão (Opcional)"></textarea>
-                                                        </div>
-                                                        
-                                                        <div class="col-lg-12 col-12">
-                                                            <br>
-                                                            <input type="text" name="signature_card" id="signature_card" class="form-control" placeholder="Assinatura do Cartão">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-lg-6 col-12">
-													    <h8 class="text-white">Data de Entrega</h8>
-                                                        <input type="date" name="date_delivery" id="date_delivery" class="form-control" placeholder="Date">
-                                                    </div>
-													<div class="col-lg-6 col-12">
-													    <h8 class="text-white">Faixa de Horário</h8>
-														<select class="form-control" name="timeslot">
-														  <option value="hr" selected>Selecione um intervalo de tempo</option>
-														  <option value="1">08:00 - 12:00</option>
-														  <option value="2">12:00 - 18:00</option>
-														</select>
-													</div>
-
-                                                    <div>
-                                                        <input type="checkbox" id="checkuser" name="checkuser" onclick="checkuserFunction()"  />
-                                                        <label for="scales" class="text-white">Criar uma conta?</label>
-                                                    </div>
-                                                    <p> 
-                                                    
-                                                    <div id="div_gifted_user" name="div_gifted_user" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-lg-6 col-12">
-                                                                <input type="user_name" name="user_name" id="user_name" class="form-control" placeholder="Nome de Usuário da Conta">
-                                                            </div>
-                                                            
-                                                            <div class="col-lg-6 col-12">
-                                                                <input type="password" name="pwd" id="pwd" class="form-control" placeholder="Senha">
-                                                            </div>													
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-lg-4 col-md-10 col-8 mx-auto mt-2">
-                                                        <button type="submit" class="form-control">Enviar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="col-lg-4 col-12 p-0">
-                                        <div class="booking-form-image-wrap">
-                                            
-                                            <img src="{{url_for('static', filename='images/barman-with-fruits.jpg')}}" class="booking-form-image img-fluid" alt="">
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                    <div>
+                        <label class="form-label-custom" for="document">CPF / CNPJ</label>
+                        <input class="form-input-custom {% if errors and errors.document %}input-error{% endif %}"
+                            type="text" id="document" name="document" placeholder="000.000.000-00"
+                            value="{{ data_input.document if data_input else '' }}">
+                        {% if errors and errors.document %}
+                            <span class="field-error">{{ errors.document[0] }}</span>
+                        {% endif %}
                     </div>
-                </section>
+                </div>
 
-
-                <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-4 col-12 me-auto">
-                                <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-
-                                <strong class="text-white">
-                                    <i class="bi-geo-alt me-2"></i>
-                                    
-                                </strong>
-
-                                <ul class="social-icon mt-4">
-                                    <li class="social-icon-item">
-                                        <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram">
-                                        </a>
-                                    </li>
-        
-                                    <li class="social-icon-item">
-                                        <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter">
-                                        </a>
-                                    </li>
-
-                                    <li class="social-icon-item">
-                                        <a href="https://api.whatsapp.com/send?phone=5534998002691" class="social-icon-link bi-whatsapp">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                                <em class="text-white d-block mb-4">Contact</em>
-
-                                <p class="d-flex mb-1">
-                                    <strong class="me-2">Telefone:</strong>
-                                    <a href="tel: 99800-2691" class="site-footer-link">
-                                        (34) 
-                                        998002691
-                                    </a>
-                                </p>
-
-                                <p class="d-flex">
-                                    <strong class="me-2">Email:</strong>
-
-                                    <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">
-                                        amoraplatterbox@gmail.com
-                                    </a>
-                                </p>
-                            </div>
-
-
-                            <div class="col-lg-5 col-12">
-                                <em class="text-white d-block mb-4">Horário de funcionamento.</em>
-
-                                <ul class="opening-hours-list">
-                                    <li class="d-flex">
-                                        Segunda - Sexta
-                                        <span class="underline"></span>
-
-                                        <strong>7:00 - 19:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Sábado
-                                        <span class="underline"></span>
-
-                                        <strong>8:00 - 12:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Domingo
-                                        <span class="underline"></span>
-
-                                        <strong>Fechado</strong>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-8 col-12 mt-4">
-                                <p class="copyright-text mb-0">Copyright © Amora 2024 
-                                    - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                            </div>
-
+                <div class="row-2">
+                    <div>
+                        <label class="form-label-custom" for="typeperson">TIPO DE PESSOA</label>
+                        <select class="form-select-custom" id="typeperson" name="typeperson">
+                            <option value="PF" {% if data_input and data_input.typeperson == 'PF' %}selected{% endif %}>Pessoa Física</option>
+                            <option value="PJ" {% if data_input and data_input.typeperson == 'PJ' %}selected{% endif %}>Pessoa Jurídica</option>
+                        </select>
                     </div>
-                </footer>
-            </main>
+                    <div>
+                        <label class="form-label-custom" for="phone">TELEFONE</label>
+                        <input class="form-input-custom {% if errors and errors.phone %}input-error{% endif %}"
+                            type="text" id="phone" name="phone" placeholder="(00) 00000-0000"
+                            value="{{ data_input.phone if data_input else '' }}">
+                        {% if errors and errors.phone %}
+                            <span class="field-error">{{ errors.phone[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
 
+                <!-- ENDEREÇO -->
+                <p class="section-label">ENDEREÇO</p>
 
-        <!-- JAVASCRIPT FILES -->
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-    </body>
+                <div class="row-2">
+                    <div>
+                        <label class="form-label-custom" for="zip_code">CEP</label>
+                        <input class="form-input-custom {% if errors and errors.zip_code %}input-error{% endif %}"
+                            type="text" id="zip_code" name="zip_code" placeholder="00000-000"
+                            value="{{ data_input.zip_code if data_input else '' }}">
+                        {% if errors and errors.zip_code %}
+                            <span class="field-error">{{ errors.zip_code[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label-custom" for="state">ESTADO</label>
+                        <input class="form-input-custom {% if errors and errors.state %}input-error{% endif %}"
+                            type="text" id="state" name="state" placeholder="MG"
+                            value="{{ data_input.state if data_input else '' }}">
+                        {% if errors and errors.state %}
+                            <span class="field-error">{{ errors.state[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="row-2">
+                    <div>
+                        <label class="form-label-custom" for="city">CIDADE</label>
+                        <input class="form-input-custom {% if errors and errors.city %}input-error{% endif %}"
+                            type="text" id="city" name="city" placeholder="Sua cidade"
+                            value="{{ data_input.city if data_input else '' }}">
+                        {% if errors and errors.city %}
+                            <span class="field-error">{{ errors.city[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label-custom" for="district">BAIRRO</label>
+                        <input class="form-input-custom {% if errors and errors.district %}input-error{% endif %}"
+                            type="text" id="district" name="district" placeholder="Seu bairro"
+                            value="{{ data_input.district if data_input else '' }}">
+                        {% if errors and errors.district %}
+                            <span class="field-error">{{ errors.district[0] }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <label class="form-label-custom" for="street">RUA</label>
+                <input class="form-input-custom {% if errors and errors.street %}input-error{% endif %}"
+                    type="text" id="street" name="street" placeholder="Nome da rua"
+                    value="{{ data_input.street if data_input else '' }}">
+                {% if errors and errors.street %}
+                    <span class="field-error">{{ errors.street[0] }}</span>
+                {% endif %}
+
+                <div class="row-2">
+                    <div>
+                        <label class="form-label-custom" for="street_number">NÚMERO</label>
+                        <input class="form-input-custom {% if errors and errors.street_number %}input-error{% endif %}"
+                            type="text" id="street_number" name="street_number" placeholder="000"
+                            value="{{ data_input.street_number if data_input else '' }}">
+                        {% if errors and errors.street_number %}
+                            <span class="field-error">{{ errors.street_number[0] }}</span>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label-custom" for="complement">COMPLEMENTO</label>
+                        <input class="form-input-custom"
+                            type="text" id="complement" name="complement" placeholder="Apto, bloco..."
+                            value="{{ data_input.complement if data_input else '' }}">
+                    </div>
+                </div>
+
+                <!-- DADOS DE ACESSO -->
+                <p class="section-label">DADOS DE ACESSO</p>
+
+                <label class="form-label-custom" for="user_name">USUÁRIO</label>
+                <input class="form-input-custom {% if errors and errors.user_name %}input-error{% endif %}"
+                    type="text" id="user_name" name="user_name" placeholder="Escolha um usuário"
+                    value="{{ data_input.user_name if data_input else '' }}" required>
+                {% if errors and errors.user_name %}
+                    <span class="field-error">{{ errors.user_name[0] }}</span>
+                {% endif %}
+
+                <label class="form-label-custom" for="pwd">SENHA</label>
+                <input class="form-input-custom {% if errors and errors.pwd %}input-error{% endif %}"
+                    type="password" id="pwd" name="pwd" placeholder="••••••••" required>
+                {% if errors and errors.pwd %}
+                    <span class="field-error">{{ errors.pwd[0] }}</span>
+                {% endif %}
+
+                <button class="btn-signup" type="submit">CRIAR CONTA</button>
+
+            </form>
+
+            <p class="login-link">
+                Já tem conta? <a href="/client/login">Fazer login</a>
+            </p>
+        </div>
+
+        <div class="back-link">
+            <a href="/">← VOLTAR PARA O INÍCIO</a>
+        </div>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
 </html>

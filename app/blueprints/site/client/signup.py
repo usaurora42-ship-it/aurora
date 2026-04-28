@@ -1,6 +1,6 @@
 # encoding: utf-8
 import re
-from flask import render_template, make_response, request, session
+from flask import render_template, make_response, request, session, redirect
 
 from app.blueprints.site import SiteBlueprint
 
@@ -9,7 +9,6 @@ from app import environment
 from app.model.client import ModelClient
 from app.model.phones import ModelPhone
 from app.model.address import ModelAddress
-from app.model.gifted import ModelClientGifted
 from app.model.client_phone import ModelClientPhone
 from app.model.client_address import ModelClientAddress
 from app.model.users import ModelUser
@@ -63,15 +62,6 @@ def signup_post():
         status=StatusEnum.enabled
     )
 
-    # query gifted 
-    query_gifted = ModelClientGifted.query.with_entities(
-         ModelClientGifted.client_id
-    ).filter_by(
-        status=StatusEnum.enabled
-    ).join(ModelClient).filter_by(
-        status=StatusEnum.enabled
-    )
-    
     # query user 
     query_user = ModelUser.query.with_entities(
          ModelUser.client_id
@@ -87,7 +77,6 @@ def signup_post():
     model_client_phone = ModelClientPhone()
     model_address = ModelAddress()
     model_client_address = ModelClientAddress()
-    model_client_gifted = ModelClientGifted()
     model_user = ModelUser()
 
     try:
@@ -171,17 +160,9 @@ def signup_post():
             ModelClient.id == client.id
         ).first()
 
-        # country
-        data_country = data.pop('country')[0:3]
+        # country fixo como Brasil
         model_country = ModelCountry()
-        country_id = model_country.get_country_id(data_country)
-        if country_id is None:
-            return {
-                'errors': {
-                    'country': ['country %s unavalible' % data_country]
-                }
-            }, 400
-
+        country_id = model_country.get_country_id('BRA')
         data['country_id'] = country_id
 
         # create client address
@@ -227,42 +208,6 @@ def signup_post():
                 return resp     
 
 
-        gifted = query_gifted.filter(
-            ModelClient.id == client.id
-        ).first()
-
-        # # create client gifted
-        if gifted is None:
-            data_client_gifted = {
-                'client_id': client.id,
-                'gifted_name': data['gifted_name'],
-                'gifted_ocasion': data['gifted_ocasion'],
-                'signature_card': data['signature_card'],
-                'gifted_message': data['gifted_message'],
-                'code_country': '55', #data['phone'][0:2]'',
-                'code_area': data['gifted_phone'][1:3],
-                'number': data['gifted_phone'][4:15].replace("-","")         
-        }      
-       
-        
-        gifted = model_client_gifted.create_client_gifted(data_client_gifted)
-        
-        # errors
-        if gifted is None:
-            resp = make_response(render_template('client/signup.html',
-                        success=False,
-                        errors=model_address.errors,
-                            data_input=data))
-
-            resp.mimetype = 'text/html'
-            return resp 
-        
-        # create client x gifted
-        data_client_gifted = {
-            'gifted_id': gifted.client_id,
-            'client_id': client.id            
-        }         
-        
         user = query_user.filter(
             ModelClient.id == client.id
         ).first()        
@@ -295,12 +240,9 @@ def signup_post():
             'client_id': client.id            
         }         
         
-        # success response
-        resp = make_response(render_template('client/signup.html',                            
-                                success=True,
-                                errors=None))
-        resp.mimetype = 'text/html'
-        return resp
+        # redireciona para next ou login
+        next_url = request.args.get('next') or request.form.get('next') or '/client/login'
+        return redirect(next_url)
 
     except Exception as e:
             LOGGER.exception(e)
