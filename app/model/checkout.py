@@ -72,15 +72,22 @@ class ModelCheckout(db.Model):
         nullable=True   # endereço criado junto com o checkout
     )
 
+    # ── CONTATO ──
+    email = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    # ── ENDEREÇO DE ENTREGA ──
+    zip_code      = db.Column(db.String(9),   nullable=False)
+    street        = db.Column(db.String(200),  nullable=False)
+    street_number = db.Column(db.String(20),   nullable=False)
+    complement    = db.Column(db.String(100),  nullable=True)
+    district      = db.Column(db.String(100),  nullable=False)
+    city          = db.Column(db.String(100),  nullable=False)
+    state         = db.Column(db.String(2),    nullable=False)
+
     # ── ENTREGA ──
-    delivery_date = db.Column(
-        db.Date,
-        nullable=False
-    )
-    delivery_time = db.Column(
-        db.String(20),   # ex: "09:00 - 11:00"
-        nullable=False
-    )
     notes = db.Column(
         db.String(500),
         nullable=True
@@ -188,11 +195,36 @@ class ModelCheckout(db.Model):
             required: false
             type: integer
             coerce: integer
-        delivery_date:
+        email:
+            maxlength: 150
             required: true
             type: string
-        delivery_time:
+        zip_code:
+            maxlength: 9
+            required: true
+            type: string
+        street:
+            maxlength: 200
+            required: true
+            type: string
+        street_number:
             maxlength: 20
+            required: true
+            type: string
+        complement:
+            maxlength: 100
+            required: false
+            type: string
+        district:
+            maxlength: 100
+            required: true
+            type: string
+        city:
+            maxlength: 100
+            required: true
+            type: string
+        state:
+            maxlength: 2
             required: true
             type: string
         notes:

@@ -32,6 +32,32 @@ https://www.tooplate.com/view/2137-barista-cafe
 Bootstrap 5 HTML CSS Template
 
 -->
+    
+        <style>
+            /* ── Carrinho badge ── */
+            .cart-badge {
+                position: absolute;
+                top: -6px;
+                right: -8px;
+                background: #e74c3c;
+                color: #fff;
+                font-size: 0.65rem;
+                font-weight: 700;
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
+            }
+            .cart-badge.bump { transform: scale(1.5); }
+            .cart-btn-wrap {
+                position: relative;
+                display: inline-block;
+            }
+        </style>
+
     </head>
     
     <body>
@@ -80,9 +106,20 @@ Bootstrap 5 HTML CSS Template
                             </ul>
 
                             <div class="ms-lg-3">
-                                <a class="btn custom-btn custom-border-btn" href="/client/signup">
-                                    Carrinho
-                                    <i class="bi-arrow-up-right ms-2"></i>
+                                {% if session.get('client_id') %}
+                                    <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-right: 8px;">
+                                        Olá, {{ session.get('client_name', '').split()[0] }}
+                                    </span>
+                                    <a href="/logout" style="color: #c9a84c; font-size: 0.82rem; text-decoration: none; border-bottom: 0.5px solid #c9a84c; padding-bottom: 1px; margin-right: 12px;">
+                                        Sair
+                                    </a>
+                                {% endif %}
+
+                                <!-- Carrinho -->
+                                <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
+                                    <strong class="small-text">Carrinho</strong>
+                                    <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
+                                    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
                                 </a>
                             </div>
                         </div>
@@ -612,6 +649,29 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
 
+
+    
+        <script>
+            // ── Atualiza o badge do carrinho ──
+            function updateCartBadge(count) {
+                const badge = document.getElementById('cartBadge');
+                if (!badge) return;
+                if (count > 0) {
+                    badge.textContent = count > 99 ? '99+' : count;
+                    badge.style.display = 'flex';
+                    badge.classList.add('bump');
+                    setTimeout(() => badge.classList.remove('bump'), 300);
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            // ── Carrega contagem atual do carrinho ao entrar na página ──
+            fetch('/cart/count')
+                .then(res => res.json())
+                .then(data => updateCartBadge(data.count))
+                .catch(() => {});
+        </script>
 
     </body>
 </html>

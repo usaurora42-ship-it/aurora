@@ -307,76 +307,117 @@
                                 <!-- Dados pessoais -->
                                 <div class="checkout-panel mb-4">
                                     <div class="panel-title">
-                                        <i class="bi-person"></i> Dados Pessoais
+                                        <i class="bi-person"></i> Dados de Contato
                                     </div>
 
                                     <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label">Nome completo *</label>
-                                            <input type="text" name="name" class="form-input {% if errors and errors.name %}is-invalid{% endif %}"
-                                                   placeholder="Seu nome" value="{{ form_data.name if form_data else '' }}">
-                                            {% if errors and errors.name %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.name }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Telefone / WhatsApp *</label>
-                                            <input type="tel" name="phone" id="phone" class="form-input {% if errors and errors.phone %}is-invalid{% endif %}"
-                                                   placeholder="(34) 99999-9999" value="{{ form_data.phone if form_data else '' }}">
-                                            {% if errors and errors.phone %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.phone }}</span>
+                                        <div class="form-group" style="grid-column: 1 / -1;">
+                                            <label class="form-label">E-mail *</label>
+                                            <input type="email" name="email" class="form-input {% if errors and errors.email %}is-invalid{% endif %}"
+                                                   placeholder="seu@email.com" value="{{ form_data.email if form_data else '' }}">
+                                            {% if errors and errors.email %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.email }}</span>
                                             {% endif %}
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Endereço (vindo do cadastro do cliente) -->
-                                {% if client_address %}
+                                <!-- Entrega / CEP -->
                                 <div class="checkout-panel mb-4">
                                     <div class="panel-title">
-                                        <i class="bi-geo-alt"></i> Endereço de Entrega
+                                        <i class="bi-geo-alt"></i> Entrega
                                     </div>
-                                    <div class="form-group" style="margin-bottom:0">
-                                        <p class="form-label" style="color:rgba(255,255,255,0.7); font-size:0.9rem; text-transform:none; letter-spacing:0;">
-                                            {{ client_address.street }}, {{ client_address.street_number }}
-                                            {% if client_address.complement %} — {{ client_address.complement }}{% endif %}<br>
-                                            {{ client_address.district }}, {{ client_address.city }}/{{ client_address.state }}<br>
-                                            CEP {{ client_address.zip_code }}
-                                        </p>
-                                        <a href="/client/signup" style="color:#c8922a; font-size:0.78rem;">Alterar endereço</a>
-                                    </div>
-                                </div>
-                                {% endif %}
 
-                                <!-- Data e horário -->
-                                <div class="checkout-panel mb-4">
-                                    <div class="panel-title">
-                                        <i class="bi-calendar3"></i> Data e Horário
+                                    <!-- CEP -->
+                                    <div class="form-group mb-2">
+                                        <label class="form-label">CEP *</label>
+                                        <div style="display:flex; align-items:center; gap:10px;">
+                                            <input type="text" name="zip_code" id="zip_code"
+                                                   class="form-input {% if errors and errors.zip_code %}is-invalid{% endif %}"
+                                                   placeholder="00000-000" maxlength="9"
+                                                   value="{{ form_data.zip_code if form_data else '' }}"
+                                                   style="flex:1;">
+                                            <span id="cep-loading" style="display:none; color:#c9a84c; font-size:0.8rem; white-space:nowrap;">
+                                                <i class="bi-arrow-repeat"></i> Buscando...
+                                            </span>
+                                            <span id="cep-error" style="display:none; color:#e74c3c; font-size:0.8rem; white-space:nowrap;">
+                                                <i class="bi-exclamation-circle"></i> CEP não encontrado
+                                            </span>
+                                        </div>
+                                        <a href="https://buscacepinter.correios.com.br/app/endereco/index.php"
+                                           target="_blank"
+                                           style="color:#c9a84c; font-size:0.75rem; text-decoration:none; display:inline-block; margin-top:4px;">
+                                            Não sei meu CEP
+                                        </a>
+                                        {% if errors and errors.zip_code %}
+                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.zip_code }}</span>
+                                        {% endif %}
                                     </div>
-                                    <div class="form-row">
+
+                                    <!-- Campos preenchidos pelo ViaCEP -->
+                                    <div id="address-fields" style="display:{% if form_data and form_data.zip_code %}block{% else %}none{% endif %};">
                                         <div class="form-group">
-                                            <label class="form-label">Data de entrega *</label>
-                                            <input type="date" name="delivery_date" class="form-input {% if errors and errors.delivery_date %}is-invalid{% endif %}"
-                                                   value="{{ form_data.delivery_date if form_data else '' }}"
-                                                   min="{{ '' }}">
-                                            {% if errors and errors.delivery_date %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.delivery_date }}</span>
+                                            <label class="form-label">Rua *</label>
+                                            <input type="text" name="street" id="street"
+                                                   class="form-input {% if errors and errors.street %}is-invalid{% endif %}"
+                                                   placeholder="Rua, Avenida..."
+                                                   value="{{ form_data.street if form_data else '' }}">
+                                            {% if errors and errors.street %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street }}</span>
                                             {% endif %}
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label">Horário desejado *</label>
-                                            <select name="delivery_time" class="form-input {% if errors and errors.delivery_time %}is-invalid{% endif %}">
-                                                <option value="">Selecione...</option>
-                                                <option value="07:00 - 09:00" {% if form_data and form_data.delivery_time == '07:00 - 09:00' %}selected{% endif %}>07:00 - 09:00</option>
-                                                <option value="09:00 - 11:00" {% if form_data and form_data.delivery_time == '09:00 - 11:00' %}selected{% endif %}>09:00 - 11:00</option>
-                                                <option value="11:00 - 13:00" {% if form_data and form_data.delivery_time == '11:00 - 13:00' %}selected{% endif %}>11:00 - 13:00</option>
-                                                <option value="13:00 - 15:00" {% if form_data and form_data.delivery_time == '13:00 - 15:00' %}selected{% endif %}>13:00 - 15:00</option>
-                                                <option value="15:00 - 17:00" {% if form_data and form_data.delivery_time == '15:00 - 17:00' %}selected{% endif %}>15:00 - 17:00</option>
-                                                <option value="17:00 - 19:00" {% if form_data and form_data.delivery_time == '17:00 - 19:00' %}selected{% endif %}>17:00 - 19:00</option>
-                                            </select>
-                                            {% if errors and errors.delivery_time %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.delivery_time }}</span>
-                                            {% endif %}
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Número *</label>
+                                                <input type="text" name="street_number" id="street_number"
+                                                       class="form-input {% if errors and errors.street_number %}is-invalid{% endif %}"
+                                                       placeholder="123"
+                                                       value="{{ form_data.street_number if form_data else '' }}">
+                                                {% if errors and errors.street_number %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street_number }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Complemento</label>
+                                                <input type="text" name="complement" id="complement"
+                                                       class="form-input"
+                                                       placeholder="Apto, Bloco..."
+                                                       value="{{ form_data.complement if form_data else '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Bairro *</label>
+                                                <input type="text" name="district" id="district"
+                                                       class="form-input {% if errors and errors.district %}is-invalid{% endif %}"
+                                                       placeholder="Bairro"
+                                                       value="{{ form_data.district if form_data else '' }}">
+                                                {% if errors and errors.district %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.district }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Cidade *</label>
+                                                <input type="text" name="city" id="city"
+                                                       class="form-input {% if errors and errors.city %}is-invalid{% endif %}"
+                                                       placeholder="Cidade"
+                                                       value="{{ form_data.city if form_data else '' }}">
+                                                {% if errors and errors.city %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.city }}</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Estado *</label>
+                                                <input type="text" name="state" id="state"
+                                                       class="form-input {% if errors and errors.state %}is-invalid{% endif %}"
+                                                       placeholder="UF" maxlength="2"
+                                                       value="{{ form_data.state if form_data else '' }}">
+                                                {% if errors and errors.state %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.state }}</span>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +430,7 @@
                                     <div class="form-group" style="margin-bottom:0">
                                         <label class="form-label">Alguma observação? (opcional)</label>
                                         <textarea name="notes" class="form-input"
-                                                  placeholder="Ex: deixar na portaria, presente para alguém, restrições alimentares...">{{ form_data.notes if form_data else '' }}</textarea>
+                                                  placeholder="Ex: deixar na portaria, presente para alguém...">{{ form_data.notes if form_data else '' }}</textarea>
                                     </div>
                                 </div>
 
@@ -477,12 +518,42 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
         <script>
-            // Máscara de telefone
-            $('#phone').mask('(00) 00000-0000');
+            // Máscara CEP
+            $('#zip_code').mask('00000-000');
 
-            // Data mínima = hoje
-            const today = new Date().toISOString().split('T')[0];
-            document.querySelector('input[name="delivery_date"]').setAttribute('min', today);
+            // Busca ViaCEP ao sair do campo
+            document.getElementById('zip_code').addEventListener('blur', function () {
+                const cep = this.value.replace(/\D/g, '');
+                const loading = document.getElementById('cep-loading');
+                const errMsg  = document.getElementById('cep-error');
+                const fields  = document.getElementById('address-fields');
+
+                errMsg.style.display = 'none';
+                if (cep.length !== 8) return;
+
+                loading.style.display = 'inline';
+
+                fetch('https://viacep.com.br/ws/' + cep + '/json/')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        loading.style.display = 'none';
+                        if (data.erro) {
+                            errMsg.style.display = 'inline';
+                            fields.style.display = 'none';
+                            return;
+                        }
+                        document.getElementById('street').value   = data.logradouro || '';
+                        document.getElementById('district').value = data.bairro      || '';
+                        document.getElementById('city').value     = data.localidade  || '';
+                        document.getElementById('state').value    = data.uf          || '';
+                        fields.style.display = 'block';
+                        document.getElementById('street_number').focus();
+                    })
+                    .catch(function() {
+                        loading.style.display = 'none';
+                        errMsg.style.display  = 'inline';
+                    });
+            });
         </script>
     </body>
 </html>
