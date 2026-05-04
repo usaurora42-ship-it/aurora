@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>        
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Aurora Semijóias - Pagamento PIX</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
+
+        <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">  
+        <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
+        <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
+
+        <style>
+            html, body { min-height: 100%; }
+            body.reservation-page,
+            body.reservation-page * {
+                background-image: none !important;
+            }
+
+            body.reservation-page {
+                background-color: #2e1f0a !important;
+                background:
+                    radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.35) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(180,110,50,0.40) 0%, transparent 55%),
+                    linear-gradient(160deg, #3d2a0f 0%, #2e1f0a 40%, #251a08 70%, #342210 100%) !important;
+                background-attachment: fixed !important;
+            }
+            main { position: relative; z-index: 1; }
+
+            /* ── Layout central ── */
+            .pix-wrap {
+                max-width: 520px;
+                margin: 0 auto;
+                padding: 20px 0 60px;
+            }
+
+            .vegas-overlay,
+            .vegas-slide,
+            .vegas-wrapper,
+            .vegas-timer {
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+
+            /* ── Steps ── */
+            .checkout-steps {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0;
+                margin-bottom: 36px;
+            }
+            .step { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; color: #555; }
+            .step.done { color: #4caf50; }
+            .step.active { color: #c8922a; }
+            .step-num {
+                width: 28px; height: 28px; border-radius: 50%;
+                border: 2px solid #444;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
+            }
+            .step.done .step-num { border-color: #4caf50; background: rgba(76,175,80,0.15); color: #4caf50; }
+            .step.active .step-num { border-color: #c8922a; background: rgba(200,146,42,0.15); color: #c8922a; }
+            .step-line { width: 50px; height: 1px; background: #333; margin: 0 8px; }
+
+            /* ── Card PIX ── */
+            .pix-card {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-radius: 20px;
+                overflow: hidden;
+            }
+
+            .pix-header {
+                background: rgba(255,255,255,0.05);
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                padding: 20px 28px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+            .pix-logo {
+                width: 42px; height: 42px;
+                background: #32BCAD;
+                border-radius: 10px;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.3rem;
+                flex-shrink: 0;
+            }
+            .pix-header-text h5 {
+                color: #fff;
+                font-weight: 700;
+                font-size: 1rem;
+                margin: 0 0 2px;
+            }
+            .pix-header-text p {
+                color: #777;
+                font-size: 0.78rem;
+                margin: 0;
+            }
+            .pix-valor {
+                margin-left: auto;
+                text-align: right;
+            }
+            .pix-valor span {
+                display: block;
+                color: rgba(255,255,255,0.4);
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+            }
+            .pix-valor strong {
+                color: #fff;
+                font-size: 1.3rem;
+                font-weight: 700;
+            }
+
+            .pix-body { padding: 28px; }
+
+            /* ── Instruções ── */
+            .pix-steps-list {
+                list-style: none;
+                padding: 0; margin: 0 0 24px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .pix-steps-list li {
+                display: flex;
+                align-items: flex-start;
+                gap: 10px;
+                color: #aaa;
+                font-size: 0.82rem;
+                line-height: 1.5;
+            }
+            .pix-step-num {
+                width: 22px; height: 22px;
+                background: rgba(50,188,173,0.15);
+                border: 1px solid rgba(50,188,173,0.3);
+                border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 0.7rem; font-weight: 700;
+                color: #32BCAD;
+                flex-shrink: 0;
+                margin-top: 1px;
+            }
+
+            /* ── QR Code ── */
+            .qrcode-wrap {
+                background: #fff;
+                border-radius: 16px;
+                padding: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 24px;
+                position: relative;
+            }
+            .qrcode-wrap img {
+                width: 100%;
+                max-width: 260px;
+                height: auto;
+                display: block;
+            }
+            .qrcode-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(255,255,255,0.92);
+                border-radius: 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                opacity: 0;
+                transition: opacity 0.2s;
+                pointer-events: none;
+            }
+            .qrcode-wrap:hover .qrcode-overlay { opacity: 1; }
+            .qrcode-overlay span { color: #333; font-size: 0.8rem; font-weight: 600; }
+
+            /* ── Copia e Cola ── */
+            .copypaste-label {
+                color: rgba(255,255,255,0.4);
+                font-size: 0.7rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                margin-bottom: 8px;
+                display: block;
+            }
+            .copypaste-wrap {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 24px;
+            }
+            .copypaste-input {
+                flex: 1;
+                background: rgba(255,255,255,0.06);
+                border: 1px solid rgba(255,255,255,0.1);
+                border-radius: 10px;
+                padding: 10px 14px;
+                color: #aaa;
+                font-size: 0.75rem;
+                font-family: 'Courier New', monospace;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                cursor: pointer;
+            }
+            .btn-copy {
+                background: rgba(50,188,173,0.15);
+                border: 1px solid rgba(50,188,173,0.3);
+                color: #32BCAD;
+                border-radius: 10px;
+                padding: 10px 16px;
+                font-size: 0.82rem;
+                font-weight: 600;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: background 0.2s;
+                display: flex; align-items: center; gap: 6px;
+            }
+            .btn-copy:hover { background: rgba(50,188,173,0.25); }
+            .btn-copy.copied {
+                background: rgba(76,175,80,0.2);
+                border-color: rgba(76,175,80,0.4);
+                color: #4caf50;
+            }
+
+            /* ── Aviso expiração ── */
+            .pix-timer {
+                background: rgba(255,193,7,0.08);
+                border: 1px solid rgba(255,193,7,0.2);
+                border-radius: 10px;
+                padding: 10px 14px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: #ffc107;
+                font-size: 0.8rem;
+                margin-bottom: 20px;
+            }
+
+            /* ── Botão confirmar ── */
+            .btn-confirmar {
+                display: block; width: 100%;
+                background: #32BCAD;
+                color: #fff; border: none;
+                border-radius: 10px; padding: 14px;
+                font-weight: 700; font-size: 0.95rem;
+                text-align: center; text-decoration: none;
+                cursor: pointer;
+                transition: background 0.2s, transform 0.15s;
+            }
+            .btn-confirmar:hover { background: #28a99b; transform: translateY(-1px); color: #fff; }
+
+            .btn-voltar {
+                display: flex; align-items: center; gap: 6px;
+                color: #555; font-size: 0.8rem; text-decoration: none;
+                margin-bottom: 24px; transition: color 0.2s;
+            }
+            .btn-voltar:hover { color: #aaa; }
+
+            .page-title { color: #fff; font-size: 1.4rem; font-weight: 700; margin-bottom: 4px; }
+            .page-subtitle { color: #666; font-size: 0.85rem; margin-bottom: 28px; }
+        </style>
+    </head>
+    
+    <body class="reservation-page">
+        <main>
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="/">
+                        <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                        Aurora
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item"><a class="nav-link" href="/#section_1">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/#section_2">Sobre Nós</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <section class="booking-section section-padding">
+                <div class="container">
+                    <div class="text-center">
+                        <h4 class="page-title">Pagamento via PIX</h4>
+                        <p class="page-subtitle">Escaneie o QR Code ou copie o código para pagar</p>
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="checkout-steps mb-4">
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Carrinho</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Dados</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step active">
+                            <div class="step-num">3</div>
+                            <span>Pagamento</span>
+                        </div>
+                    </div>
+
+                    <div class="pix-wrap">
+                        <a href="/cart/checkout" class="btn-voltar">
+                            <i class="bi-arrow-left"></i> Voltar
+                        </a>
+
+                        <div class="pix-card">
+                            <!-- Header -->
+                            <div class="pix-header">
+                                <div class="pix-logo">🏦</div>
+                                <div class="pix-header-text">
+                                    <h5>Pagamento PIX</h5>
+                                    <p>Pedido #{{ order_id }}</p>
+                                </div>
+                                <div class="pix-valor">
+                                    <span>Total</span>
+                                    <strong>{{ pix.valor_fmt }}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="pix-body">
+
+                                <!-- Instruções -->
+                                <ul class="pix-steps-list">
+                                    <li>
+                                        <div class="pix-step-num">1</div>
+                                        Abra o app do seu banco e acesse a opção <strong style="color:#ddd;">PIX</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">2</div>
+                                        Escolha <strong style="color:#ddd;">Pagar com QR Code</strong> ou <strong style="color:#ddd;">Copia e Cola</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">3</div>
+                                        Confirme os dados e o valor de <strong style="color:#32BCAD;">{{ pix.valor_fmt }}</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">4</div>
+                                        Após pagar, clique em <strong style="color:#ddd;">"Já paguei"</strong> abaixo
+                                    </li>
+                                </ul>
+
+                                <!-- QR Code -->
+                                <div class="qrcode-wrap">
+                                    <img src="data:image/png;base64,{{ pix.qrcode_b64 }}" alt="QR Code PIX">
+                                    <div class="qrcode-overlay">
+                                        <i class="bi-zoom-in" style="font-size:1.5rem;color:#333;"></i>
+                                        <span>QR Code PIX</span>
+                                    </div>
+                                </div>
+
+                                <!-- Copia e Cola -->
+                                <span class="copypaste-label">
+                                    <i class="bi-clipboard me-1"></i> PIX Copia e Cola
+                                </span>
+                                <div class="copypaste-wrap">
+                                    <div class="copypaste-input" id="pixCode" title="{{ pix.payload }}">
+                                        {{ pix.payload[:60] }}...
+                                    </div>
+                                    <button class="btn-copy" id="btnCopy" onclick="copiarPix()">
+                                        <i class="bi-clipboard"></i> Copiar
+                                    </button>
+                                </div>
+
+                                <!-- Timer -->
+                                <div class="pix-timer">
+                                    <i class="bi-clock"></i>
+                                    <span>Este QR Code é válido por <strong id="timer">30:00</strong> minutos</span>
+                                </div>
+
+                                <!-- Botão confirmar -->
+                                <a href="{{ whatsapp_url }}" target="_blank" class="btn-confirmar">
+                                    <i class="bi-whatsapp me-2"></i> Já paguei — Confirmar pelo WhatsApp
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 col-12 mt-4">
+                            <p class="copyright-text mb-0">Copyright © Aurora 2026</p>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+        <script>
+            // ── Remove o Vegas imediatamente após o custom.js iniciá-lo ──
+            $(document).ready(function() {
+                try {
+                    $('body').vegas('destroy');
+                } catch(e) {}
+
+                // Remove os elementos injetados pelo Vegas no DOM
+                $('.vegas-slide, .vegas-overlay, .vegas-wrapper, .vegas-timer').remove();
+
+                // Garante o fundo correto
+                $('body').css({
+                    'background': 'linear-gradient(160deg, #3d2a0f 0%, #2e1f0a 40%, #251a08 70%, #342210 100%)',
+                    'background-attachment': 'fixed'
+                });
+            });
+
+            // ── Copia o payload PIX ──
+            const fullPayload = "{{ pix.payload }}";
+
+            function copiarPix() {
+                navigator.clipboard.writeText(fullPayload).then(() => {
+                    const btn = document.getElementById('btnCopy');
+                    btn.classList.add('copied');
+                    btn.innerHTML = '<i class="bi-check2"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = '<i class="bi-clipboard"></i> Copiar';
+                    }, 3000);
+                });
+            }
+
+            // ── Timer de 30 minutos ──
+            let seconds = 30 * 60;
+            const timerEl = document.getElementById('timer');
+
+            setInterval(() => {
+                if (seconds <= 0) {
+                    timerEl.textContent = 'Expirado';
+                    timerEl.style.color = '#ff6b6b';
+                    return;
+                }
+                seconds--;
+                const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+            }, 1000);
+        </script>
+    </body>
+</html>

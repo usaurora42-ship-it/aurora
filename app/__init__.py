@@ -237,6 +237,19 @@ def handle_bad_request(e):
     }, 500
 """
 
+# ── Context processor: injeta dados do usuário em todos os templates ──
+from flask import session as flask_session
+
+@FlaskApp.context_processor
+def inject_user():
+    return {
+        'current_user': {
+            'id':   flask_session.get('client_id'),
+            'name': flask_session.get('client_name', ''),
+            'logged_in': bool(flask_session.get('client_id')),
+        }
+    }
+
 # API
 api = Api(FlaskApp)
 

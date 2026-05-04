@@ -87,6 +87,14 @@ class ModelCheckout(db.Model):
     city          = db.Column(db.String(100),  nullable=False)
     state         = db.Column(db.String(2),    nullable=False)
 
+    # ── PREFERÊNCIAS ──
+    email_optin = db.Column(
+        db.Boolean,
+        nullable=False,
+        default=False,
+        server_default='0'
+    )
+
     # ── ENTREGA ──
     notes = db.Column(
         db.String(500),
@@ -146,6 +154,19 @@ class ModelCheckout(db.Model):
 
     # ── CREATE ──
     def create_checkout(self, data):
+        # Remove campos None/vazios opcionais antes de validar (Cerberus não aceita null)
+        optional_fields = ['complement', 'notes', 'address_id']
+        for field in optional_fields:
+            if field in data and not data[field]:
+                del data[field]
+
+        # Garante que email_optin seja bool
+        if 'email_optin' in data:
+            data['email_optin'] = bool(data['email_optin'])
+
+        # Extrai email_optin antes de validar (o coerce boolean do validator é incompatível)
+        email_optin_value = bool(data.pop('email_optin', False))
+
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -157,6 +178,8 @@ class ModelCheckout(db.Model):
         for k in data:
             setattr(self, k, data[k])
 
+        # Seta email_optin diretamente
+        self.email_optin = email_optin_value
         self.uuid = util.gen_uuid()
 
         try:

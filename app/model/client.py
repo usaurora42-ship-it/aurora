@@ -40,7 +40,7 @@ class ModelClient(db.Model):
           db.String(2)
     )
     email = db.Column(
-          db.String(50),
+          db.String(150),
           unique=True
     )
     document = db.Column(
@@ -147,7 +147,7 @@ class ModelClient(db.Model):
         type:
             maxlength: 2
         email:
-            maxlength: 50        
+            maxlength: 150        
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
@@ -161,7 +161,7 @@ class ModelClient(db.Model):
         type:
             maxlength: 2  
         email:
-            maxlength: 50   
+            maxlength: 150   
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
    

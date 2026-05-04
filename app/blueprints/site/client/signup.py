@@ -21,10 +21,30 @@ LOGGER = logging.getLogger(__name__)
 
 @SiteBlueprint.route('/client/signup')
 def signup_get():
+    from flask import session as flask_session
+
+    # Pré-preenche com dados do checkout se vier de lá
+    checkout_data = flask_session.get('checkout_data', {})
+    data_input = None
+    if checkout_data:
+        data_input = {
+            'email':         checkout_data.get('email', ''),
+            'zip_code':      checkout_data.get('zip_code', ''),
+            'street':        checkout_data.get('street', ''),
+            'street_number': checkout_data.get('street_number', ''),
+            'complement':    checkout_data.get('complement', ''),
+            'district':      checkout_data.get('district', ''),
+            'city':          checkout_data.get('city', ''),
+            'state':         checkout_data.get('state', ''),
+        }
+
+    next_url = request.args.get('next', '/client/login')
+
     resp = make_response(render_template('client/signup.html',
         success=False,
         errors=None,
-        data_input=None))
+        data_input=data_input,
+        next_url=next_url))
     resp.mimetype = 'text/html'
     return resp 
 
@@ -35,6 +55,19 @@ def signup_post():
 
     # record the user name
     session["name"] = data['name']
+
+    # ── Verifica se o e-mail já está cadastrado ──
+    if data.get('email', '').strip():
+        email_exists = ModelClient.query.filter_by(
+            email=data['email'].strip().lower()
+        ).first()
+        if email_exists:
+            resp = make_response(render_template('client/signup.html',
+                        success=False,
+                        errors={'email': ['Este e-mail já está cadastrado. Faça login ou use outro e-mail.']},
+                        data_input=data))
+            resp.mimetype = 'text/html'
+            return resp
 
     # query client
     query_client = ModelClient.query.with_entities(

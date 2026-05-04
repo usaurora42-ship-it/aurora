@@ -11,4 +11,5 @@ from app.blueprints.site.hello import hello
 from app.blueprints.site.cart import cart  # importa as rotas do carrinho
 from app.blueprints.site.cart import checkout
 from app.blueprints.site.cart import pix
+from app.blueprints.site.cart import frete
 
