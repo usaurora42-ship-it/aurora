@@ -328,28 +328,20 @@
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 80px; width: auto; transform: scale(1.8);"
-                        alt="Aurora Semijóias">
-                </a>
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
-                        alt="Aurora Semijóias">
+                <a class="navbar-brand d-flex align-items-center" href="/">
+                    <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
+                    Aurora
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-lg-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_1">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_2">Sobre Nós</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#section_1">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#section_2">Sobre Nós</a></li>
                         <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_4">Avaliações</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_5">Contato</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#section_4">Avaliações</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/#section_5">Contato</a></li>
                     </ul>
                     <div class="ms-lg-3">
                         <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">

@@ -68,10 +68,18 @@ Bootstrap 5 HTML CSS Template
             <main>
                 <nav class="navbar navbar-expand-lg">                
                     <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="index.html">
-                            <img src="{{url_for('static', filename='images/coffee-beans.png')}}" class="navbar-brand-image img-fluid" alt="">
-                            Aurora
-                        </a>
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <img src="{{ url_for('static', filename='images/aurora-04.png') }}" 
+                        class="navbar-brand-image img-fluid" 
+                        style="height: 80px; width: auto; transform: scale(1.8);"
+                        alt="Aurora Semijóias">
+                    </a>
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
+                        <img src="{{ url_for('static', filename='images/aurora-06.png') }}" 
+                            class="navbar-brand-image img-fluid" 
+                            style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
+                            alt="Aurora Semijóias">
+                    </a>
         
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>

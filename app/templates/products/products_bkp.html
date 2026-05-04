@@ -20,10 +20,10 @@
             html, body { min-height: 100%; }
             body.reservation-page {
                 background:
-                    radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
-                    radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
-                    radial-gradient(ellipse at 60% 30%, rgba(130,80,30,0.25) 0%, transparent 50%),
-                    linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
+                    radial-gradient(ellipse at 0% 0%, rgba(180,120,60,0.18) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(120,70,30,0.22) 0%, transparent 55%),
+                    radial-gradient(ellipse at 60% 30%, rgba(80,40,15,0.15) 0%, transparent 50%),
+                    linear-gradient(160deg, #1a1208 0%, #12100a 40%, #0e0c08 70%, #16110a 100%) !important;
                 background-attachment: fixed !important;
             }
             body.reservation-page::before { display: none !important; }
@@ -220,13 +220,13 @@
         <main>
             <nav class="navbar navbar-expand-lg">                
                 <div class="container">
-                    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
+                     <a class="navbar-brand d-flex align-items-center" href="index.html">
                         <img src="{{ url_for('static', filename='images/aurora-04.png') }}" 
                             class="navbar-brand-image img-fluid" 
                             style="height: 80px; width: auto; transform: scale(1.8);"
                             alt="Aurora Semijóias">
                     </a>
-                    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
+                    <a class="navbar-brand d-flex align-items-center" href="index.html">
                         <img src="{{ url_for('static', filename='images/aurora-06.png') }}" 
                             class="navbar-brand-image img-fluid" 
                             style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"

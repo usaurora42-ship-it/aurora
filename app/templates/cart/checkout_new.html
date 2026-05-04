@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aurora Semijóias - Finalizar Pedido</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+        }
+
+        body {
+            background: #0a0a0a;
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            color: #e8d5a3;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 48px;
+            font-weight: 300;
+            color: #f0e6c8;
+            margin-bottom: 12px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            letter-spacing: 3px;
+            color: #8a7a60;
+            font-weight: 400;
+        }
+
+        /* Steps */
+        .checkout-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            color: #8a7a60;
+            font-weight: 600;
+        }
+
+        .step.active { color: #c9a84c; }
+        .step.done { color: #7ac97a; }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #3a3020;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-num {
+            border-color: #c9a84c;
+            background: rgba(201, 168, 76, 0.1);
+            color: #c9a84c;
+        }
+
+        .step.done .step-num {
+            border-color: #7ac97a;
+            background: rgba(122, 201, 122, 0.1);
+            color: #7ac97a;
+        }
+
+        .step-line {
+            width: 60px;
+            height: 2px;
+            background: #3a3020;
+            margin: 0 12px;
+        }
+
+        @media (max-width: 768px) {
+            .step-line { display: none; }
+            .checkout-steps { flex-direction: column; gap: 16px; }
+        }
+
+        /* Main Layout */
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 1024px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Panel */
+        .checkout-panel {
+            background: #0f0d09;
+            border: 2px solid #c9a84c;
+            border-radius: 2px;
+            padding: 48px;
+        }
+
+        .panel-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #c9a84c;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #3a3020;
+            letter-spacing: 1px;
+        }
+
+        /* Form Group */
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 18px;
+            font-weight: 700;
+            color: #e8d5a3;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .form-label .required {
+            color: #ff9999;
+        }
+
+        .form-hint {
+            display: block;
+            font-size: 16px;
+            color: #8a7a60;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 2px solid #3a3020;
+            border-radius: 2px;
+            color: #e8d5a3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 16px 20px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: #c9a84c;
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+        }
+
+        .form-input::placeholder {
+            color: #5a4a30;
+            font-size: 17px;
+        }
+
+        .form-input.input-error {
+            border-color: #d32f2f;
+            background: #1a0a0a;
+        }
+
+        .form-select {
+            width: 100%;
+            background: #0a0a0a;
+            border: 2px solid #3a3020;
+            border-radius: 2px;
+            color: #e8d5a3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            padding: 16px 20px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a84c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            padding-right: 48px;
+        }
+
+        .form-select:focus {
+            border-color: #c9a84c;
+            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+        }
+
+        .form-select option {
+            background: #0f0d09;
+            color: #e8d5a3;
+            font-size: 18px;
+        }
+
+        .field-error {
+            display: block;
+            font-size: 17px;
+            color: #ff9999;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        /* Two Columns */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Summary Panel */
+        .order-summary {
+            background: #0f0d09;
+            border: 2px solid #c9a84c;
+            border-radius: 2px;
+            padding: 32px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .summary-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #c9a84c;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #3a3020;
+            letter-spacing: 1px;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #3a3020;
+        }
+
+        .summary-item:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-item-image {
+            width: 70px;
+            height: 70px;
+            background: #1a1a1a;
+            border: 1px solid #3a3020;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a7a60;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .summary-item-details h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #f0e6c8;
+            margin-bottom: 4px;
+        }
+
+        .summary-item-details p {
+            font-size: 16px;
+            color: #8a7a60;
+        }
+
+        .summary-item-price {
+            margin-left: auto;
+            text-align: right;
+            font-size: 18px;
+            font-weight: 700;
+            color: #c9a84c;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 17px;
+            color: #8a7a60;
+            margin-bottom: 16px;
+        }
+
+        .summary-row span:last-child {
+            color: #e8d5a3;
+            font-weight: 600;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            font-weight: 700;
+            color: #c9a84c;
+            border-top: 2px solid #3a3020;
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        /* Buttons */
+        .btn-finish {
+            display: block;
+            width: 100%;
+            background: #c9a84c;
+            color: #0a0a0a;
+            border: none;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 24px;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        .btn-finish:hover {
+            background: #d4b55a;
+        }
+
+        .btn-finish:active {
+            transform: scale(0.98);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            color: #8a7a60;
+            text-decoration: none;
+            margin-bottom: 32px;
+            transition: color 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            color: #c9a84c;
+        }
+
+        /* Alert */
+        .alert-error {
+            background: #2a1a1a;
+            border-left: 4px solid #d32f2f;
+            color: #ff9999;
+            font-size: 17px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            border-radius: 2px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 32px;
+            }
+
+            .checkout-panel {
+                padding: 32px 24px;
+            }
+
+            .form-label {
+                font-size: 16px;
+            }
+
+            .form-input,
+            .form-select {
+                font-size: 16px;
+                padding: 14px 16px;
+            }
+
+            .order-summary {
+                position: static;
+            }
+        }
+
+        /* Accessibility */
+        *:focus-visible {
+            outline: 2px solid #c9a84c;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="page-header">
+            <h1 class="page-title">Finalizar <em style="color: #c9a84c; font-style: italic;">Pedido</em></h1>
+            <p class="page-subtitle">COMPLETE SEUS DADOS DE ENTREGA</p>
+        </div>
+
+        <!-- Steps -->
+        <div class="checkout-steps">
+            <div class="step done">
+                <div class="step-num">✓</div>
+                <span>Carrinho</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+                <div class="step-num">2</div>
+                <span>Dados</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <span>Pagamento</span>
+            </div>
+        </div>
+
+        <a href="/cart" class="btn-back">← Voltar ao Carrinho</a>
+
+        {% if errors and errors.general %}
+        <div class="alert-error" role="alert">
+            ⚠ {{ errors.general[0] }}
+        </div>
+        {% endif %}
+
+        <div class="checkout-layout">
+
+            <!-- Form -->
+            <div>
+
+                <!-- Dados de Entrega -->
+                <div class="checkout-panel">
+                    <h2 class="panel-title">DADOS DE ENTREGA</h2>
+
+                    <form method="post" action="/checkout" novalidate>
+
+                        <div class="form-group">
+                            <label class="form-label" for="full_name">
+                                NOME COMPLETO <span class="required">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="full_name"
+                                name="full_name"
+                                class="form-input {% if errors and errors.full_name %}input-error{% endif %}"
+                                placeholder="Ex: João Silva"
+                                required
+                                aria-required="true"
+                                aria-describedby="{% if errors and errors.full_name %}full_name-error{% endif %}">
+                            {% if errors and errors.full_name %}
+                                <span class="field-error" id="full_name-error">{{ errors.full_name[0] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">
+                                E-MAIL <span class="required">*</span>
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-input {% if errors and errors.email %}input-error{% endif %}"
+                                placeholder="seu@email.com"
+                                required
+                                aria-required="true"
+                                aria-describedby="{% if errors and errors.email %}email-error{% endif %}">
+                            {% if errors and errors.email %}
+                                <span class="field-error" id="email-error">{{ errors.email[0] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="phone">
+                                TELEFONE <span class="required">*</span>
+                            </label>
+                            <span class="form-hint">Formato: (11) 99999-9999</span>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                class="form-input {% if errors and errors.phone %}input-error{% endif %}"
+                                placeholder="(11) 99999-9999"
+                                required
+                                aria-required="true"
+                                aria-describedby="{% if errors and errors.phone %}phone-error{% endif %}">
+                            {% if errors and errors.phone %}
+                                <span class="field-error" id="phone-error">{{ errors.phone[0] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="address">
+                                ENDEREÇO <span class="required">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                class="form-input {% if errors and errors.address %}input-error{% endif %}"
+                                placeholder="Rua, número e complemento"
+                                required
+                                aria-required="true"
+                                aria-describedby="{% if errors and errors.address %}address-error{% endif %}">
+                            {% if errors and errors.address %}
+                                <span class="field-error" id="address-error">{{ errors.address[0] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label" for="city">
+                                    CIDADE <span class="required">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    class="form-input {% if errors and errors.city %}input-error{% endif %}"
+                                    placeholder="São Paulo"
+                                    required
+                                    aria-required="true"
+                                    aria-describedby="{% if errors and errors.city %}city-error{% endif %}">
+                                {% if errors and errors.city %}
+                                    <span class="field-error" id="city-error">{{ errors.city[0] }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="state">
+                                    ESTADO <span class="required">*</span>
+                                </label>
+                                <select
+                                    id="state"
+                                    name="state"
+                                    class="form-select {% if errors and errors.state %}input-error{% endif %}"
+                                    required
+                                    aria-required="true"
+                                    aria-describedby="{% if errors and errors.state %}state-error{% endif %}">
+                                    <option value="">Selecione</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="BA">Bahia</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <option value="PR">Paraná</option>
+                                    <option value="PE">Pernambuco</option>
+                                    <option value="CE">Ceará</option>
+                                    <option value="PA">Pará</option>
+                                    <option value="SC">Santa Catarina</option>
+                                </select>
+                                {% if errors and errors.state %}
+                                    <span class="field-error" id="state-error">{{ errors.state[0] }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="zipcode">
+                                CEP <span class="required">*</span>
+                            </label>
+                            <span class="form-hint">Formato: 12345-678</span>
+                            <input
+                                type="text"
+                                id="zipcode"
+                                name="zipcode"
+                                class="form-input {% if errors and errors.zipcode %}input-error{% endif %}"
+                                placeholder="12345-678"
+                                required
+                                aria-required="true"
+                                aria-describedby="{% if errors and errors.zipcode %}zipcode-error{% endif %}">
+                            {% if errors and errors.zipcode %}
+                                <span class="field-error" id="zipcode-error">{{ errors.zipcode[0] }}</span>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn-finish" aria-label="Prosseguir para pagamento">
+                            PROSSEGUIR PARA PAGAMENTO →
+                        </button>
+
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Summary -->
+            <div class="order-summary">
+                <h2 class="summary-title">RESUMO DO PEDIDO</h2>
+
+                {% for item in cart_items %}
+                <div class="summary-item">
+                    <div class="summary-item-image">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="summary-item-details">
+                        <h4>{{ item.name }}</h4>
+                        <p>Qtd: {{ item.quantity }}</p>
+                    </div>
+                    <div class="summary-item-price">R$ {{ "%.2f"|format(item.price * item.quantity) }}</div>
+                </div>
+                {% endfor %}
+
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>R$ {{ "%.2f"|format(subtotal) }}</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Frete:</span>
+                    <span>R$ {{ "%.2f"|format(shipping) }}</span>
+                </div>
+
+                {% if discount > 0 %}
+                <div class="summary-row" style="color: #7ac97a;">
+                    <span>Desconto:</span>
+                    <span>-R$ {{ "%.2f"|format(discount) }}</span>
+                </div>
+                {% endif %}
+
+                <div class="summary-total">
+                    <span>TOTAL:</span>
+                    <span>R$ {{ "%.2f"|format(total) }}</span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // Máscara para telefone
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.slice(0, 11);
+                if (value.length >= 2) {
+                    value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Máscara para CEP
+        const zipcodeInput = document.getElementById('zipcode');
+        if (zipcodeInput) {
+            zipcodeInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 8) value = value.slice(0, 8);
+                if (value.length >= 5) {
+                    value = `${value.slice(0, 5)}-${value.slice(5)}`;
+                }
+                e.target.value = value;
+            });
+        }
+
+        // Validação em tempo real
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input[required], select[required]');
+
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                validateField(this);
+            });
+
+            input.addEventListener('input', function() {
+                if (this.classList.contains('input-error')) {
+                    validateField(this);
+                }
+            });
+        });
+
+        function validateField(field) {
+            const errorId = field.getAttribute('aria-describedby');
+            const errorElement = errorId ? document.getElementById(errorId) : null;
+
+            let isValid = true;
+            let errorMessage = '';
+
+            if (field.type === 'email') {
+                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+                errorMessage = 'E-mail inválido';
+            } else if (field.id === 'phone') {
+                isValid = /^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(field.value);
+                errorMessage = 'Telefone inválido. Use o formato: (11) 99999-9999';
+            } else if (field.id === 'zipcode') {
+                isValid = /^\d{5}-\d{3}$/.test(field.value);
+                errorMessage = 'CEP inválido. Use o formato: 12345-678';
+            } else if (field.value.trim() === '') {
+                isValid = false;
+                errorMessage = 'Este campo é obrigatório';
+            }
+
+            if (!isValid) {
+                field.classList.add('input-error');
+                if (errorElement) {
+                    errorElement.textContent = errorMessage;
+                }
+            } else {
+                field.classList.remove('input-error');
+                if (errorElement) {
+                    errorElement.textContent = '';
+                }
+            }
+
+            return isValid;
+        }
+
+        // Validar formulário antes de enviar
+        form.addEventListener('submit', function(e) {
+            let isFormValid = true;
+            inputs.forEach(input => {
+                if (!validateField(input)) {
+                    isFormValid = false;
+                }
+            });
+
+            if (!isFormValid) {
+                e.preventDefault();
+                alert('Por favor, corrija os erros no formulário antes de enviar.');
+            }
+        });
+    </script>
+
+</body>
+</html>
