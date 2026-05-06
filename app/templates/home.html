@@ -3,38 +3,20 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <meta name="description" content="">
+        <meta name="description" content="Aurora Semijóias — Semijoias folheadas a ouro 18k. Elegância para o dia a dia.">
         <meta name="author" content="">
-
         <title>Aurora Semijóias</title>
 
-        <!-- CSS FILES -->                
+        <!-- CSS FILES -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&display=swap" rel="stylesheet">
-            
-        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">  
-        
-        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">  
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/vegas.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">
 
-        <link href="{{ url_for('static', filename='css/vegas.min.css') }}" rel="stylesheet">  
-
-        <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">  
-<!--
-
-Tooplate 2137 Barista Cafe
-
-https://www.tooplate.com/view/2137-barista-cafe
-
-Bootstrap 5 HTML CSS Template
-
--->
-    
-        
-        
         <style>
             *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -64,7 +46,7 @@ Bootstrap 5 HTML CSS Template
             .aurora-topbar-side { width: 160px; font-size: 12px; }
             .aurora-topbar-side:last-child { text-align: right; }
 
-            /* ── Navbar preta (combina com logo) ── */
+            /* ── Navbar marrom ── */
             .navbar {
                 background: #4a2e10 !important;
                 border-bottom: 1px solid #3a2008 !important;
@@ -74,7 +56,6 @@ Bootstrap 5 HTML CSS Template
                 z-index: 999;
                 box-shadow: none !important;
             }
-
             .navbar .container {
                 display: flex;
                 align-items: center;
@@ -83,16 +64,12 @@ Bootstrap 5 HTML CSS Template
                 gap: 16px;
                 position: relative;
             }
-
-            /* Logo central */
             .navbar-brand-wrap {
                 display: flex;
                 align-items: center;
                 gap: 0;
                 text-decoration: none;
-                margin-right: auto;
             }
-
             .navbar-brand, .navbar-brand:hover {
                 background: none !important;
                 padding: 0 !important;
@@ -154,7 +131,7 @@ Bootstrap 5 HTML CSS Template
                 display: flex; align-items: center; justify-content: center;
             }
 
-            /* ── Menu de categorias ── */
+            /* ── Catbar de categorias ── */
             .aurora-catbar {
                 background: #3a2008;
                 border-bottom: 1px solid #2a1505;
@@ -169,7 +146,7 @@ Bootstrap 5 HTML CSS Template
                 letter-spacing: 0.1em;
                 text-transform: uppercase;
                 position: sticky;
-                top: 81px;
+                top: 142px;
                 z-index: 998;
             }
             .aurora-catbar a {
@@ -186,52 +163,255 @@ Bootstrap 5 HTML CSS Template
                 border-bottom-color: #c9a84c;
             }
 
-            /* ── Seções ── */
+            /* ── Variáveis de cor Aurora ── */
+            :root {
+                --au-gold:      #c9a84c;
+                --au-gold-lt:   #f5d98a;
+                --au-brown:     #4a2e10;
+                --au-brown-dk:  #2a1505;
+                --au-salmon:    #e8886a;
+                --au-cream:     #f9f7f5;
+                --au-warm:      #f0ebe3;
+                --au-stone:     #d4c8bc;
+                --au-muted:     #888;
+                --au-dark:      #1a1a1a;
+            }
+
+            /* ── Seção genérica ── */
+            .section-padding { padding: 80px 0; }
+            .section-bg { background: var(--au-cream) !important; }
+
+            /* ── Rótulo dourado ── */
+            .au-label {
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                color: var(--au-gold);
+                display: block;
+                margin-bottom: 8px;
+            }
+
+            /* ── Hero ── */
             .hero-section {
-                background: #f9f7f5 !important;
+                background: var(--au-cream) !important;
                 color: #333 !important;
-                min-height: 400px;
+                min-height: 480px;
             }
-            .hero-section h1 { color: #1a1a1a !important; font-size: 2.8rem; font-weight: 700; }
-            .hero-section p, .hero-section em.small-text { color: #666 !important; }
-
-            .about-section, .barista-section, .menu-section,
-            .reviews-section, .contact-section, .booking-section {
-                background: #fff !important;
-                color: #333 !important;
+            .hero-section h1 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 4rem;
+                font-weight: 300;
+                color: var(--au-dark) !important;
+                line-height: 1.1;
             }
-
-            .section-overlay { display: none !important; }
-            .text-white { color: #333 !important; }
-            h2, h3, h4, h5, h6 { color: #1a1a1a !important; }
-            em { color: #c9a84c; }
+            .hero-section p { color: #666 !important; font-size: 0.95rem; }
 
             /* ── Botões ── */
             .btn.custom-btn {
-                background: #1a1a1a !important;
+                background: var(--au-dark) !important;
                 color: #fff !important;
-                border: 2px solid #1a1a1a !important;
+                border: 2px solid var(--au-dark) !important;
                 border-radius: 2px !important;
                 padding: 12px 28px !important;
-                font-size: 12px !important;
+                font-size: 11px !important;
                 font-weight: 700 !important;
-                letter-spacing: 0.1em !important;
+                letter-spacing: 0.12em !important;
                 text-transform: uppercase !important;
                 transition: background 0.2s, color 0.2s !important;
             }
             .btn.custom-btn:hover {
-                background: #c9a84c !important;
-                border-color: #c9a84c !important;
+                background: var(--au-gold) !important;
+                border-color: var(--au-gold) !important;
                 color: #fff !important;
             }
             .btn.custom-btn.custom-border-btn {
                 background: transparent !important;
-                color: #1a1a1a !important;
+                color: var(--au-dark) !important;
             }
             .btn.custom-btn.custom-border-btn:hover {
-                background: #c9a84c !important;
+                background: var(--au-gold) !important;
                 color: #fff !important;
-                border-color: #c9a84c !important;
+                border-color: var(--au-gold) !important;
+            }
+
+            /* ── Seções de conteúdo ── */
+            .about-section, .produtos-section, .destaques-section,
+            .reviews-section, .contact-section, .newsletter-section {
+                background: #fff !important;
+                color: #333 !important;
+            }
+            .section-overlay { display: none !important; }
+            h2, h3, h4, h5, h6 { color: var(--au-dark) !important; }
+            em { color: var(--au-gold); }
+
+            /* ── Cards de produto ── */
+            .produto-card {
+                background: #fff;
+                border: 1px solid var(--au-stone);
+                transition: border-color 0.2s, transform 0.2s;
+                position: relative;
+                overflow: hidden;
+            }
+            .produto-card:hover { border-color: var(--au-gold); transform: translateY(-2px); }
+
+            .produto-card-img {
+                background: var(--au-warm);
+                aspect-ratio: 1/1;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .produto-card-img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.4s ease;
+            }
+            .produto-card:hover .produto-card-img img { transform: scale(1.04); }
+
+            .produto-card-body { padding: 14px 16px 18px; }
+            .produto-card-material {
+                font-size: 10px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--au-muted);
+                margin-bottom: 4px;
+            }
+            .produto-card-name {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--au-dark) !important;
+                margin-bottom: 6px;
+            }
+            .produto-card-price {
+                font-size: 15px;
+                font-weight: 700;
+                color: var(--au-dark) !important;
+            }
+            .produto-card-price-old {
+                font-size: 12px;
+                color: var(--au-stone);
+                text-decoration: line-through;
+                margin-right: 6px;
+            }
+            .produto-card-badge {
+                position: absolute;
+                top: 12px; left: 12px;
+                background: var(--au-salmon);
+                color: #fff;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                padding: 3px 9px;
+            }
+            .produto-card-wish {
+                position: absolute;
+                top: 12px; right: 12px;
+                background: rgba(255,255,255,0.9);
+                border: 1px solid var(--au-stone);
+                width: 34px; height: 34px;
+                display: flex; align-items: center; justify-content: center;
+                color: var(--au-muted);
+                text-decoration: none;
+                transition: background 0.2s, color 0.2s;
+            }
+            .produto-card-wish:hover { background: var(--au-dark); color: #fff; border-color: var(--au-dark); }
+
+            .btn-ver-produto {
+                display: block;
+                text-align: center;
+                padding: 9px;
+                background: transparent;
+                border: 1px solid var(--au-stone);
+                color: var(--au-dark) !important;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                text-decoration: none;
+                transition: background 0.2s, border-color 0.2s, color 0.2s;
+                margin-top: 10px;
+            }
+            .btn-ver-produto:hover { background: var(--au-dark); border-color: var(--au-dark); color: #fff !important; }
+
+            /* ── Categorias ── */
+            .cat-card {
+                position: relative;
+                overflow: hidden;
+                aspect-ratio: 3/4;
+                background: var(--au-warm);
+            }
+            .cat-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+            .cat-card:hover img { transform: scale(1.05); }
+            .cat-card-overlay {
+                position: absolute; inset: 0;
+                background: linear-gradient(to top, rgba(26,26,26,0.7) 0%, transparent 50%);
+                display: flex; flex-direction: column;
+                justify-content: flex-end;
+                padding: 20px;
+            }
+            .cat-card-label {
+                color: #fff;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                margin-bottom: 6px;
+            }
+            .cat-card-btn {
+                display: inline-block;
+                background: rgba(255,255,255,0.15);
+                border: 1px solid rgba(255,255,255,0.5);
+                color: #fff !important;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                text-decoration: none;
+                padding: 7px 16px;
+                transition: background 0.2s;
+                width: fit-content;
+            }
+            .cat-card-btn:hover { background: var(--au-gold); border-color: var(--au-gold); }
+
+            /* ── Depoimentos ── */
+            .review-card {
+                background: var(--au-cream);
+                border: 1px solid var(--au-stone);
+                padding: 28px;
+            }
+            .review-stars { color: var(--au-gold); font-size: 14px; letter-spacing: 2px; }
+            .review-text { font-size: 14px; font-style: italic; color: #555; line-height: 1.8; }
+            .review-author { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--au-muted); }
+
+            /* ── Banner editorial (kit presente) ── */
+            .editorial-banner {
+                background: var(--au-brown-dk);
+                color: #fff;
+            }
+            .editorial-banner h2 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.8rem;
+                font-weight: 300;
+                color: #fff !important;
+                line-height: 1.15;
+            }
+            .editorial-banner p { color: rgba(255,255,255,0.65); font-size: 0.9rem; }
+
+            /* ── Newsletter ── */
+            .newsletter-section { background: var(--au-cream) !important; border-top: 1px solid var(--au-stone); }
+            .newsletter-section .form-control {
+                border: 1px solid var(--au-stone);
+                border-radius: 0;
+                font-size: 13px;
+                padding: 12px 16px;
+                background: #fff;
+            }
+            .newsletter-section .form-control:focus {
+                border-color: var(--au-gold);
+                box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
             }
 
             /* ── Footer ── */
@@ -240,65 +420,54 @@ Bootstrap 5 HTML CSS Template
                 color: #c9a88a !important;
             }
             .site-footer .text-white { color: #fff !important; }
-            .site-footer em { color: #c9a84c !important; }
+            .site-footer em { color: var(--au-gold) !important; }
             .site-footer a { color: #999 !important; }
-            .site-footer a:hover { color: #c9a84c !important; }
+            .site-footer a:hover { color: var(--au-gold) !important; }
 
-            /* ── Painéis internos ── */
-            .cart-table-wrapper,
-            .cart-summary,
-            .checkout-panel,
-            .order-summary,
-            .pix-card {
+            /* ── Seção "sobre" ── */
+            .about-section { border-top: 1px solid var(--au-stone); }
+            .about-section h2 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.4rem;
+                font-weight: 400;
+            }
+            .about-section p { font-size: 0.9rem; color: #666; line-height: 1.9; }
+
+            /* ── Diferenciais ── */
+            .diferencial-item { border-top: 2px solid var(--au-gold); padding-top: 18px; }
+            .diferencial-item i { font-size: 28px; color: var(--au-gold); margin-bottom: 10px; }
+            .diferencial-item h6 { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+            .diferencial-item p { font-size: 13px; color: var(--au-muted); }
+
+            /* ── Painéis internos (carrinho / checkout) ── */
+            .cart-table-wrapper, .cart-summary, .checkout-panel,
+            .order-summary, .pix-card {
                 background: #faf8f6 !important;
                 border-color: #e8e0d8 !important;
             }
-            .cart-table th { color: #1a1a1a !important; background: #f0ebe3 !important; }
+            .cart-table th { color: var(--au-dark) !important; background: #f0ebe3 !important; }
             .cart-table td { color: #333 !important; border-bottom-color: #ede8e0 !important; }
             .cart-table tbody tr:hover { background: #f5f0ea !important; }
             .cart-table thead { border-bottom-color: #d4c8bc !important; }
-
-            .price { color: #c9a84c !important; }
-            .summary-title, .panel-title { color: #1a1a1a !important; border-bottom-color: #e8e0d8 !important; }
-            .summary-total-row { color: #1a1a1a !important; border-top-color: #d4c8bc !important; }
-            .summary-row span:last-child { color: #333 !important; }
-
-            .btn-checkout {
-                background: #1a1a1a !important;
-                color: #fff !important;
-                letter-spacing: 0.08em !important;
-            }
-            .btn-checkout:hover { background: #c9a84c !important; color: #fff !important; }
+            .price { color: var(--au-gold) !important; }
+            .summary-title, .panel-title { color: var(--au-dark) !important; border-bottom-color: #e8e0d8 !important; }
+            .summary-total-row { color: var(--au-dark) !important; border-top-color: #d4c8bc !important; }
+            .btn-checkout { background: var(--au-dark) !important; color: #fff !important; letter-spacing: 0.08em !important; }
+            .btn-checkout:hover { background: var(--au-gold) !important; color: #fff !important; }
             .btn-continue { border-color: #d4c8bc !important; color: #666 !important; }
-            .btn-continue:hover { border-color: #c9a84c !important; color: #c9a84c !important; }
-            .qty-btn { color: #c9a84c !important; }
+            .btn-continue:hover { border-color: var(--au-gold) !important; color: var(--au-gold) !important; }
+            .qty-btn { color: var(--au-gold) !important; }
             .qty-input { color: #333 !important; }
             .btn-remove { color: #e74c3c !important; }
-
-            .page-title { color: #1a1a1a !important; font-family: serif !important; }
+            .page-title { color: var(--au-dark) !important; font-family: 'Cormorant Garamond', serif !important; }
             .page-subtitle { color: #888 !important; }
 
-            /* ── Forms ── */
-            .form-input {
-                background: #fff !important;
-                border-color: #d4c8bc !important;
-                color: #333 !important;
-            }
-            .form-input:focus {
-                border-color: #c9a84c !important;
-                box-shadow: 0 0 0 3px rgba(201,168,76,0.15) !important;
-            }
+            /* Forms */
+            .form-input { background: #fff !important; border-color: #d4c8bc !important; color: #333 !important; }
+            .form-input:focus { border-color: var(--au-gold) !important; box-shadow: 0 0 0 3px rgba(201,168,76,0.15) !important; }
             .form-label { color: #666 !important; }
-
-            .alert-error {
-                background: #fff5f5 !important;
-                border-left-color: #e74c3c !important;
-                color: #c0392b !important;
-            }
-            .alert-success {
-                background: #f0faf0 !important;
-                color: #27ae60 !important;
-            }
+            .alert-error { background: #fff5f5 !important; border-left-color: #e74c3c !important; color: #c0392b !important; }
+            .alert-success { background: #f0faf0 !important; color: #27ae60 !important; }
 
             /* ── Responsive ── */
             @media (max-width: 991px) {
@@ -306,16 +475,20 @@ Bootstrap 5 HTML CSS Template
                 .aurora-search { min-width: 130px; }
                 .navbar-brand-wrap { position: static; transform: none; }
                 .aurora-catbar { gap: 16px; overflow-x: auto; justify-content: flex-start; font-size: 10px; }
+                .hero-section h1 { font-size: 2.6rem; }
+                .editorial-banner h2 { font-size: 2rem; }
+            }
+            @media (max-width: 576px) {
+                .hero-section h1 { font-size: 2rem; }
+                .section-padding { padding: 50px 0; }
             }
         </style>
-
     </head>
-    
+
     <body>
-                
-            <main>
-                
-            <!-- Barra superior salmão -->
+        <main>
+
+            <!-- ── Barra superior salmão ── -->
             <div class="aurora-topbar">
                 <div class="aurora-topbar-side">
                     <i class="bi-headset me-1"></i> Atendimento ao cliente
@@ -328,48 +501,52 @@ Bootstrap 5 HTML CSS Template
                 </div>
             </div>
 
+            <!-- ── Navbar ── -->
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
 
-                    <!-- Busca (esquerda) -->
-                    <div class="aurora-search d-none d-lg-flex">
-                        <i class="bi-search"></i>
-                        <input type="text" placeholder="Buscar produto...">
-                    </div>
-
-                    <!-- Logo central -->
+                    <!-- Logo (esquerda) -->
                     <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
                         <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                            style="height: 80px; width: auto;"
+                            style="height: 110px; width: auto;"
                             alt="Aurora Semijóias">
                         <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
-                            style="height: 60px; width: auto; margin-left: 10px;"
+                            style="height: 130px; width: auto; margin-left: 8px;"
                             alt="Aurora Semijóias">
                     </a>
 
-                    <!-- Ícones direita -->
-                    <div class="aurora-nav-icons">
-                        {% if session.get('client_id') %}
-                            <a href="/logout" title="Sair">
-                                <i class="bi-person-check"></i>
-                                <span>{{ session.get('client_name', '').split()[0] }}</span>
+                    <!-- Direita: busca + ícones -->
+                    <div class="d-flex align-items-center gap-4">
+
+                        <div class="aurora-search d-none d-lg-flex">
+                            <i class="bi-search"></i>
+                            <input type="text" placeholder="Buscar produto...">
+                        </div>
+
+                        <div class="aurora-nav-icons">
+                            {% if session.get('client_id') %}
+                                <a href="/logout" title="Sair">
+                                    <i class="bi-person-check"></i>
+                                    <span>{{ session.get('client_name', '').split()[0] }}</span>
+                                </a>
+                            {% else %}
+                                <a href="/login" title="Entrar">
+                                    <i class="bi-person"></i>
+                                    <span>Entrar</span>
+                                </a>
+                            {% endif %}
+                            <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                                <i class="bi-bag"></i>
+                                <span>Sacola</span>
+                                <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
                             </a>
-                        {% else %}
-                            <a href="/login" title="Entrar">
-                                <i class="bi-person"></i>
-                                <span>Entrar</span>
-                            </a>
-                        {% endif %}
-                        <a href="/cart" class="cart-btn-wrap" title="Sacola">
-                            <i class="bi-bag"></i>
-                            <span>Sacola</span>
-                            <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
-                        </a>
+                        </div>
+
                     </div>
                 </div>
             </nav>
 
-            <!-- Menu de categorias -->
+            <!-- ── Menu de categorias ── -->
             <div class="aurora-catbar">
                 <a href="/products/category_products">Todos</a>
                 <a href="/products/category_products?cat=aneis">Anéis</a>
@@ -380,519 +557,423 @@ Bootstrap 5 HTML CSS Template
                 <a href="/products/category_products?cat=presentes">Presentes</a>
             </div>
 
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 1 — HERO
+            ══════════════════════════════════════════ -->
+            <section class="hero-section d-flex justify-content-center align-items-center section-padding" id="section_1">
+                <div class="container">
+                    <div class="row align-items-center g-5">
 
-                <section class="hero-section d-flex justify-content-center align-items-center" style="min-height:520px; background:#f9f7f5 !important;" id="section_1">
+                        <div class="col-lg-6 col-12">
+                            <span class="au-label">Nova coleção 2025</span>
+                            <h1>Semijoias<br><em>que duram</em></h1>
+                            <p class="mt-3 mb-4 pb-lg-2" style="max-width:440px;">
+                                Folheadas a ouro 18k, antialérgicas e com garantia de 12 meses.
+                                Elegância pensada para o seu dia a dia.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3">
+                                <a class="btn custom-btn" href="/products/category_products">
+                                    <strong>Ver coleção</strong>
+                                </a>
+                                <a class="btn custom-btn custom-border-btn" href="#section_sobre">
+                                    Nossa história
+                                </a>
+                            </div>
+                        </div>
 
-                    <div class="container">
-                        <div class="row align-items-center">
+                        <div class="col-lg-6 col-12 d-none d-lg-block">
+                            <div class="row g-3">
+                                <div class="col-7">
+                                    <div style="background:var(--au-warm);aspect-ratio:3/4;overflow:hidden;">
+                                        <img src="{{ url_for('static', filename='images/hero-principal.jpg') }}"
+                                            style="width:100%;height:100%;object-fit:cover;" alt="Semijoia Aurora"
+                                            onerror="this.style.display='none'">
+                                    </div>
+                                </div>
+                                <div class="col-5 d-flex flex-column gap-3">
+                                    <div style="background:var(--au-stone);aspect-ratio:1/1;overflow:hidden;">
+                                        <img src="{{ url_for('static', filename='images/hero-detalhe-1.jpg') }}"
+                                            style="width:100%;height:100%;object-fit:cover;" alt=""
+                                            onerror="this.style.display='none'">
+                                    </div>
+                                    <div style="background:#e8d9c8;aspect-ratio:1/1;overflow:hidden;">
+                                        <img src="{{ url_for('static', filename='images/hero-detalhe-2.jpg') }}"
+                                            style="width:100%;height:100%;object-fit:cover;" alt=""
+                                            onerror="this.style.display='none'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                            <div class="col-lg-6 col-12 mx-auto">
-                                <em class="small-text">Bem-Vindo a</em>
-                                
-                                <h1>Aurora</h1>
+                    </div>
+                </div>
+            </section>
 
-                                <p class="text-white mb-4 pb-lg-2">
-                                    sua <em>loja</em> favorita no dia a dia.
-                                </p>
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 2 — DIFERENCIAIS
+            ══════════════════════════════════════════ -->
+            <section style="background:var(--au-warm);border-top:1px solid var(--au-stone);border-bottom:1px solid var(--au-stone);">
+                <div class="container">
+                    <div class="row g-4 py-5">
+                        <div class="col-6 col-md-3">
+                            <div class="diferencial-item">
+                                <i class="bi-box-seam"></i>
+                                <h6>Embalagem presente</h6>
+                                <p>Cada peça em caixa especial, pronta para presentear.</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="diferencial-item">
+                                <i class="bi-truck"></i>
+                                <h6>Frete grátis</h6>
+                                <p>Pedidos acima de R$ 200 com entrega grátis para todo o Brasil.</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="diferencial-item">
+                                <i class="bi-arrow-repeat"></i>
+                                <h6>Troca em 30 dias</h6>
+                                <p>Não gostou? Troca sem burocracia em até 30 dias.</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="diferencial-item">
+                                <i class="bi-shield-check"></i>
+                                <h6>Garantia 12 meses</h6>
+                                <p>Todas as peças com garantia contra defeitos de fabricação.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                                <a class="btn custom-btn custom-border-btn smoothscroll me-3" href="#section_2">
-                                    Nossa História
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 3 — CATEGORIAS
+            ══════════════════════════════════════════ -->
+            <section class="section-padding" id="section_categorias">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <span class="au-label">Explore</span>
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.4rem;">Nossas categorias</h2>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <a href="/products/category_products?cat=aneis" class="d-block text-decoration-none">
+                                <div class="cat-card">
+                                    <img src="{{ url_for('static', filename='images/cat-aneis.jpg') }}" alt="Anéis"
+                                        onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Anéis'">
+                                    <div class="cat-card-overlay">
+                                        <span class="cat-card-label">Anéis</span>
+                                        <span class="cat-card-btn">Ver peças</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/products/category_products?cat=colares" class="d-block text-decoration-none">
+                                <div class="cat-card">
+                                    <img src="{{ url_for('static', filename='images/cat-colares.jpg') }}" alt="Colares"
+                                        onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Colares'">
+                                    <div class="cat-card-overlay">
+                                        <span class="cat-card-label">Colares</span>
+                                        <span class="cat-card-btn">Ver peças</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/products/category_products?cat=brincos" class="d-block text-decoration-none">
+                                <div class="cat-card">
+                                    <img src="{{ url_for('static', filename='images/cat-brincos.jpg') }}" alt="Brincos"
+                                        onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Brincos'">
+                                    <div class="cat-card-overlay">
+                                        <span class="cat-card-label">Brincos</span>
+                                        <span class="cat-card-btn">Ver peças</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/products/category_products?cat=pulseiras" class="d-block text-decoration-none">
+                                <div class="cat-card">
+                                    <img src="{{ url_for('static', filename='images/cat-pulseiras.jpg') }}" alt="Pulseiras"
+                                        onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Pulseiras'">
+                                    <div class="cat-card-overlay">
+                                        <span class="cat-card-label">Pulseiras</span>
+                                        <span class="cat-card-btn">Ver peças</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 4 — PRODUTOS (dinâmico via Jinja)
+            ══════════════════════════════════════════ -->
+            <section class="section-padding section-bg" id="section_3">
+                <div class="container">
+                    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
+                        <div>
+                            <span class="au-label">Recém chegados</span>
+                            <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.2rem;margin:0;">Novidades</h2>
+                        </div>
+                        <a href="/products/category_products" class="btn custom-btn custom-border-btn mt-3 mt-md-0">Ver todos</a>
+                    </div>
+
+                    <div class="row g-4">
+                        {% for post in items %}
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="produto-card h-100">
+                                <div class="produto-card-img">
+                                    {% if post.image %}
+                                        <img src="{{ url_for('static', filename='images/products/' ~ post.image) }}"
+                                            alt="{{ post.name }}"
+                                            onerror="this.src='https://placehold.co/400x400/f0ebe3/888?text={{ post.name }}'">
+                                    {% else %}
+                                        <img src="https://placehold.co/400x400/f0ebe3/c9a84c?text={{ post.name }}" alt="{{ post.name }}">
+                                    {% endif %}
+                                </div>
+
+                                {% if post.value_old is defined and post.value_old %}
+                                    <span class="produto-card-badge">OFERTA</span>
+                                {% endif %}
+
+                                <a href="/products/{{ post.id }}" class="produto-card-wish" title="Favoritar">
+                                    <i class="bi-heart" style="font-size:14px;"></i>
                                 </a>
 
-                                <a class="btn custom-btn smoothscroll me-2 mb-2" href="#section_3"><strong>Check Menu</strong></a>
+                                <div class="produto-card-body">
+                                    <p class="produto-card-material">
+                                        {% if post.material %}{{ post.material }}{% else %}Semijoia{% endif %}
+                                    </p>
+                                    <p class="produto-card-name">{{ post.name }}</p>
+                                    <div class="d-flex align-items-baseline gap-1">
+                                        {% if post.value_old is defined and post.value_old %}
+                                            <span class="produto-card-price-old">R$ {{ "%.2f"|format(post.value_old) }}</span>
+                                        {% endif %}
+                                        <span class="produto-card-price">R$ {{ "%.2f"|format(post.value) }}</span>
+                                    </div>
+                                    <a href="/products/{{ post.id }}" class="btn-ver-produto">Ver produto</a>
+                                </div>
                             </div>
+                        </div>
+                        {% else %}
+                        <!-- Fallback se não houver produtos -->
+                        <div class="col-12 text-center py-5">
+                            <i class="bi-gem" style="font-size:3rem;color:var(--au-stone);"></i>
+                            <p class="mt-3" style="color:var(--au-muted);">Nenhum produto cadastrado ainda.</p>
+                            <a href="/admin" class="btn custom-btn mt-2">Adicionar produtos</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
 
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 5 — BANNER EDITORIAL (Kit presente)
+            ══════════════════════════════════════════ -->
+            <section class="editorial-banner">
+                <div class="container-fluid px-0">
+                    <div class="row g-0 align-items-center">
+                        <div class="col-lg-6 d-none d-lg-block" style="aspect-ratio:16/9;overflow:hidden;">
+                            <img src="{{ url_for('static', filename='images/kit-presente.jpg') }}"
+                                style="width:100%;height:100%;object-fit:cover;"
+                                alt="Kit presente Aurora"
+                                onerror="this.src='https://placehold.co/800x450/2a1505/c9a84c?text=Kit+Presente'">
+                        </div>
+                        <div class="col-lg-6 py-5 px-5">
+                            <span class="au-label" style="color:var(--au-gold);">Edição especial</span>
+                            <h2 class="mt-2 mb-3">Kit presente<br><em>Aurora</em></h2>
+                            <p class="mb-4">Monte o kit perfeito com duas ou mais peças e ganhe embalagem especial com laço, cartão personalizado e sacola exclusiva. Ideal para aniversários, Dia das Mães e datas especiais.</p>
+                            <a href="/products/category_products?cat=presentes" class="btn custom-btn">
+                                <strong>Montar kit</strong>
+                            </a>
                         </div>
                     </div>
+                </div>
+            </section>
 
-                </section>
-
-
-                <section class="about-section section-padding" id="section_2">
-                    <div class="section-overlay"></div>
-                    <div class="container">
-                        <div class="row align-items-center">
-
-                            <div class="col-lg-6 col-12">
-                                <div class="ratio ratio-1x1">
-                                    <video autoplay="" loop="" muted="" class="custom-video" poster="">
-                                        <source src="{{ url_for('static', filename='videos/pexels-mike-jones-9046237.mp4') }}" type="video/mp4">
-
-                                        Your browser does not support the video tag.
-                                    </video>
-
-                                    <div class="about-video-info d-flex flex-column">
-                                        <h4 class="mt-auto">We Started Since 2009.</h4>
-
-                                        <h4>Best Cafe in Klang.</h4>
-                                    </div>
-                                </div>
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 6 — SOBRE A AURORA
+            ══════════════════════════════════════════ -->
+            <section class="about-section section-padding" id="section_sobre">
+                <div class="container">
+                    <div class="row align-items-center g-5">
+                        <div class="col-lg-6 col-12">
+                            <div class="ratio ratio-4x3" style="background:var(--au-warm);overflow:hidden;">
+                                <video autoplay loop muted playsinline style="object-fit:cover;width:100%;height:100%;">
+                                    <source src="{{ url_for('static', filename='videos/pexels-mike-jones-9046237.mp4') }}" type="video/mp4">
+                                </video>
                             </div>
-
-                            <div class="col-lg-5 col-12 mt-4 mt-lg-0 mx-auto">
-                                <em class="text-white">Barista.co</em>
-
-                                <h2 class="text-white mb-3">Cafe KL</h2>
-
-                                <p class="text-white">The café had been in the town for as long as anyone could remember, and it had become a beloved institution among the locals.</p>
-
-                                <p class="text-white">The café was run by a friendly and hospitable couple, Mr. and Mrs. Johnson. Barista Cafe is free Bootstrap 5 HTML layout provided by <a rel="nofollow" href="https://www.tooplate.com" target="_blank">Tooplate</a>.</p>
-
-                                <a href="#barista-team" class="smoothscroll btn custom-btn custom-border-btn mt-3 mb-4">Meet Baristas</a>
-                            </div>
-
+                        </div>
+                        <div class="col-lg-5 col-12 mx-auto">
+                            <span class="au-label">Nossa história</span>
+                            <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.2rem;">Aurora Semijóias</h2>
+                            <p class="mt-3">Nascemos da paixão por tornar a beleza acessível sem abrir mão da qualidade. Cada peça Aurora é cuidadosamente selecionada para unir estética, durabilidade e bom preço.</p>
+                            <p>Trabalhamos com banho de ouro 18k de alta espessura, materiais antialérgicos e controle rigoroso de qualidade para que você use com confiança todos os dias.</p>
+                            <a href="#section_categorias" class="btn custom-btn custom-border-btn mt-4">Conhecer coleção</a>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 7 — DEPOIMENTOS
+            ══════════════════════════════════════════ -->
+            <section class="reviews-section section-padding section-bg" id="section_4">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <span class="au-label">O que dizem nossas clientes</span>
+                        <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.2rem;">Avaliações</h2>
+                    </div>
+                    <div class="row g-4">
 
-                <section class="barista-section section-padding section-bg" id="barista-team">
-                    <div class="container">
-                        <div class="row justify-content-center">
-
-                            <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
-                                <em class="text-white">Creative Baristas</em>
-
-                                <h2 class="text-white">Meet People</h2>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Steve</h4>
-
-                                            <p class="badge ms-4"><em>Boss</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">your favourite coffee daily lives tempor.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="{{ url_for('static', filename='images/team/portrait-elegant-old-man-wearing-suit.jpg') }}" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Sandra</h4>
-
-                                            <p class="badge ms-4"><em>Manager</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">your favourite coffee daily lives.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="{{ url_for('static', filename='images/team/cute-korean-barista-girl-pouring-coffee-prepare-filter-batch-brew-pour-working-cafe.jpg') }}" class="team-block-image img-fluid" alt="">
+                        <div class="col-md-4 col-12">
+                            <div class="review-card h-100">
+                                <div class="review-stars mb-3">★★★★★</div>
+                                <p class="review-text mb-4">"Qualidade incrível. A pulseira parece de ouro de verdade. Já comprei 3 peças e todas chegaram perfeitas, sem nenhuma falha."</p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ url_for('static', filename='images/reviews/young-woman-with-round-glasses-yellow-sweater.jpg') }}"
+                                        style="width:44px;height:44px;border-radius:50%;object-fit:cover;"
+                                        alt="Ana R."
+                                        onerror="this.src='https://placehold.co/44x44/f0ebe3/888?text=A'">
+                                    <div>
+                                        <p class="review-author mb-0">Ana R.</p>
+                                        <p style="font-size:11px;color:var(--au-muted);margin:0;">São Paulo</p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="col-lg-3 col-md-6 col-12 mb-4">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Jackson</h4>
-
-                                            <p class="badge ms-4"><em>Senior</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">your favourite coffee daily lives.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="{{ url_for('static', filename='images/team/small-business-owner-drinking-coffee.jpg') }}" class="team-block-image img-fluid" alt="">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-3 col-md-6 col-12">
-                                <div class="team-block-wrap">
-                                    <div class="team-block-info d-flex flex-column">
-                                        <div class="d-flex mt-auto mb-3">
-                                            <h4 class="text-white mb-0">Michelle</h4>
-
-                                            <p class="badge ms-4"><em>Barista</em></p>
-                                        </div>
-
-                                        <p class="text-white mb-0">your favourite coffee daily consectetur.</p>
-                                    </div>
-
-                                    <div class="team-block-image-wrap">
-                                        <img src="{{ url_for('static', filename='images/team/smiley-business-woman-working-cashier.jpg') }}" class="team-block-image img-fluid" alt="">
+                        <div class="col-md-4 col-12">
+                            <div class="review-card h-100">
+                                <div class="review-stars mb-3">★★★★★</div>
+                                <p class="review-text mb-4">"Comprei o kit presente para minha mãe e ela adorou. A embalagem é lindíssima, parece de loja de luxo. Chegou super rápido!"</p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ url_for('static', filename='images/reviews/senior-man-white-sweater-eyeglasses.jpg') }}"
+                                        style="width:44px;height:44px;border-radius:50%;object-fit:cover;"
+                                        alt="Carla M."
+                                        onerror="this.src='https://placehold.co/44x44/f0ebe3/888?text=C'">
+                                    <div>
+                                        <p class="review-author mb-0">Carla M.</p>
+                                        <p style="font-size:11px;color:var(--au-muted);margin:0;">Rio de Janeiro</p>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="col-md-4 col-12">
+                            <div class="review-card h-100">
+                                <div class="review-stars mb-3">★★★★★</div>
+                                <p class="review-text mb-4">"Uso o anel há 4 meses, entrou em contato com água várias vezes e não manchou nada. Valeu cada centavo. Já indiquei para amigas."</p>
+                                <div class="d-flex align-items-center gap-3">
+                                    <img src="{{ url_for('static', filename='images/reviews/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair.jpg') }}"
+                                        style="width:44px;height:44px;border-radius:50%;object-fit:cover;"
+                                        alt="Juliana S."
+                                        onerror="this.src='https://placehold.co/44x44/f0ebe3/888?text=J'">
+                                    <div>
+                                        <p class="review-author mb-0">Juliana S.</p>
+                                        <p style="font-size:11px;color:var(--au-muted);margin:0;">Belo Horizonte</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════════════════════════════════════
+                 SEÇÃO 8 — NEWSLETTER
+            ══════════════════════════════════════════ -->
+            <section class="newsletter-section section-padding">
+                <div class="container">
+                    <div class="row justify-content-center text-center">
+                        <div class="col-md-6">
+                            <span class="au-label">Fique por dentro</span>
+                            <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2rem;margin:8px 0 12px;">
+                                10% off na primeira compra
+                            </h2>
+                            <p style="font-size:14px;color:var(--au-muted);margin-bottom:28px;">
+                                Cadastre seu e-mail e receba um cupom exclusivo de boas-vindas.
+                            </p>
+                            <div class="d-flex gap-2">
+                                <input type="email" class="form-control" placeholder="seu@email.com">
+                                <button class="btn custom-btn" style="white-space:nowrap;"><strong>Quero o cupom</strong></button>
+                            </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
+            <!-- ══════════════════════════════════════════
+                 FOOTER
+            ══════════════════════════════════════════ -->
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row pt-5 pb-4">
 
-                 <section class="menu-section section-padding" id="section_3">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-6 col-12 mb-4 mb-lg-0">
-                                <div class="menu-block-wrap">
-                                    <div class="text-center mb-4 pb-lg-2">
-                                         <em class="text-white">Menu de Produtos</em> 
-                                        <h4 class="text-white">Menu de Produtos</h4>
-                                    </div>
-                                    
-                                    <div class="menu-block">
-                                        {% for post in items %} 
-                                            <div class="d-flex">                                          
-                                                <h6>{{ post.name }}</h6>
-                                                <span class="underline"></span>
-                                                <strong class="ms-auto">R$ {{ post.value }}</strong>
-                                            </div>
-                                            <div class="border-top mt-2 pt-2">
-                                                <small>{{ post.description }}</small>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                 
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6 col-12">
-                                <div class="menu-block-wrap">
-                                    <div class="text-center mb-4 pb-lg-2">
-                                         <em class="text-white">Favourite Menu</em> 
-                                        <h4 class="text-white">Menu de Produtos</h4>
-                                    </div>
-
-                                    <div class="menu-block">
-                                        <div class="d-flex">
-                                            <h6>Latte</h6>
-                                        
-                                            <span class="underline"></span>
-
-                                            <strong class="text-white ms-auto"><del>$12.50</del></strong>
-
-                                            <strong class="ms-2">$7.50</strong>
-                                        </div>
-
-                                        <div class="border-top mt-2 pt-2">
-                                            <small>Fresh brewed coffee and steamed milk</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="menu-block my-4">
-                                        <div class="d-flex">
-                                            <h6>
-                                                White Coffee
-                                                <span class="badge ms-3">Recommend</span>
-                                            </h6>
-                                        
-                                            <span class="underline"></span>
-
-                                            <strong class="ms-auto">$5.90</strong>
-                                        </div>
-
-                                        <div class="border-top mt-2 pt-2">
-                                            <small>Brewed coffee and steamed milk</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="menu-block">
-                                        <div class="d-flex">
-                                            <h6>Chocolate Milk</h6>
-                                        
-                                            <span class="underline"></span>
-
-                                            <strong class="ms-auto">$5.50</strong>
-                                        </div>
-
-                                        <div class="border-top mt-2 pt-2">
-                                            <small>Rich Milk and Foam</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="menu-block my-4">
-                                        <div class="d-flex">
-                                            <h6>Greentea</h6>
-                                        
-                                            <span class="underline"></span>
-
-                                            <strong class="ms-auto">$7.50</strong>
-                                        </div>
-
-                                        <div class="border-top mt-2 pt-2">
-                                            <small>Fresh brewed coffee and steamed milk</small>
-                                        </div>
-                                    </div>
-
-                                    <div class="menu-block">
-                                        <div class="d-flex">
-                                            <h6>Dark Chocolate</h6>
-                                        
-                                            <span class="underline"></span>
-
-                                            <strong class="ms-auto">$7.25</strong>
-                                        </div>
-
-                                        <div class="border-top mt-2 pt-2">
-                                            <small>Rich Milk and Foam</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-4 col-12 me-auto mb-4 mb-lg-0">
+                            <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                                style="height:60px;width:auto;margin-bottom:16px;" alt="Aurora Semijóias"
+                                onerror="this.style.display='none'">
+                            <p style="font-size:13px;">Semijoias folheadas a ouro 18k. Feitas para durar, desenhadas para encantar.</p>
+                            <ul class="social-icon mt-4 d-flex gap-3 list-unstyled">
+                                <li>
+                                    <a href="https://www.instagram.com/Auroraplatterbox/" class="social-icon-link bi-instagram" style="font-size:20px;"></a>
+                                </li>
+                                <li>
+                                    <a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp" style="font-size:20px;"></a>
+                                </li>
+                            </ul>
                         </div>
-                    </div>
-                </section> 
 
-
-                <section class="reviews-section section-padding section-bg" id="section_4">
-                    <div class="container">
-                        <div class="row justify-content-center">
-
-                            <div class="col-lg-12 col-12 text-center mb-4 pb-lg-2">
-                                <em class="text-white">Reviews by Customers</em>
-
-                                <h2 class="text-white">Testimonials</h2>
-                            </div>
-
-                            <div class="timeline">
-                                <div class="timeline-container timeline-container-left">
-                                    <div class="timeline-content">
-                                        <div class="reviews-block">
-                                            <div class="reviews-block-image-wrap d-flex align-items-center">
-                                                <img src="{{ url_for('static', filename='images/reviews/young-woman-with-round-glasses-yellow-sweater.jpg') }}" class="reviews-block-image img-fluid" alt="">
-
-                                                <div class="">
-                                                    <h6 class="text-white mb-0">Sandra</h6>
-                                                    <em class="text-white"> Customers</em>
-                                                </div>
-                                            </div>
-
-                                            <div class="reviews-block-info">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-
-                                                <div class="d-flex border-top pt-3 mt-4">
-                                                    <strong class="text-white">4.5 <small class="ms-2">Rating</small></strong>
-
-                                                    <div class="reviews-group ms-auto">
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="timeline-container timeline-container-right">
-                                    <div class="-content">
-                                        <div class="reviews-block">
-                                            <div class="reviews-block-image-wrap d-flex align-items-center">
-                                                <img src="{{ url_for('static', filename='images/reviews/senior-man-white-sweater-eyeglasses.jpg') }}" class="reviews-block-image img-fluid" alt="">
-
-                                                <div class="">
-                                                    <h6 class="text-white mb-0">Don</h6>
-                                                    <em class="text-white"> Customers</em>
-                                                </div>
-                                            </div>
-
-                                            <div class="reviews-block-info">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-
-                                                <div class="d-flex border-top pt-3 mt-4">
-                                                    <strong class="text-white">4.5 <small class="ms-2">Rating</small></strong>
-
-                                                    <div class="reviews-group ms-auto">
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="timeline-container timeline-container-left">
-                                    <div class="timeline-content">
-                                        <div class="reviews-block">
-                                            <div class="reviews-block-image-wrap d-flex align-items-center">
-                                                <img src="{{ url_for('static', filename='images/reviews/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair.jpg') }}" class="reviews-block-image img-fluid" alt="">
-
-                                                <div class="">
-                                                    <h6 class="text-white mb-0">Olivia</h6>
-                                                    <em class="text-white"> Customers</em>
-                                                </div>
-                                            </div>
-
-                                            <div class="reviews-block-info">
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-
-                                                <div class="d-flex border-top pt-3 mt-4">
-                                                    <strong class="text-white">4.5 <small class="ms-2">Rating</small></strong>
-
-                                                    <div class="reviews-group ms-auto">
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star-fill"></i>
-                                                        <i class="bi-star"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
+                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
+                            <ul class="list-unstyled" style="font-size:13px;">
+                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                            </ul>
                         </div>
-                    </div>
-                </section>
 
-
-                <section class="contact-section section-padding" id="section_5">
-                    <div class="container">
-                        <div class="row">   
-
-                            <div class="col-lg-12 col-12">
-                                <em class="text-white">Say Hello</em>
-                                <h2 class="text-white mb-4 pb-lg-2">Contact</h2>
-                            </div>
-
-                            <div class="col-lg-6 col-12">
-                                <form action="#" method="post" class="custom-form contact-form" role="form">
-
-                                <div class="row">
-                                    
-                                    <div class="col-lg-6 col-12">
-                                        <label for="name" class="form-label">Name <sup class="text-danger">*</sup></label>
-
-                                        <input type="text" name="name" id="name" class="form-control" placeholder="Jackson" required="">
-                                    </div>
-
-                                    <div class="col-lg-6 col-12">
-                                        <label for="email" class="form-label">Email Address</label>
-
-                                        <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Jack@gmail.com" required="">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label for="message" class="form-label">How can we help?</label>
-
-                                        <textarea name="message" rows="4" class="form-control" id="message" placeholder="Message" required=""></textarea>
-                                        
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-5 col-12 mx-auto mt-3">
-                                    <button type="submit" class="form-control">Send Message</button>
-                                </div>
-                            </form>
-                            </div>
-
-                            <div class="col-lg-6 col-12 mx-auto mt-5 mt-lg-0 ps-lg-5">
-                                <iframe class="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5039.668141741662!2d72.81814769288509!3d19.043340656729775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c994f34a7355%3A0x2680d63a6f7e33c2!2sLover%20Point!5e1!3m2!1sen!2sth!4v1692722771770!5m2!1sen!2sth" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>  
-                            </div>
-
+                        <div class="col-lg-3 col-6">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Contato</em>
+                            <p class="d-flex mb-2" style="font-size:13px;">
+                                <strong class="me-2">Telefone:</strong>
+                                <a href="tel:(34)984104546">(34) 98410-4546</a>
+                            </p>
+                            <p class="d-flex mb-2" style="font-size:13px;">
+                                <strong class="me-2">WhatsApp:</strong>
+                                <a href="https://api.whatsapp.com/send?phone=5534984104546">Falar agora</a>
+                            </p>
+                            <p class="d-flex" style="font-size:13px;">
+                                <strong class="me-2">Email:</strong>
+                                <a href="mailto:contato@aurora.com.br">contato@aurora.com.br</a>
+                            </p>
+                            <ul class="opening-hours-list mt-3" style="font-size:12px;">
+                                <li class="d-flex mb-1">Seg – Sex <span class="underline mx-2"></span> <strong>9h – 18h</strong></li>
+                                <li class="d-flex mb-1">Sábado <span class="underline mx-2"></span> <strong>11h – 16h</strong></li>
+                                <li class="d-flex">Domingo <span class="underline mx-2"></span> <strong>Fechado</strong></li>
+                            </ul>
                         </div>
+
                     </div>
-                </section>
 
-
-                <footer class="site-footer">
-                    <div class="container">
-                        <div class="row">
-
-                            <div class="col-lg-4 col-12 me-auto">
-                                <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-
-                                <strong class="text-white">
-                                    <i class="bi-geo-alt me-2"></i>
-                                    Bandra West, Mumbai, Maharashtra 400050, India
-                                </strong>
-
-                                <ul class="social-icon mt-4">
-                                    <li class="social-icon-item">
-                                        <a href="https://www.instagram.com/Auroraplatterbox/" class="social-icon-link bi-instagram">
-                                        </a>
-                                    </li>
-        
-                                    <li class="social-icon-item">
-                                        <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter">
-                                        </a>
-                                    </li>
-
-                                    <li class="social-icon-item">
-                                        <a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                                <em class="text-white d-block mb-4">Contact</em>
-
-                                <p class="d-flex mb-1">
-                                    <strong class="me-2">Telefone:</strong>
-                                    <a href="tel: (34) 98410-4546" class="site-footer-link">
-                                        (34) 
-                                        98410-4546
-                                    </a>
-                                </p>
-
-                                <p class="d-flex">
-                                    <strong class="me-2">Email:</strong>
-
-                                    <a href="mailto:info@yourgmail.com" class="site-footer-link">
-                                        hello@barista.co
-                                    </a>
-                                </p>
-                            </div>
-
-
-                            <div class="col-lg-5 col-12">
-                                <em class="text-white d-block mb-4">Opening Hours.</em>
-
-                                <ul class="opening-hours-list">
-                                    <li class="d-flex">
-                                        Monday - Friday
-                                        <span class="underline"></span>
-
-                                        <strong>9:00 - 18:00</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Saturday
-                                        <span class="underline"></span>
-
-                                        <strong>11:00 - 16:30</strong>
-                                    </li>
-
-                                    <li class="d-flex">
-                                        Sunday
-                                        <span class="underline"></span>
-
-                                        <strong>Closed</strong>
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="col-lg-8 col-12 mt-4">
-                                <p class="copyright-text mb-0">Copyright © Barista Cafe 2048 
-                                    - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                            </div>
+                    <div class="border-top pt-4 pb-4" style="border-color:rgba(255,255,255,0.1)!important;">
+                        <p class="copyright-text mb-0" style="font-size:12px;">
+                            © 2025 Aurora Semijóias. Todos os direitos reservados.
+                            &nbsp;|&nbsp; Pagamento seguro: Visa · Mastercard · Pix · Boleto
+                        </p>
                     </div>
-                </footer>
-            </main>
+                </div>
+            </footer>
+
+        </main>
 
         <!-- JAVASCRIPT FILES -->
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
@@ -901,7 +982,6 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/click-scroll.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script>
-            // Desativa o Vegas para manter o fundo limpo
             if (typeof $.fn.vegas !== 'undefined') {
                 $.fn.vegasOff = $.fn.vegas;
                 $.fn.vegas = function() { return this; };
@@ -910,10 +990,7 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
 
-
-    
         <script>
-            // ── Atualiza o badge do carrinho ──
             function updateCartBadge(count) {
                 const badge = document.getElementById('cartBadge');
                 if (!badge) return;
@@ -927,7 +1004,6 @@ Bootstrap 5 HTML CSS Template
                 }
             }
 
-            // ── Carrega contagem atual do carrinho ao entrar na página ──
             fetch('/cart/count')
                 .then(res => res.json())
                 .then(data => updateCartBadge(data.count))
