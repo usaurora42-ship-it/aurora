@@ -20,54 +20,34 @@ LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\products'
 
-# print("diretoriooooooooooooooooooooo")
-# print(os.getcwd() + '\\app\\static\\images\\products')
-# print(os.path.basename(__file__))
-# print(os.path.abspath(__file__))
-# print(os.path.dirname(__file__))
-# print(os.path.dirname(os.path.abspath(__file__)))
-# print(dirname(dirname(dirname(os.path.abspath(__file__)))))
 
 def categories_get():    
-    # query categories    
     query_category = ModelCategory.query.with_entities(
         ModelCategory.id,
         ModelCategory.description
     ).filter_by(
         status=StatusEnum.enabled
     ).order_by(ModelCategory.description)
-
-    categories = query_category.all()
-    
-    print("CATEGORIAS ENCONTRADAS:", categories)  # ← adicione esta linha
-    
-    return categories
+    return query_category.all()
 
 def units_get():    
-    # query units
     query_unit = ModelUnit.query.with_entities(
         ModelUnit.id,
         ModelUnit.description
     ).filter_by(
         status=StatusEnum.enabled        
     ).order_by(ModelUnit.description)
-
-    units = query_unit.all()
-
-    return units
+    return query_unit.all()
 
 def products_get():    
-    # query products    
     query_products = ModelProduct.query.with_entities(
         ModelProduct.id,
         ModelProduct.name
     ).filter_by(
         status=StatusEnum.enabled
     ).order_by(ModelProduct.description)
+    return query_products.all()
 
-    products = query_products.all()
-
-    return products
 
 @SiteBlueprint.route('/products/products', methods=['GET'])
 def product_get():
@@ -79,153 +59,118 @@ def product_get():
                            units=units,            
                            products=products)
 
-    # print(descriptions)
-        #return render_template('product/product.html',descriptions=descriptions)
-
-        # for category in query_category.all():
-        #     result_category = category.description
-        #     print(result_category)
-        # return render_template('product/product.html',result_category=result_category)
-        # resp = make_response(render_template('products/products.html',
-        #     success=False,
-        #     errors=None,
-        #     data_input=None,
-        #     descriptions=descriptions,
-        #     units=units))
-        # resp.mimetype = 'text/html'
-        # return resp 
-        
 
 @SiteBlueprint.route('/products/products', methods=['POST'])	
 def products_post():  
-    data = request.form.to_dict() or {}     
+    data = request.form.to_dict() or {}
 
-    
-    file = request.files['file'] # get file
-    file.save(os.path.join(app.config['UPLOAD_PATH'], file.filename))
-    directory_path = os.path.join(app.config['UPLOAD_PATH'], file.filename)
+    print("=" * 60)
+    print(">>> [POST /products] DADOS RECEBIDOS:", data)
+    print(">>> [POST /products] ARQUIVO:", request.files.get('file'))
+    print("=" * 60)
 
     categories = categories_get()
-    products = products_get()  
-    units = units_get()
-    #print(descriptions)
-    #print(units)
-    #return render_template('/products/products.html', descriptions=descriptions, units=units)
+    products   = products_get()
+    units      = units_get()
 
-    # query product
-    query_product = ModelProduct.query.with_entities(
-        ModelProduct.description,
-        ModelProduct.id
-    ).filter_by(
-        status=StatusEnum.enabled
-    )
-
-    # query categories
-    query_categories = ModelProductCategory.query.with_entities(
-        ModelProduct.id
-    ).filter_by(
-        status=StatusEnum.enabled
-    )
-    
-    # for product in query_product.all():
-    #       result = ModelCategory.get_dict(product)
-    #       print(result)
-
-    # # query categories
-    # query_category = ModelCategory.query.with_entities(
-    #      ModelCategory.description
-    # ).filter_by(
-    #     status=StatusEnum.enabled
-    # )
-
-
-    # for category in query_category.all():
-    #      result = ModelCategory.get_dict(category)
-    #      print(result)
-
-           
-    
-    # instance models
-    model_product = ModelProduct()  
+    model_product          = ModelProduct()  
     model_product_category = ModelProductCategory()
-    
+
+    def render_error(errors):
+        print(">>> [ERRO] Erros retornados:", errors)
+        resp = make_response(render_template('products/products.html',
+            success=False,
+            errors=errors,
+            data_input=data,
+            categories=categories,
+            units=units,
+            products=products))
+        resp.mimetype = 'text/html'
+        return resp
+
     try:
-        
-    #return f'Uploaded: {file.filename}' 
-        #
-        # GET OR CREATE PRODUCT
-        #
-        product = query_product.first()
-        product_category = query_categories.first()
-        
-        substring = "\static"
-        string = directory_path      
-        n = string.find(substring)
-        directory_path = string[n:].replace("\\","/") 
-        
+        # ── Valida arquivo ─────────────────────────────────────────
+        file = request.files.get('file')
+        if not file or file.filename == '':
+            print(">>> [ERRO] Nenhum arquivo enviado")
+            return render_error({'file': 'Selecione uma imagem para o produto.'})
 
-       
-    # create product
-        #if product is None:
+        # ── Converte value ─────────────────────────────────────────
+        value_raw = data.get('value', '').strip()
+        try:
+            value = float(value_raw.replace(',', '.'))
+        except ValueError:
+            print(">>> [ERRO] value inválido:", value_raw)
+            return render_error({'value': f'Valor inválido: "{value_raw}". Use números (ex: 56,00).'})
+
+        # ── Salva imagem ───────────────────────────────────────────
+        filename = secure_filename(file.filename)
+        save_path = os.path.join(app.config['UPLOAD_PATH'], filename)
+        print(">>> [ARQUIVO] Salvando em:", save_path)
+        file.save(save_path)
+
+        # Monta path relativo (\static/...)
+        directory_path = save_path
+        for sep in ['\\static', '/static']:
+            n = save_path.find(sep)
+            if n != -1:
+                directory_path = save_path[n:].replace('\\', '/')
+                break
+
+        print(">>> [ARQUIVO] Path relativo:", directory_path)
+
+        # ── Monta data_product ─────────────────────────────────────
         data_product = {
-            'name': data['name'],
-            'description': data['description'],                           
-            'value': data['value'],
-            'size': data['size'],
-            'unit_id': data['unit'],            
-            'path': directory_path
-        }     
+            'name':        data.get('name', '').strip(),
+            'description': data.get('description', '').strip(),
+            'value':       value,
+            'size':        data.get('size', '').strip() or None,
+            'unit_id':     int(data.get('unit', 0)),
+            'path':        directory_path,
+        }
 
+        print(">>> [MODEL] data_product:", data_product)
 
         product = model_product.create_product(data_product)
 
-        # error to create product
-           
         if product is None:
-            resp = make_response(render_template('products/products.html',
-                success=False,
-                errors=model_product.errors,
-                data_input=data,
-                categories=categories,   
-                units=units))           
-            resp.mimetype = 'text/html'
-            return resp  
+            print(">>> [ERRO] create_product falhou:", model_product.errors)
+            return render_error(model_product.errors)
 
-        print('entrei')
-        print(product.id)
-        print(data['category'])
-        print("pathh01")
-        print(directory_path)
+        print(">>> [OK] Produto criado id:", product.id)
 
+        # ── Cria relação produto-categoria ─────────────────────────
         data_product_category = {
-             'product_id': product.id,
-             'category_id': data['category']
-        }           
+            'product_id':  product.id,
+            'category_id': int(data.get('category', 0))
+        }
 
-        product_category = model_product_category.create_product_category(data_product_category) 
-        
+        print(">>> [MODEL] data_product_category:", data_product_category)
+
+        product_category = model_product_category.create_product_category(data_product_category)
+
         if product_category is None:
-            resp = make_response(render_template('products/products.html',
-                success=False,
-                errors=model_product_category.errors,
-                data_input=data,
-                categories=categories,  
-                units=units))            
-            resp.mimetype = 'text/html'
-            return resp  
-            
-        # success response
-        resp = make_response(render_template('products/products.html',                            
-                                success=True,
-                                errors=None,categories=categories, units=units, products=products))
+            print(">>> [ERRO] create_product_category falhou:", model_product_category.errors)
+            return render_error(model_product_category.errors)
+
+        print(">>> [OK] ProductCategory criado")
+
+        # ── Sucesso ────────────────────────────────────────────────
+        resp = make_response(render_template('products/products.html',
+            success=True,
+            errors=None,
+            data_input=None,
+            categories=categories,
+            units=units,
+            products=products_get()))
         resp.mimetype = 'text/html'
         return resp
-        
 
     except Exception as e:
-            LOGGER.exception(e)
-            resp = make_response(render_template('errors/500.html',                            
-                                    success=False,
-                                    errors=None))
-            resp.mimetype = 'text/html'
-            return resp, 500
+        print(">>> [EXCEPTION]", str(e))
+        LOGGER.exception(e)
+        resp = make_response(render_template('errors/500.html',
+            success=False,
+            errors=None))
+        resp.mimetype = 'text/html'
+        return resp, 500

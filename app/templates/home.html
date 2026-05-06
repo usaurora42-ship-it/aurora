@@ -33,46 +33,279 @@ Bootstrap 5 HTML CSS Template
 
 -->
     
+        
+        
         <style>
-            /* ── Clarear fundo (overlay sobre o Vegas) ── */
-            body::before {
-                content: '';
-                position: fixed;
-                inset: 0;
-                background: rgba(80, 50, 15, 0.15);
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                background: #ffffff !important;
+                color: #333333;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            body::before { display: none !important; }
+
+            /* ── Barra superior salmão ── */
+            .aurora-topbar {
+                background: #e8886a;
+                color: #fff;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 9px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                letter-spacing: 0.01em;
+                position: relative;
+                z-index: 1000;
+            }
+            .aurora-topbar a { color: #fff; text-decoration: underline; }
+            .aurora-topbar-center { flex: 1; text-align: center; }
+            .aurora-topbar-side { width: 160px; font-size: 12px; }
+            .aurora-topbar-side:last-child { text-align: right; }
+
+            /* ── Navbar preta (combina com logo) ── */
+            .navbar {
+                background: #4a2e10 !important;
+                border-bottom: 1px solid #3a2008 !important;
+                padding: 0 !important;
+                position: sticky !important;
+                top: 0;
+                z-index: 999;
+                box-shadow: none !important;
             }
 
-            /* ── Hero section igual ao restante */
-            .hero-section {
-                background:
-                    radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
-                    radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
-                    radial-gradient(ellipse at 60% 30%, rgba(130,80,30,0.25) 0%, transparent 50%),
-                    linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
+            .navbar .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 32px;
+                gap: 16px;
+                position: relative;
             }
-            main { position: relative; z-index: 1; }
 
-            /* ── Carrinho badge ── */
+            /* Logo central */
+            .navbar-brand-wrap {
+                display: flex;
+                align-items: center;
+                gap: 0;
+                text-decoration: none;
+                margin-right: auto;
+            }
+
+            .navbar-brand, .navbar-brand:hover {
+                background: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* Busca */
+            .aurora-search {
+                display: flex;
+                align-items: center;
+                border: 1px solid #6a4a28;
+                border-radius: 4px;
+                padding: 7px 14px;
+                gap: 8px;
+                background: #5a3a18;
+                min-width: 200px;
+            }
+            .aurora-search input {
+                border: none;
+                background: none;
+                outline: none;
+                font-size: 13px;
+                color: #f0e6c8;
+                width: 100%;
+            }
+            .aurora-search input::placeholder { color: #b09070; }
+            .aurora-search i { color: #b09070; font-size: 16px; }
+
+            /* Ícones direita */
+            .aurora-nav-icons {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+            .aurora-nav-icons a {
+                color: #f0e6c8;
+                text-decoration: none;
+                font-size: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                transition: color 0.2s;
+            }
+            .aurora-nav-icons a:hover { color: #f5d98a; }
+            .aurora-nav-icons i { font-size: 20px; }
+
+            /* Badge carrinho */
+            .cart-btn-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
             .cart-badge {
                 position: absolute;
-                top: -6px;
-                right: -8px;
-                background: #e74c3c;
+                top: -6px; right: -8px;
+                background: #e8886a;
                 color: #fff;
-                font-size: 0.65rem;
+                font-size: 10px;
                 font-weight: 700;
                 border-radius: 50%;
-                width: 18px;
-                height: 18px;
+                width: 17px; height: 17px;
+                display: flex; align-items: center; justify-content: center;
+            }
+
+            /* ── Menu de categorias ── */
+            .aurora-catbar {
+                background: #3a2008;
+                border-bottom: 1px solid #2a1505;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
+                gap: 36px;
+                padding: 0 24px;
+                height: 44px;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                position: sticky;
+                top: 81px;
+                z-index: 998;
             }
-            .cart-badge.bump { transform: scale(1.5); }
-            .cart-btn-wrap {
-                position: relative;
-                display: inline-block;
+            .aurora-catbar a {
+                color: #aaa;
+                text-decoration: none;
+                padding: 12px 2px;
+                border-bottom: 2px solid transparent;
+                transition: color 0.2s, border-color 0.2s;
+                white-space: nowrap;
+            }
+            .aurora-catbar a:hover,
+            .aurora-catbar a.active {
+                color: #c9a84c;
+                border-bottom-color: #c9a84c;
+            }
+
+            /* ── Seções ── */
+            .hero-section {
+                background: #f9f7f5 !important;
+                color: #333 !important;
+                min-height: 400px;
+            }
+            .hero-section h1 { color: #1a1a1a !important; font-size: 2.8rem; font-weight: 700; }
+            .hero-section p, .hero-section em.small-text { color: #666 !important; }
+
+            .about-section, .barista-section, .menu-section,
+            .reviews-section, .contact-section, .booking-section {
+                background: #fff !important;
+                color: #333 !important;
+            }
+
+            .section-overlay { display: none !important; }
+            .text-white { color: #333 !important; }
+            h2, h3, h4, h5, h6 { color: #1a1a1a !important; }
+            em { color: #c9a84c; }
+
+            /* ── Botões ── */
+            .btn.custom-btn {
+                background: #1a1a1a !important;
+                color: #fff !important;
+                border: 2px solid #1a1a1a !important;
+                border-radius: 2px !important;
+                padding: 12px 28px !important;
+                font-size: 12px !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.1em !important;
+                text-transform: uppercase !important;
+                transition: background 0.2s, color 0.2s !important;
+            }
+            .btn.custom-btn:hover {
+                background: #c9a84c !important;
+                border-color: #c9a84c !important;
+                color: #fff !important;
+            }
+            .btn.custom-btn.custom-border-btn {
+                background: transparent !important;
+                color: #1a1a1a !important;
+            }
+            .btn.custom-btn.custom-border-btn:hover {
+                background: #c9a84c !important;
+                color: #fff !important;
+                border-color: #c9a84c !important;
+            }
+
+            /* ── Footer ── */
+            .site-footer {
+                background: #2a1505 !important;
+                color: #c9a88a !important;
+            }
+            .site-footer .text-white { color: #fff !important; }
+            .site-footer em { color: #c9a84c !important; }
+            .site-footer a { color: #999 !important; }
+            .site-footer a:hover { color: #c9a84c !important; }
+
+            /* ── Painéis internos ── */
+            .cart-table-wrapper,
+            .cart-summary,
+            .checkout-panel,
+            .order-summary,
+            .pix-card {
+                background: #faf8f6 !important;
+                border-color: #e8e0d8 !important;
+            }
+            .cart-table th { color: #1a1a1a !important; background: #f0ebe3 !important; }
+            .cart-table td { color: #333 !important; border-bottom-color: #ede8e0 !important; }
+            .cart-table tbody tr:hover { background: #f5f0ea !important; }
+            .cart-table thead { border-bottom-color: #d4c8bc !important; }
+
+            .price { color: #c9a84c !important; }
+            .summary-title, .panel-title { color: #1a1a1a !important; border-bottom-color: #e8e0d8 !important; }
+            .summary-total-row { color: #1a1a1a !important; border-top-color: #d4c8bc !important; }
+            .summary-row span:last-child { color: #333 !important; }
+
+            .btn-checkout {
+                background: #1a1a1a !important;
+                color: #fff !important;
+                letter-spacing: 0.08em !important;
+            }
+            .btn-checkout:hover { background: #c9a84c !important; color: #fff !important; }
+            .btn-continue { border-color: #d4c8bc !important; color: #666 !important; }
+            .btn-continue:hover { border-color: #c9a84c !important; color: #c9a84c !important; }
+            .qty-btn { color: #c9a84c !important; }
+            .qty-input { color: #333 !important; }
+            .btn-remove { color: #e74c3c !important; }
+
+            .page-title { color: #1a1a1a !important; font-family: serif !important; }
+            .page-subtitle { color: #888 !important; }
+
+            /* ── Forms ── */
+            .form-input {
+                background: #fff !important;
+                border-color: #d4c8bc !important;
+                color: #333 !important;
+            }
+            .form-input:focus {
+                border-color: #c9a84c !important;
+                box-shadow: 0 0 0 3px rgba(201,168,76,0.15) !important;
+            }
+            .form-label { color: #666 !important; }
+
+            .alert-error {
+                background: #fff5f5 !important;
+                border-left-color: #e74c3c !important;
+                color: #c0392b !important;
+            }
+            .alert-success {
+                background: #f0faf0 !important;
+                color: #27ae60 !important;
+            }
+
+            /* ── Responsive ── */
+            @media (max-width: 991px) {
+                .aurora-topbar-side { display: none; }
+                .aurora-search { min-width: 130px; }
+                .navbar-brand-wrap { position: static; transform: none; }
+                .aurora-catbar { gap: 16px; overflow-x: auto; justify-content: flex-start; font-size: 10px; }
             }
         </style>
 
@@ -81,71 +314,74 @@ Bootstrap 5 HTML CSS Template
     <body>
                 
             <main>
-                <nav class="navbar navbar-expand-lg">                
-                    <div class="container">
-                        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                            <img src="{{ url_for('static', filename='images/aurora-04.png') }}" 
-                                class="navbar-brand-image img-fluid" 
-                                style="height: 80px; width: auto; transform: scale(1.8);"
-                                alt="Aurora Semijóias">
-                        </a>
-                        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                            <img src="{{ url_for('static', filename='images/aurora-06.png') }}" 
-                                class="navbar-brand-image img-fluid" 
-                                style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
-                                alt="Aurora Semijóias">
-                        </a>
-        
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav ms-lg-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_1">Home</a>
-                                </li>
-        
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_2">Sobre Nós</a>
-                                </li>
+                
+            <!-- Barra superior salmão -->
+            <div class="aurora-topbar">
+                <div class="aurora-topbar-side">
+                    <i class="bi-headset me-1"></i> Atendimento ao cliente
+                </div>
+                <div class="aurora-topbar-center">
+                    ✨ Frete grátis acima de R$ 200 &nbsp;|&nbsp; Parcele em até 12x sem juros
+                </div>
+                <div class="aurora-topbar-side">
+                    <i class="bi-shield-check me-1"></i> Compra segura
+                </div>
+            </div>
 
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_3">Nossos Produtos</a>
-                                </li>
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
 
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_4">Avaliações</a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a class="nav-link click-scroll" href="#section_5">Contato</a>
-                                </li>
-                            </ul>
-
-                            <div class="ms-lg-3">
-                                {% if session.get('client_id') %}
-                                    <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-right: 8px;">
-                                        Olá, {{ session.get('client_name', '').split()[0] }}
-                                    </span>
-                                    <a href="/logout" style="color: #c9a84c; font-size: 0.82rem; text-decoration: none; border-bottom: 0.5px solid #c9a84c; padding-bottom: 1px; margin-right: 12px;">
-                                        Sair
-                                    </a>
-                                {% endif %}
-
-                                <!-- Carrinho -->
-                                <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
-                                    <strong class="small-text">Carrinho</strong>
-                                    <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
-                                    <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
-                                </a>
-                            </div>
-                        </div>
+                    <!-- Busca (esquerda) -->
+                    <div class="aurora-search d-none d-lg-flex">
+                        <i class="bi-search"></i>
+                        <input type="text" placeholder="Buscar produto...">
                     </div>
-                </nav>
+
+                    <!-- Logo central -->
+                    <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
+                        <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                            style="height: 80px; width: auto;"
+                            alt="Aurora Semijóias">
+                        <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
+                            style="height: 60px; width: auto; margin-left: 10px;"
+                            alt="Aurora Semijóias">
+                    </a>
+
+                    <!-- Ícones direita -->
+                    <div class="aurora-nav-icons">
+                        {% if session.get('client_id') %}
+                            <a href="/logout" title="Sair">
+                                <i class="bi-person-check"></i>
+                                <span>{{ session.get('client_name', '').split()[0] }}</span>
+                            </a>
+                        {% else %}
+                            <a href="/login" title="Entrar">
+                                <i class="bi-person"></i>
+                                <span>Entrar</span>
+                            </a>
+                        {% endif %}
+                        <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                            <i class="bi-bag"></i>
+                            <span>Sacola</span>
+                            <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Menu de categorias -->
+            <div class="aurora-catbar">
+                <a href="/products/category_products">Todos</a>
+                <a href="/products/category_products?cat=aneis">Anéis</a>
+                <a href="/products/category_products?cat=brincos">Brincos</a>
+                <a href="/products/category_products?cat=colares">Colares</a>
+                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
+                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
+                <a href="/products/category_products?cat=presentes">Presentes</a>
+            </div>
 
 
-                <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
+                <section class="hero-section d-flex justify-content-center align-items-center" style="min-height:520px; background:#f9f7f5 !important;" id="section_1">
 
                     <div class="container">
                         <div class="row align-items-center">
@@ -664,6 +900,13 @@ Bootstrap 5 HTML CSS Template
         <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
         <script src="{{ url_for('static', filename='js/click-scroll.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script>
+            // Desativa o Vegas para manter o fundo limpo
+            if (typeof $.fn.vegas !== 'undefined') {
+                $.fn.vegasOff = $.fn.vegas;
+                $.fn.vegas = function() { return this; };
+            }
+        </script>
         <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
         <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
 

@@ -34,6 +34,24 @@ Bootstrap 5 HTML CSS Template
 -->
     
         <style>
+            /* ── Clarear fundo (overlay sobre o Vegas) ── */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: rgba(80, 50, 15, 0.15);
+            }
+
+            /* ── Hero section igual ao restante */
+            .hero-section {
+                background:
+                    radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
+                    radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
+                    radial-gradient(ellipse at 60% 30%, rgba(130,80,30,0.25) 0%, transparent 50%),
+                    linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
+            }
+            main { position: relative; z-index: 1; }
+
             /* ── Carrinho badge ── */
             .cart-badge {
                 position: absolute;
@@ -127,7 +145,7 @@ Bootstrap 5 HTML CSS Template
                 </nav>
 
 
-                <section class="hero-section d-flex justify-content-center align-items-center" id="section_1" style="background:#0d0d0d;">
+                <section class="hero-section d-flex justify-content-center align-items-center" id="section_1">
 
                     <div class="container">
                         <div class="row align-items-center">

@@ -42,8 +42,8 @@ class ModelProduct(db.Model):
         nullable=False
     )
     size = db.Column(
-        db.Numeric,
-        nullable=False,
+        db.String(40),
+        nullable=True,
     )
     path = db.Column(
         db.String(200)
@@ -145,8 +145,9 @@ class ModelProduct(db.Model):
             required: true
             type: string
         size:
-            type: number
-            coerce: float
+            type: string
+            maxlength: 40
+            nullable: true
         value:
             type: number
             coerce: float
@@ -172,8 +173,9 @@ class ModelProduct(db.Model):
             required: true
             type: string
         size:
-            type: number
-            coerce: float
+            type: string
+            maxlength: 40
+            nullable: true
         value:
             type: number
             coerce: float
