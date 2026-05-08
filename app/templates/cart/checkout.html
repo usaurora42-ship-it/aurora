@@ -1,766 +1,801 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aurora Semijóias - Finalizar Pedido</title>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Aurora Semijóias — Finalizar pedido">
+        <title>Aurora Semijóias — Finalizar Pedido</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/vegas.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">
 
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+                background: #ffffff !important;
+                color: #333;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            body::before { display: none !important; }
+            main { padding-top: 190px; }
 
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-        }
+            /* ── Topbar ── */
+            .aurora-topbar {
+                background: #e8886a; color: #fff;
+                font-size: 13px; font-weight: 500;
+                padding: 9px 24px;
+                display: flex; align-items: center; justify-content: space-between;
+                position: fixed; top: 0; left: 0; right: 0;
+                z-index: 1001; height: 38px;
+            }
+            .aurora-topbar a { color: #fff; text-decoration: underline; }
+            .aurora-topbar-center { flex: 1; text-align: center; }
+            .aurora-topbar-side { width: 160px; font-size: 12px; }
+            .aurora-topbar-side:last-child { text-align: right; }
 
-        html, body { min-height: 100%; }
+            /* ── Navbar ── */
+            .navbar {
+                background: #4a2e10 !important;
+                border-bottom: 1px solid #3a2008 !important;
+                padding: 0 !important;
+                position: fixed !important;
+                top: 38px !important; left: 0 !important; right: 0 !important;
+                width: 100% !important; z-index: 999 !important;
+                box-shadow: none !important; transform: none !important;
+            }
+            .navbar .container {
+                display: flex; align-items: center;
+                justify-content: space-between;
+                padding: 8px 32px; gap: 16px;
+            }
+            .navbar-brand-wrap { display: flex; align-items: center; text-decoration: none; }
+            .navbar-brand, .navbar-brand:hover { background: none !important; padding: 0 !important; margin: 0 !important; }
 
-        body.reservation-page {
-            background:
-                radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
-                radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
-                radial-gradient(ellipse at 60% 30%, rgba(130,80,30,0.25) 0%, transparent 50%),
-                linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
-            background-attachment: fixed !important;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            font-family: 'Montserrat', sans-serif;
-            color: #e8d5a3;
-            line-height: 1.6;
-        }
+            .aurora-search {
+                display: flex; align-items: center;
+                border: 1px solid #6a4a28; border-radius: 4px;
+                padding: 7px 14px; gap: 8px;
+                background: #5a3a18; min-width: 200px;
+            }
+            .aurora-search input { border: none; background: none; outline: none; font-size: 13px; color: #f0e6c8; width: 100%; }
+            .aurora-search input::placeholder { color: #b09070; }
+            .aurora-search i { color: #b09070; font-size: 16px; }
 
-        body.reservation-page::before { display: none !important; }
-        .booking-section { background: transparent !important; }
-        main { position: relative; z-index: 1; }
+            .aurora-nav-icons { display: flex; align-items: center; gap: 20px; }
+            .aurora-nav-icons a {
+                color: #f0e6c8; text-decoration: none; font-size: 12px;
+                display: flex; flex-direction: column; align-items: center;
+                gap: 2px; transition: color 0.2s;
+            }
+            .aurora-nav-icons a:hover { color: #f5d98a; }
+            .aurora-nav-icons i { font-size: 20px; }
 
-        /* ── Badge carrinho ── */
-        .cart-badge {
-            position: absolute; top: -6px; right: -8px;
-            background: #e74c3c; color: #fff;
-            font-size: 0.65rem; font-weight: 700;
-            border-radius: 50%; width: 18px; height: 18px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .cart-btn-wrap { position: relative; display: inline-block; }
+            .cart-btn-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+            .cart-badge {
+                position: absolute; top: -6px; right: -8px;
+                background: #e8886a; color: #fff; font-size: 10px; font-weight: 700;
+                border-radius: 50%; width: 17px; height: 17px;
+                display: flex; align-items: center; justify-content: center;
+            }
 
-        /* ── Page Header ── */
-        .page-header {
-            text-align: center;
-            margin-bottom: 48px;
-            padding-top: 40px;
-        }
+            /* ── Variáveis ── */
+            :root {
+                --au-gold:   #c9a84c;
+                --au-brown:  #4a2e10;
+                --au-salmon: #e8886a;
+                --au-cream:  #f9f7f5;
+                --au-warm:   #f0ebe3;
+                --au-stone:  #d4c8bc;
+                --au-muted:  #888;
+                --au-dark:   #1a1a1a;
+            }
 
-        .page-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 48px;
-            font-weight: 300;
-            color: #f0e6c8;
-            margin-bottom: 12px;
-        }
+            /* ── Breadcrumb ── */
+            .au-breadcrumb { padding: 18px 0 0; margin-bottom: 28px; }
+            .au-breadcrumb a { font-size: 12px; color: var(--au-muted); text-decoration: none; letter-spacing: 0.06em; }
+            .au-breadcrumb a:hover { color: var(--au-dark); }
+            .au-breadcrumb span { font-size: 12px; color: var(--au-stone); margin: 0 6px; }
+            .au-breadcrumb strong { font-size: 12px; color: var(--au-dark); }
 
-        .page-subtitle {
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #8a7a60;
-            font-weight: 400;
-            margin-bottom: 0;
-        }
+            /* ── Header ── */
+            .page-header { margin-bottom: 36px; }
+            .page-title {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.8rem; font-weight: 400;
+                color: var(--au-dark) !important; line-height: 1.1;
+            }
+            .page-title em { color: var(--au-gold); font-style: italic; }
+            .page-subtitle {
+                font-size: 11px; letter-spacing: 0.18em;
+                text-transform: uppercase; color: var(--au-muted); margin-top: 6px;
+            }
 
-        /* ── Steps ── */
-        .checkout-steps {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            margin-bottom: 48px;
-            flex-wrap: wrap;
-        }
+            /* ── Steps ── */
+            .checkout-steps {
+                display: flex; align-items: center;
+                justify-content: center; gap: 0;
+                margin-bottom: 40px; flex-wrap: wrap;
+            }
+            .step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--au-stone); font-weight: 600; }
+            .step.active { color: var(--au-gold); }
+            .step.done { color: #7ac97a; }
+            .step-num {
+                width: 34px; height: 34px; border-radius: 50%;
+                border: 1.5px solid var(--au-stone);
+                display: flex; align-items: center; justify-content: center;
+                font-size: 13px; font-weight: 700; flex-shrink: 0;
+            }
+            .step.active .step-num { border-color: var(--au-gold); background: rgba(201,168,76,0.08); color: var(--au-gold); }
+            .step.done .step-num { border-color: #7ac97a; background: rgba(122,201,122,0.08); color: #7ac97a; }
+            .step-line { width: 50px; height: 1px; background: var(--au-stone); margin: 0 10px; }
+            @media (max-width: 576px) { .step-line { display: none; } .checkout-steps { flex-direction: column; gap: 14px; } }
 
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 18px;
-            color: #8a7a60;
-            font-weight: 600;
-        }
+            /* ── Layout ── */
+            .checkout-layout {
+                display: grid;
+                grid-template-columns: 1fr 360px;
+                gap: 28px; margin-bottom: 60px;
+                align-items: start;
+            }
+            @media (max-width: 1024px) { .checkout-layout { grid-template-columns: 1fr; } }
 
-        .step.active { color: #c9a84c; }
-        .step.done { color: #7ac97a; }
+            /* ── Painéis ── */
+            .checkout-panel {
+                background: #fff;
+                border: 1px solid var(--au-stone);
+                padding: 32px;
+                margin-bottom: 20px;
+            }
+            .panel-title {
+                font-size: 11px; font-weight: 700;
+                letter-spacing: 0.18em; text-transform: uppercase;
+                color: var(--au-dark) !important;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--au-stone);
+                margin-bottom: 24px;
+                display: flex; align-items: center; gap: 8px;
+            }
+            .panel-title i { color: var(--au-gold); font-size: 15px; }
 
-        .step-num {
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            border: 2px solid #3a3020;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; flex-shrink: 0;
-        }
+            /* ── Inputs ── */
+            .form-group { margin-bottom: 20px; }
+            .form-label {
+                display: block; font-size: 10px; font-weight: 700;
+                letter-spacing: 0.14em; text-transform: uppercase;
+                color: var(--au-muted); margin-bottom: 7px;
+            }
+            .form-input {
+                width: 100%;
+                background: var(--au-cream);
+                border: 1px solid var(--au-stone);
+                color: var(--au-dark);
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                font-size: 14px; padding: 12px 16px;
+                outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+            .form-input:focus { border-color: var(--au-gold); box-shadow: 0 0 0 3px rgba(201,168,76,0.12); }
+            .form-input::placeholder { color: var(--au-stone); }
+            .form-input.is-invalid { border-color: #e74c3c; }
+            textarea.form-input { resize: vertical; min-height: 90px; }
 
-        .step.active .step-num { border-color: #c9a84c; background: rgba(201,168,76,0.1); color: #c9a84c; }
-        .step.done .step-num { border-color: #7ac97a; background: rgba(122,201,122,0.1); color: #7ac97a; }
+            .error-msg { display: block; color: #e74c3c; font-size: 11px; margin-top: 5px; }
+            .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+            @media (max-width: 576px) { .form-row { grid-template-columns: 1fr; } }
 
-        .step-line { width: 60px; height: 2px; background: #3a3020; margin: 0 12px; }
+            /* ── Frete ── */
+            .frete-option-label {
+                display: flex; align-items: center; justify-content: space-between;
+                border: 1px solid var(--au-stone);
+                padding: 14px 16px; margin-bottom: 10px;
+                cursor: pointer; transition: border-color 0.2s;
+            }
+            .frete-option-label:hover { border-color: var(--au-gold); }
+            .frete-option-label .service-name { font-size: 13px; font-weight: 600; color: var(--au-dark); }
+            .frete-option-label .service-prazo { font-size: 11px; color: var(--au-muted); margin-top: 2px; }
+            .frete-option-label .service-valor { font-size: 14px; font-weight: 700; color: var(--au-gold); }
 
-        @media (max-width: 768px) {
-            .step-line { display: none; }
-            .checkout-steps { flex-direction: column; gap: 16px; }
-        }
+            /* ── Resumo ── */
+            .order-summary {
+                background: var(--au-cream);
+                border: 1px solid var(--au-stone);
+                padding: 28px;
+                position: sticky; top: 200px;
+            }
+            .summary-title {
+                font-size: 11px; font-weight: 700;
+                letter-spacing: 0.18em; text-transform: uppercase;
+                color: var(--au-dark) !important;
+                padding-bottom: 14px;
+                border-bottom: 1px solid var(--au-stone);
+                margin-bottom: 18px;
+            }
+            .summary-item {
+                display: flex; align-items: center; gap: 12px;
+                margin-bottom: 14px; padding-bottom: 14px;
+                border-bottom: 1px solid #ede8e0;
+            }
+            .summary-item:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+            .summary-item img { width: 52px; height: 52px; object-fit: cover; border: 1px solid var(--au-stone); flex-shrink: 0; }
+            .summary-item-ph {
+                width: 52px; height: 52px; background: var(--au-warm);
+                border: 1px solid var(--au-stone);
+                display: flex; align-items: center; justify-content: center;
+                color: var(--au-stone); font-size: 1.2rem; flex-shrink: 0;
+            }
+            .summary-item-name { font-size: 13px; font-weight: 600; color: var(--au-dark); }
+            .summary-item-qty { font-size: 11px; color: var(--au-muted); margin-top: 2px; }
+            .summary-item-price { font-size: 13px; font-weight: 700; color: var(--au-gold); margin-left: auto; white-space: nowrap; }
 
-        /* ── Layout ── */
-        .checkout-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 32px;
-            margin-bottom: 48px;
-        }
+            .summary-total-row {
+                display: flex; justify-content: space-between;
+                font-size: 15px; font-weight: 700;
+                color: var(--au-dark) !important;
+                border-top: 1px solid var(--au-stone);
+                padding-top: 16px; margin-top: 14px;
+            }
 
-        @media (max-width: 1024px) {
-            .checkout-layout { grid-template-columns: 1fr; }
-        }
+            /* ── Botões ── */
+            .btn-finish {
+                display: block; width: 100%;
+                background: var(--au-gold); color: #fff;
+                border: none; padding: 16px;
+                font-size: 11px; font-weight: 700;
+                letter-spacing: 0.14em; text-transform: uppercase;
+                cursor: pointer; margin-top: 20px;
+                transition: background 0.2s, transform 0.1s; text-align: center;
+            }
+            .btn-finish:hover { background: #b8972a; }
+            .btn-finish:active { transform: scale(0.98); }
 
-        /* ── Form Panel ── */
-        .checkout-panel {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-            padding: 48px;
-            margin-bottom: 24px;
-        }
+            .btn-back {
+                display: inline-flex; align-items: center; gap: 6px;
+                font-size: 12px; color: var(--au-muted);
+                text-decoration: none; margin-bottom: 24px;
+                letter-spacing: 0.08em; transition: color 0.2s;
+            }
+            .btn-back:hover { color: var(--au-dark); }
 
-        .panel-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: #c9a84c;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #3a3020;
-            letter-spacing: 1px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+            /* ── Alert ── */
+            .alert-error {
+                background: #fff5f5;
+                border-left: 3px solid #e74c3c;
+                color: #c0392b; font-size: 13px;
+                padding: 14px 18px; margin-bottom: 20px;
+                display: flex; align-items: center; gap: 8px;
+            }
 
-        /* ── Inputs ── */
-        .form-group { margin-bottom: 28px; }
+            /* ── Footer ── */
+            .site-footer { background: #2a1505 !important; color: #c9a88a !important; padding: 60px 0 0; }
+            .site-footer a { color: #999 !important; }
+            .site-footer a:hover { color: var(--au-gold) !important; }
+            .site-footer .text-white { color: #fff !important; }
 
-        .form-label {
-            display: block;
-            font-size: 18px;
-            font-weight: 700;
-            color: #e8d5a3;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
+            @media (max-width: 991px) { .aurora-topbar-side { display: none; } .aurora-search { min-width: 130px; } }
+            @media (max-width: 768px) { .checkout-panel { padding: 20px; } .order-summary { position: static; } }
+            @media (max-width: 576px) { main { padding-top: 175px; } .page-title { font-size: 2rem; } }
 
-        .form-input {
-            width: 100%;
-            background: #0a0a0a;
-            border: 2px solid #3a3020;
-            border-radius: 2px;
-            color: #e8d5a3;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
-            padding: 16px 20px;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+            *:focus-visible { outline: 2px solid var(--au-gold); outline-offset: 2px; }
+        </style>
 
-        .form-input:focus {
-            border-color: #c9a84c;
-            box-shadow: 0 0 0 3px rgba(201,168,76,0.15);
-        }
+        <!-- Força catbar -->
+        <style>
+            .aurora-catbar {
+                display: flex !important; visibility: visible !important; opacity: 1 !important;
+                position: fixed !important; top: 142px !important;
+                left: 0 !important; right: 0 !important; width: 100% !important;
+                height: 44px !important; z-index: 99999 !important;
+                background: #3a2008 !important; pointer-events: all !important;
+                clip: auto !important; clip-path: none !important;
+                transform: none !important; overflow: visible !important;
+                align-items: center !important; justify-content: center !important;
+                gap: 36px !important; padding: 0 24px !important;
+                font-size: 11px !important; font-weight: 700 !important;
+                letter-spacing: 0.1em !important; text-transform: uppercase !important;
+                border-bottom: 1px solid #2a1505 !important;
+            }
+            .aurora-catbar a {
+                color: #aaa !important; text-decoration: none !important;
+                padding: 12px 2px !important; border-bottom: 2px solid transparent !important;
+                transition: color 0.2s, border-color 0.2s !important; white-space: nowrap !important;
+            }
+            .aurora-catbar a:hover { color: #c9a84c !important; border-bottom-color: #c9a84c !important; }
+        </style>
 
-        .form-input::placeholder { color: #5a4a30; }
+        <script>
+            function fixCatbar() {
+                const topbar = document.querySelector('.aurora-topbar');
+                const navbar = document.querySelector('.navbar');
+                const catbar = document.querySelector('.aurora-catbar');
+                const main   = document.querySelector('main');
+                if (!navbar || !catbar) return;
+                const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+                const navbarH = navbar.getBoundingClientRect().height;
+                const offset  = topbarH + navbarH;
+                catbar.style.top        = offset + 'px';
+                catbar.style.visibility = 'visible';
+                if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
+            }
+            window.addEventListener('load', fixCatbar);
+            window.addEventListener('resize', fixCatbar);
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(fixCatbar, 100);
+                setTimeout(fixCatbar, 500);
+            });
+        </script>
+    </head>
 
-        .form-input.is-invalid { border-color: #d32f2f; background: #1a0a0a; }
+    <body>
+        <main>
 
-        textarea.form-input { resize: vertical; min-height: 90px; }
-
-        .error-msg {
-            display: block;
-            color: #ff6b6b;
-            font-size: 0.78rem;
-            margin-top: 6px;
-        }
-
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-
-        @media (max-width: 576px) { .form-row { grid-template-columns: 1fr; } }
-
-        /* ── Frete ── */
-        .frete-option-label {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 2px solid #3a3020;
-            border-radius: 4px;
-            padding: 14px 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            transition: border-color 0.2s;
-        }
-        .frete-option-label:hover { border-color: #c9a84c; }
-
-        /* ── Summary ── */
-        .order-summary {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-            padding: 32px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
-
-        .summary-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: #c9a84c;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #3a3020;
-            letter-spacing: 1px;
-        }
-
-        .summary-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #3a3020;
-        }
-
-        .summary-item:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-        .summary-item img {
-            width: 56px; height: 56px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #3a3020;
-            flex-shrink: 0;
-        }
-
-        .summary-item-ph {
-            width: 56px; height: 56px;
-            background: #1a1a1a;
-            border: 1px solid #3a3020;
-            border-radius: 4px;
-            display: flex; align-items: center; justify-content: center;
-            color: #8a7a60; font-size: 1.4rem; flex-shrink: 0;
-        }
-
-        .summary-item-name { color: #f0e6c8; font-size: 0.9rem; font-weight: 700; }
-        .summary-item-qty { color: #8a7a60; font-size: 0.78rem; margin-top: 2px; }
-        .summary-item-price { color: #c9a84c; font-size: 0.9rem; font-weight: 700; margin-left: auto; white-space: nowrap; }
-
-        .summary-total-row {
-            display: flex;
-            justify-content: space-between;
-            color: #f0e6c8;
-            font-weight: 700;
-            font-size: 20px;
-            border-top: 2px solid #c9a84c;
-            padding-top: 16px;
-            margin-top: 12px;
-        }
-
-        /* ── Buttons ── */
-        .btn-finish {
-            display: block; width: 100%;
-            background: #c9a84c; color: #0a0a0a;
-            border: none; border-radius: 4px;
-            padding: 18px; font-size: 18px;
-            font-weight: 700; letter-spacing: 2px;
-            cursor: pointer; margin-top: 24px;
-            transition: background 0.3s, transform 0.1s;
-            text-align: center;
-        }
-
-        .btn-finish:hover { background: #d4b55a; }
-        .btn-finish:active { transform: scale(0.98); }
-
-        .btn-back {
-            display: inline-flex; align-items: center; gap: 8px;
-            font-size: 18px; color: #8a7a60;
-            text-decoration: none; margin-bottom: 32px;
-            transition: color 0.3s; font-weight: 600;
-        }
-
-        .btn-back:hover { color: #c9a84c; }
-
-        /* ── Alert ── */
-        .alert-error {
-            background: #2a1a1a;
-            border-left: 4px solid #d32f2f;
-            color: #ff9999;
-            font-size: 17px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            border-radius: 2px;
-            display: flex; align-items: center; gap: 8px;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .page-title { font-size: 32px; }
-            .checkout-panel { padding: 32px 24px; }
-            .order-summary { position: static; }
-        }
-
-        *:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
-    </style>
-</head>
-
-<body class="reservation-page">
-    <main>
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 80px; width: auto; transform: scale(1.8);"
-                        alt="Aurora Semijóias">
-                </a>
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
-                        alt="Aurora Semijóias">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-lg-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_1">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_2">Sobre Nós</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_4">Avaliações</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_5">Contato</a></li>
-                    </ul>
-                    <div class="ms-lg-3">
-                        <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
-                            <strong class="small-text">Carrinho</strong>
-                            <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
-                            {% set total_items = items | sum(attribute='quantity') %}
-                            {% if total_items > 0 %}
-                            <span class="cart-badge">{{ total_items }}</span>
-                            {% endif %}
-                        </a>
-                    </div>
-                </div>
+            <!-- ── Topbar salmão ── -->
+            <div class="aurora-topbar">
+                <div class="aurora-topbar-side"><i class="bi-headset me-1"></i> Atendimento ao cliente</div>
+                <div class="aurora-topbar-center">✨ Frete grátis acima de R$ 200 &nbsp;|&nbsp; Parcele em até 12x sem juros</div>
+                <div class="aurora-topbar-side"><i class="bi-shield-check me-1"></i> Compra segura</div>
             </div>
-        </nav>
 
-        <section class="booking-section section-padding">
-            <div class="container">
-
-                <!-- Header -->
-                <div class="page-header">
-                    <h1 class="page-title">Finalizar <em style="color: #c9a84c; font-style: italic;">Pedido</em></h1>
-                    <p class="page-subtitle">COMPLETE SEUS DADOS DE ENTREGA</p>
-                </div>
-
-                <!-- Steps -->
-                <div class="checkout-steps">
-                    <div class="step done">
-                        <div class="step-num"><i class="bi-check2"></i></div>
-                        <span>Carrinho</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step active">
-                        <div class="step-num">2</div>
-                        <span>Dados</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step">
-                        <div class="step-num">3</div>
-                        <span>Confirmação</span>
-                    </div>
-                </div>
-
-                <div class="checkout-layout">
-
-                    <!-- Formulário -->
-                    <div>
-                        <a href="/cart" class="btn-back">← Voltar ao Carrinho</a>
-
-                        {% if errors and errors.geral %}
-                        <div class="alert-error" role="alert">
-                            <i class="bi-exclamation-circle"></i> {{ errors.geral }}
+            <!-- ── Navbar ── -->
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
+                        <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                            style="height:110px;width:auto;" alt="Aurora Semijóias">
+                        <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
+                            style="height:130px;width:auto;margin-left:8px;" alt="Aurora Semijóias">
+                    </a>
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="aurora-search d-none d-lg-flex">
+                            <i class="bi-search"></i>
+                            <input type="text" placeholder="Buscar produto...">
                         </div>
-                        {% endif %}
+                        <div class="aurora-nav-icons">
+                            {% if session.get('client_id') %}
+                                <a href="/logout" title="Sair">
+                                    <i class="bi-person-check"></i>
+                                    <span>{{ session.get('client_name', '').split()[0] }}</span>
+                                </a>
+                            {% else %}
+                                <a href="/login" title="Entrar">
+                                    <i class="bi-person"></i>
+                                    <span>Entrar</span>
+                                </a>
+                            {% endif %}
+                            <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                                <i class="bi-bag"></i>
+                                <span>Sacola</span>
+                                <span class="cart-badge">{{ items|sum(attribute='quantity') if items else 0 }}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
-                        <form action="/cart/checkout" method="POST" id="checkoutForm">
+            <!-- ── Catbar ── -->
+            <div class="aurora-catbar">
+                <a href="/products/category_products">Todos</a>
+                <a href="/products/category_products?cat=colares">Colares</a>
+                <a href="/products/category_products?cat=brincos">Brincos</a>
+                <a href="/products/category_products?cat=aneis">Anéis</a>
+                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
+                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
+                <a href="/products/category_products?cat=bolsas">Bolsas</a>
+                <a href="/products/category_products?cat=presentes">Presentes</a>
+            </div>
 
-                            <!-- Dados de Contato -->
-                            <div class="checkout-panel">
-                                <h2 class="panel-title">
-                                    <i class="bi-person"></i> DADOS DE CONTATO
-                                </h2>
+            <!-- ── Conteúdo ── -->
+            <section class="py-5">
+                <div class="container">
 
-                                <div class="form-group">
-                                    <label class="form-label" for="email">E-MAIL *</label>
-                                    <input type="email" name="email" id="email"
-                                           class="form-input {% if errors and errors.email %}is-invalid{% endif %}"
-                                           placeholder="seu@email.com"
-                                           value="{{ form_data.email if form_data else '' }}">
-                                    {% if errors and errors.email %}
-                                    <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.email }}</span>
-                                    {% endif %}
-                                </div>
+                    <!-- Breadcrumb -->
+                    <nav class="au-breadcrumb">
+                        <a href="{{ url_for('site_bp.index') }}">Início</a>
+                        <span>/</span>
+                        <a href="/cart">Carrinho</a>
+                        <span>/</span>
+                        <strong>Finalizar pedido</strong>
+                    </nav>
 
-                                <div style="margin-top: -8px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
-                                    <input type="checkbox" name="email_optin" id="email_optin" value="1"
-                                           {% if form_data and form_data.get('email_optin') %}checked{% endif %}
-                                           style="width: 16px; height: 16px; accent-color: #c9a84c; cursor: pointer; flex-shrink: 0;">
-                                    <label for="email_optin" style="color: #8a7a60; font-size: 0.85rem; cursor: pointer; margin: 0;">
-                                        Receber ofertas e novidades por e-mail
-                                    </label>
-                                </div>
+                    <!-- Título -->
+                    <div class="page-header">
+                        <h1 class="page-title">Finalizar <em>Pedido</em></h1>
+                        <p class="page-subtitle">Complete seus dados de entrega</p>
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="checkout-steps">
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Carrinho</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step active">
+                            <div class="step-num">2</div>
+                            <span>Dados</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step">
+                            <div class="step-num">3</div>
+                            <span>Confirmação</span>
+                        </div>
+                    </div>
+
+                    <div class="checkout-layout">
+
+                        <!-- ── Formulário ── -->
+                        <div>
+                            <a href="/cart" class="btn-back">← Voltar ao carrinho</a>
+
+                            {% if errors and errors.geral %}
+                            <div class="alert-error" role="alert">
+                                <i class="bi-exclamation-circle"></i> {{ errors.geral }}
                             </div>
+                            {% endif %}
 
-                            <!-- Entrega / CEP -->
-                            <div class="checkout-panel">
-                                <h2 class="panel-title">
-                                    <i class="bi-geo-alt"></i> ENTREGA
-                                </h2>
+                            <form action="/cart/checkout" method="POST" id="checkoutForm">
 
-                                <div class="form-group">
-                                    <label class="form-label" for="zip_code">CEP *</label>
-                                    <div style="display:flex; align-items:center; gap:10px;">
-                                        <input type="text" name="zip_code" id="zip_code"
-                                               class="form-input {% if errors and errors.zip_code %}is-invalid{% endif %}"
-                                               placeholder="00000-000" maxlength="9"
-                                               value="{{ form_data.zip_code if form_data else '' }}"
-                                               style="flex:1;">
-                                        <span id="cep-loading" style="display:none; color:#c9a84c; font-size:0.85rem; white-space:nowrap;">
-                                            <i class="bi-arrow-repeat"></i> Buscando...
-                                        </span>
-                                        <span id="cep-error" style="display:none; color:#e74c3c; font-size:0.85rem; white-space:nowrap;">
-                                            <i class="bi-exclamation-circle"></i> CEP não encontrado
-                                        </span>
-                                    </div>
-                                    <a href="https://buscacepinter.correios.com.br/app/endereco/index.php"
-                                       target="_blank"
-                                       style="color:#c9a84c; font-size:0.78rem; text-decoration:none; display:inline-block; margin-top:6px;">
-                                        Não sei meu CEP
-                                    </a>
-                                    {% if errors and errors.zip_code %}
-                                    <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.zip_code }}</span>
-                                    {% endif %}
-                                </div>
+                                <!-- Dados de contato -->
+                                <div class="checkout-panel">
+                                    <h2 class="panel-title">
+                                        <i class="bi-person"></i> Dados de contato
+                                    </h2>
 
-                                <div id="address-fields" style="display:{% if form_data and form_data.zip_code %}block{% else %}none{% endif %};">
                                     <div class="form-group">
-                                        <label class="form-label" for="street">RUA *</label>
-                                        <input type="text" name="street" id="street"
-                                               class="form-input {% if errors and errors.street %}is-invalid{% endif %}"
-                                               placeholder="Rua, Avenida..."
-                                               value="{{ form_data.street if form_data else '' }}">
-                                        {% if errors and errors.street %}
-                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street }}</span>
+                                        <label class="form-label" for="email">E-mail *</label>
+                                        <input type="email" name="email" id="email"
+                                               class="form-input {% if errors and errors.email %}is-invalid{% endif %}"
+                                               placeholder="seu@email.com"
+                                               value="{{ form_data.email if form_data else '' }}">
+                                        {% if errors and errors.email %}
+                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.email }}</span>
                                         {% endif %}
                                     </div>
 
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label" for="street_number">NÚMERO *</label>
-                                            <input type="text" name="street_number" id="street_number"
-                                                   class="form-input {% if errors and errors.street_number %}is-invalid{% endif %}"
-                                                   placeholder="123"
-                                                   value="{{ form_data.street_number if form_data else '' }}">
-                                            {% if errors and errors.street_number %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street_number }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label" for="complement">COMPLEMENTO</label>
-                                            <input type="text" name="complement" id="complement"
-                                                   class="form-input"
-                                                   placeholder="Apto, Bloco..."
-                                                   value="{{ form_data.complement if form_data else '' }}">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label" for="district">BAIRRO *</label>
-                                            <input type="text" name="district" id="district"
-                                                   class="form-input {% if errors and errors.district %}is-invalid{% endif %}"
-                                                   placeholder="Bairro"
-                                                   value="{{ form_data.district if form_data else '' }}">
-                                            {% if errors and errors.district %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.district }}</span>
-                                            {% endif %}
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label" for="city">CIDADE *</label>
-                                            <input type="text" name="city" id="city"
-                                                   class="form-input {% if errors and errors.city %}is-invalid{% endif %}"
-                                                   placeholder="Cidade"
-                                                   value="{{ form_data.city if form_data else '' }}">
-                                            {% if errors and errors.city %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.city }}</span>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label class="form-label" for="state">ESTADO *</label>
-                                            <input type="text" name="state" id="state"
-                                                   class="form-input {% if errors and errors.state %}is-invalid{% endif %}"
-                                                   placeholder="UF" maxlength="2"
-                                                   value="{{ form_data.state if form_data else '' }}">
-                                            {% if errors and errors.state %}
-                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.state }}</span>
-                                            {% endif %}
-                                        </div>
+                                    <div style="margin-top:-8px;margin-bottom:0;display:flex;align-items:center;gap:10px;">
+                                        <input type="checkbox" name="email_optin" id="email_optin" value="1"
+                                               {% if form_data and form_data.get('email_optin') %}checked{% endif %}
+                                               style="width:16px;height:16px;accent-color:#c9a84c;cursor:pointer;flex-shrink:0;">
+                                        <label for="email_optin" style="font-size:12px;color:var(--au-muted);cursor:pointer;margin:0;">
+                                            Receber ofertas e novidades por e-mail
+                                        </label>
                                     </div>
                                 </div>
-                            </div>
 
-                            <!-- Frete -->
-                            <div id="frete-panel" class="checkout-panel" style="display:none;">
-                                <h2 class="panel-title">
-                                    <i class="bi-truck"></i> FRETE
-                                </h2>
-                                <div id="frete-loading" style="color:#c9a84c; font-size:0.88rem; display:none;">
-                                    <i class="bi-arrow-repeat"></i> Calculando frete...
-                                </div>
-                                <div id="frete-error" style="color:#e74c3c; font-size:0.88rem; display:none;">
-                                    <i class="bi-exclamation-circle"></i> Não foi possível calcular o frete.
-                                </div>
-                                <div id="frete-opcoes" style="display:none;">
-                                    <label id="frete-pac-label" class="frete-option-label">
-                                        <div style="display:flex; align-items:center; gap:12px;">
-                                            <input type="radio" name="shipping_service" value="pac"
-                                                   id="radio-pac" style="accent-color:#c9a84c; width:18px; height:18px;">
-                                            <div>
-                                                <div style="color:#f0e6c8; font-size:0.95rem; font-weight:700;">Correios — PAC</div>
-                                                <div id="frete-pac-prazo" style="color:#8a7a60; font-size:0.82rem;"></div>
+                                <!-- Entrega / CEP -->
+                                <div class="checkout-panel">
+                                    <h2 class="panel-title">
+                                        <i class="bi-geo-alt"></i> Endereço de entrega
+                                    </h2>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="zip_code">CEP *</label>
+                                        <div style="display:flex;align-items:center;gap:10px;">
+                                            <input type="text" name="zip_code" id="zip_code"
+                                                   class="form-input {% if errors and errors.zip_code %}is-invalid{% endif %}"
+                                                   placeholder="00000-000" maxlength="9"
+                                                   value="{{ form_data.zip_code if form_data else '' }}"
+                                                   style="flex:1;">
+                                            <span id="cep-loading" style="display:none;color:var(--au-gold);font-size:12px;white-space:nowrap;">
+                                                <i class="bi-arrow-repeat"></i> Buscando...
+                                            </span>
+                                            <span id="cep-error" style="display:none;color:#e74c3c;font-size:12px;white-space:nowrap;">
+                                                <i class="bi-exclamation-circle"></i> CEP não encontrado
+                                            </span>
+                                        </div>
+                                        <a href="https://buscacepinter.correios.com.br/app/endereco/index.php"
+                                           target="_blank"
+                                           style="color:var(--au-gold);font-size:11px;text-decoration:none;display:inline-block;margin-top:6px;">
+                                            Não sei meu CEP
+                                        </a>
+                                        {% if errors and errors.zip_code %}
+                                        <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.zip_code }}</span>
+                                        {% endif %}
+                                    </div>
+
+                                    <div id="address-fields" style="display:{% if form_data and form_data.zip_code %}block{% else %}none{% endif %};">
+                                        <div class="form-group">
+                                            <label class="form-label" for="street">Rua *</label>
+                                            <input type="text" name="street" id="street"
+                                                   class="form-input {% if errors and errors.street %}is-invalid{% endif %}"
+                                                   placeholder="Rua, Avenida..."
+                                                   value="{{ form_data.street if form_data else '' }}">
+                                            {% if errors and errors.street %}
+                                            <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label" for="street_number">Número *</label>
+                                                <input type="text" name="street_number" id="street_number"
+                                                       class="form-input {% if errors and errors.street_number %}is-invalid{% endif %}"
+                                                       placeholder="123"
+                                                       value="{{ form_data.street_number if form_data else '' }}">
+                                                {% if errors and errors.street_number %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.street_number }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="complement">Complemento</label>
+                                                <input type="text" name="complement" id="complement"
+                                                       class="form-input" placeholder="Apto, Bloco..."
+                                                       value="{{ form_data.complement if form_data else '' }}">
                                             </div>
                                         </div>
-                                        <div id="frete-pac-valor" style="color:#c9a84c; font-weight:700; font-size:1rem;"></div>
-                                    </label>
-                                    <label id="frete-sedex-label" class="frete-option-label">
-                                        <div style="display:flex; align-items:center; gap:12px;">
-                                            <input type="radio" name="shipping_service" value="sedex"
-                                                   id="radio-sedex" style="accent-color:#c9a84c; width:18px; height:18px;">
-                                            <div>
-                                                <div style="color:#f0e6c8; font-size:0.95rem; font-weight:700;">Correios — SEDEX</div>
-                                                <div id="frete-sedex-prazo" style="color:#8a7a60; font-size:0.82rem;"></div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label" for="district">Bairro *</label>
+                                                <input type="text" name="district" id="district"
+                                                       class="form-input {% if errors and errors.district %}is-invalid{% endif %}"
+                                                       placeholder="Bairro"
+                                                       value="{{ form_data.district if form_data else '' }}">
+                                                {% if errors and errors.district %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.district }}</span>
+                                                {% endif %}
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label" for="city">Cidade *</label>
+                                                <input type="text" name="city" id="city"
+                                                       class="form-input {% if errors and errors.city %}is-invalid{% endif %}"
+                                                       placeholder="Cidade"
+                                                       value="{{ form_data.city if form_data else '' }}">
+                                                {% if errors and errors.city %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.city }}</span>
+                                                {% endif %}
                                             </div>
                                         </div>
-                                        <div id="frete-sedex-valor" style="color:#c9a84c; font-weight:700; font-size:1rem;"></div>
-                                    </label>
-                                    <input type="hidden" name="shipping_service" id="shipping_service_hidden" value="">
-                                    <input type="hidden" name="shipping_value"   id="shipping_value_hidden"   value="">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label" for="state">Estado *</label>
+                                                <input type="text" name="state" id="state"
+                                                       class="form-input {% if errors and errors.state %}is-invalid{% endif %}"
+                                                       placeholder="UF" maxlength="2"
+                                                       value="{{ form_data.state if form_data else '' }}">
+                                                {% if errors and errors.state %}
+                                                <span class="error-msg"><i class="bi-exclamation-circle me-1"></i>{{ errors.state }}</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Observações -->
-                            <div class="checkout-panel">
-                                <h2 class="panel-title">
-                                    <i class="bi-chat-text"></i> OBSERVAÇÕES
-                                </h2>
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label" for="notes">Alguma observação? (opcional)</label>
-                                    <textarea name="notes" id="notes" class="form-input"
-                                              placeholder="Ex: deixar na portaria, presente para alguém...">{{ form_data.notes if form_data else '' }}</textarea>
+                                <!-- Frete -->
+                                <div id="frete-panel" class="checkout-panel" style="display:none;">
+                                    <h2 class="panel-title">
+                                        <i class="bi-truck"></i> Frete
+                                    </h2>
+                                    <div id="frete-loading" style="color:var(--au-gold);font-size:13px;display:none;">
+                                        <i class="bi-arrow-repeat me-1"></i> Calculando frete...
+                                    </div>
+                                    <div id="frete-error" style="color:#e74c3c;font-size:13px;display:none;">
+                                        <i class="bi-exclamation-circle me-1"></i> Não foi possível calcular o frete.
+                                    </div>
+                                    <div id="frete-opcoes" style="display:none;">
+                                        <label id="frete-pac-label" class="frete-option-label">
+                                            <div style="display:flex;align-items:center;gap:12px;">
+                                                <input type="radio" name="shipping_service" value="pac"
+                                                       id="radio-pac" style="accent-color:#c9a84c;width:16px;height:16px;">
+                                                <div>
+                                                    <div class="service-name">Correios — PAC</div>
+                                                    <div id="frete-pac-prazo" class="service-prazo"></div>
+                                                </div>
+                                            </div>
+                                            <div id="frete-pac-valor" class="service-valor"></div>
+                                        </label>
+                                        <label id="frete-sedex-label" class="frete-option-label">
+                                            <div style="display:flex;align-items:center;gap:12px;">
+                                                <input type="radio" name="shipping_service" value="sedex"
+                                                       id="radio-sedex" style="accent-color:#c9a84c;width:16px;height:16px;">
+                                                <div>
+                                                    <div class="service-name">Correios — SEDEX</div>
+                                                    <div id="frete-sedex-prazo" class="service-prazo"></div>
+                                                </div>
+                                            </div>
+                                            <div id="frete-sedex-valor" class="service-valor"></div>
+                                        </label>
+                                        <input type="hidden" name="shipping_service" id="shipping_service_hidden" value="">
+                                        <input type="hidden" name="shipping_value"   id="shipping_value_hidden"   value="">
+                                    </div>
                                 </div>
-                            </div>
 
-                            <button type="submit" class="btn-finish">
-                                <i class="bi-whatsapp me-2"></i> CONFIRMAR E ENVIAR PELO WHATSAPP
-                            </button>
+                                <!-- Observações -->
+                                <div class="checkout-panel">
+                                    <h2 class="panel-title">
+                                        <i class="bi-chat-text"></i> Observações
+                                    </h2>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label class="form-label" for="notes">Alguma observação? (opcional)</label>
+                                        <textarea name="notes" id="notes" class="form-input"
+                                                  placeholder="Ex: deixar na portaria, presente para alguém...">{{ form_data.notes if form_data else '' }}</textarea>
+                                    </div>
+                                </div>
 
-                            <p style="text-align:center; color:#8a7a60; font-size:0.8rem; margin-top:12px;">
-                                <i class="bi-shield-check me-1"></i>
-                                Ao confirmar, você será redirecionado ao WhatsApp para concluir o pedido
-                            </p>
+                                <button type="submit" class="btn-finish">
+                                    <i class="bi-whatsapp me-2"></i> Confirmar e enviar pelo WhatsApp
+                                </button>
 
-                        </form>
-                    </div>
+                                <p style="text-align:center;color:var(--au-muted);font-size:11px;margin-top:10px;">
+                                    <i class="bi-shield-check me-1"></i>
+                                    Ao confirmar, você será redirecionado ao WhatsApp para concluir o pedido
+                                </p>
 
-                    <!-- Resumo do pedido -->
-                    <div class="order-summary">
-                        <h2 class="summary-title">RESUMO DO PEDIDO</h2>
-
-                        {% for item in items %}
-                        <div class="summary-item">
-                            {% if item.path %}
-                            <img src="{{ item.path }}" alt="{{ item.name }}">
-                            {% else %}
-                            <div class="summary-item-ph"><i class="bi-box"></i></div>
-                            {% endif %}
-                            <div>
-                                <div class="summary-item-name">{{ item.name }}</div>
-                                <div class="summary-item-qty">× {{ item.quantity }}</div>
-                            </div>
-                            <div class="summary-item-price">R$ {{ "%.2f"|format(item.subtotal) }}</div>
+                            </form>
                         </div>
-                        {% endfor %}
 
-                        <div class="summary-total-row">
-                            <span>Total</span>
-                            <span>R$ {{ "%.2f"|format(total) }}</span>
+                        <!-- ── Resumo do pedido ── -->
+                        <div class="order-summary">
+                            <h2 class="summary-title">Resumo do pedido</h2>
+
+                            {% for item in items %}
+                            <div class="summary-item">
+                                {% if item.path %}
+                                    <img src="{{ item.path }}" alt="{{ item.name }}">
+                                {% else %}
+                                    <div class="summary-item-ph"><i class="bi-box"></i></div>
+                                {% endif %}
+                                <div>
+                                    <div class="summary-item-name">{{ item.name }}</div>
+                                    <div class="summary-item-qty">× {{ item.quantity }}</div>
+                                </div>
+                                <div class="summary-item-price">R$ {{ "%.2f"|format(item.subtotal) }}</div>
+                            </div>
+                            {% endfor %}
+
+                            <div class="summary-total-row">
+                                <span>Total</span>
+                                <span>R$ {{ "%.2f"|format(total) }}</span>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-12 me-auto">
-                        <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-                        <a href="https://api.whatsapp.com/send?phone=5534984104546">Send Message</a>
-                        <ul class="social-icon mt-4">
-                            <li class="social-icon-item"><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram"></a></li>
-                            <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534984104546" class="social-icon-link bi-whatsapp"></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                        <em class="text-white d-block mb-4">Contato</em>
-                        <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:984104546" class="site-footer-link">(34) 984104546</a></p>
-                        <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com" class="site-footer-link">aurorasemijoiasudi@gmail.com</a></p>
-                    </div>
-                    <div class="col-lg-5 col-12">
-                        <em class="text-white d-block mb-4">Horário de funcionamento.</em>
-                        <ul class="opening-hours-list">
-                            <li class="d-flex">Segunda - Sexta<span class="underline"></span><strong>7:00 - 19:00</strong></li>
-                            <li class="d-flex">Sábado<span class="underline"></span><strong>8:00 - 12:00</strong></li>
-                            <li class="d-flex">Domingo<span class="underline"></span><strong>Fechado</strong></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-8 col-12 mt-4">
-                        <p class="copyright-text mb-0">Copyright © Aurora 2026 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </section>
 
-    </main>
+            <!-- ── Footer ── -->
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row pt-2 pb-4">
+                        <div class="col-lg-4 col-12 me-auto mb-4 mb-lg-0">
+                            <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                                style="height:60px;width:auto;margin-bottom:16px;" alt="Aurora Semijóias"
+                                onerror="this.style.display='none'">
+                            <p style="font-size:13px;">Semijoias folheadas a ouro 18k. Feitas para durar, desenhadas para encantar.</p>
+                            <ul class="social-icon mt-4 d-flex gap-3 list-unstyled">
+                                <li><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram" style="font-size:20px;"></a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp" style="font-size:20px;"></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
+                            <ul class="list-unstyled" style="font-size:13px;">
+                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Contato</em>
+                            <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">Telefone:</strong><a href="tel:(34)984104546">(34) 98410-4546</a></p>
+                            <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">WhatsApp:</strong><a href="https://api.whatsapp.com/send?phone=5534984104546">Falar agora</a></p>
+                            <p class="d-flex" style="font-size:13px;"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com">aurorasemijoiasudi@gmail.com</a></p>
+                            <ul class="opening-hours-list mt-3" style="font-size:12px;">
+                                <li class="d-flex mb-1">Seg – Sex <span class="underline mx-2"></span> <strong>9h – 18h</strong></li>
+                                <li class="d-flex mb-1">Sábado <span class="underline mx-2"></span> <strong>11h – 16h</strong></li>
+                                <li class="d-flex">Domingo <span class="underline mx-2"></span> <strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="border-top pt-4 pb-4" style="border-color:rgba(255,255,255,0.1)!important;">
+                        <p class="copyright-text mb-0" style="font-size:12px;">
+                            © 2025 Aurora Semijóias. Todos os direitos reservados.
+                            &nbsp;|&nbsp; Pagamento seguro: Visa · Mastercard · Pix · Boleto
+                        </p>
+                    </div>
+                </div>
+            </footer>
 
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+        </main>
 
-    <script>
-        // Máscara CEP
-        $('#zip_code').mask('00000-000');
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script>
+            if (typeof $.fn.vegas !== 'undefined') {
+                $.fn.vegasOff = $.fn.vegas;
+                $.fn.vegas = function() { return this; };
+            }
+        </script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
 
-        // Busca ViaCEP ao sair do campo
-        document.getElementById('zip_code').addEventListener('blur', function () {
-            const cep = this.value.replace(/\D/g, '');
-            const loading = document.getElementById('cep-loading');
-            const errMsg  = document.getElementById('cep-error');
-            const fields  = document.getElementById('address-fields');
+        <script>
+            // Máscara CEP
+            $('#zip_code').mask('00000-000');
 
-            errMsg.style.display = 'none';
-            if (cep.length !== 8) return;
+            // Busca ViaCEP
+            document.getElementById('zip_code').addEventListener('blur', function () {
+                const cep     = this.value.replace(/\D/g, '');
+                const loading = document.getElementById('cep-loading');
+                const errMsg  = document.getElementById('cep-error');
+                const fields  = document.getElementById('address-fields');
 
-            loading.style.display = 'inline';
+                errMsg.style.display = 'none';
+                if (cep.length !== 8) return;
+                loading.style.display = 'inline';
 
-            fetch('https://viacep.com.br/ws/' + cep + '/json/')
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    loading.style.display = 'none';
-                    if (data.erro) {
-                        errMsg.style.display = 'inline';
-                        fields.style.display = 'none';
-                        return;
-                    }
-                    document.getElementById('street').value   = data.logradouro || '';
-                    document.getElementById('district').value = data.bairro      || '';
-                    document.getElementById('city').value     = data.localidade  || '';
-                    document.getElementById('state').value    = data.uf          || '';
-                    fields.style.display = 'block';
-                    document.getElementById('street_number').focus();
-                    calcularFrete(cep);
-                })
-                .catch(function() {
-                    loading.style.display = 'none';
-                    errMsg.style.display  = 'inline';
-                });
-        });
+                fetch('https://viacep.com.br/ws/' + cep + '/json/')
+                    .then(r => r.json())
+                    .then(data => {
+                        loading.style.display = 'none';
+                        if (data.erro) { errMsg.style.display = 'inline'; fields.style.display = 'none'; return; }
+                        document.getElementById('street').value   = data.logradouro || '';
+                        document.getElementById('district').value = data.bairro      || '';
+                        document.getElementById('city').value     = data.localidade  || '';
+                        document.getElementById('state').value    = data.uf          || '';
+                        fields.style.display = 'block';
+                        document.getElementById('street_number').focus();
+                        calcularFrete(cep);
+                    })
+                    .catch(() => { loading.style.display = 'none'; errMsg.style.display = 'inline'; });
+            });
 
-        // Calcula frete via backend
-        function calcularFrete(cepDestino) {
-            var fretePanel   = document.getElementById('frete-panel');
-            var freteLoading = document.getElementById('frete-loading');
-            var freteError   = document.getElementById('frete-error');
-            var freteOpcoes  = document.getElementById('frete-opcoes');
+            // Calcula frete
+            function calcularFrete(cepDestino) {
+                const fretePanel   = document.getElementById('frete-panel');
+                const freteLoading = document.getElementById('frete-loading');
+                const freteError   = document.getElementById('frete-error');
+                const freteOpcoes  = document.getElementById('frete-opcoes');
 
-            fretePanel.style.display   = 'block';
-            freteLoading.style.display = 'block';
-            freteError.style.display   = 'none';
-            freteOpcoes.style.display  = 'none';
+                fretePanel.style.display   = 'block';
+                freteLoading.style.display = 'block';
+                freteError.style.display   = 'none';
+                freteOpcoes.style.display  = 'none';
 
-            fetch('/cart/frete?cep=' + cepDestino)
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    freteLoading.style.display = 'none';
-                    if (!data.success) {
-                        freteError.style.display = 'block';
-                        return;
-                    }
-                    if (data.pac && data.pac.valor) {
-                        document.getElementById('frete-pac-valor').textContent = 'R$ ' + data.pac.valor;
-                        document.getElementById('frete-pac-prazo').textContent = 'Chega em até ' + data.pac.prazo + ' dias úteis';
-                        document.getElementById('frete-pac-label').style.display = 'flex';
-                    } else {
-                        document.getElementById('frete-pac-label').style.display = 'none';
-                    }
-                    if (data.sedex && data.sedex.valor) {
-                        document.getElementById('frete-sedex-valor').textContent = 'R$ ' + data.sedex.valor;
-                        document.getElementById('frete-sedex-prazo').textContent = 'Chega em até ' + data.sedex.prazo + ' dias úteis';
-                        document.getElementById('frete-sedex-label').style.display = 'flex';
-                    } else {
-                        document.getElementById('frete-sedex-label').style.display = 'none';
-                    }
+                fetch('/cart/frete?cep=' + cepDestino)
+                    .then(r => r.json())
+                    .then(data => {
+                        freteLoading.style.display = 'none';
+                        if (!data.success) { freteError.style.display = 'block'; return; }
+                        if (data.pac && data.pac.valor) {
+                            document.getElementById('frete-pac-valor').textContent = 'R$ ' + data.pac.valor;
+                            document.getElementById('frete-pac-prazo').textContent = 'Chega em até ' + data.pac.prazo + ' dias úteis';
+                            document.getElementById('frete-pac-label').style.display = 'flex';
+                        } else {
+                            document.getElementById('frete-pac-label').style.display = 'none';
+                        }
+                        if (data.sedex && data.sedex.valor) {
+                            document.getElementById('frete-sedex-valor').textContent = 'R$ ' + data.sedex.valor;
+                            document.getElementById('frete-sedex-prazo').textContent = 'Chega em até ' + data.sedex.prazo + ' dias úteis';
+                            document.getElementById('frete-sedex-label').style.display = 'flex';
+                        } else {
+                            document.getElementById('frete-sedex-label').style.display = 'none';
+                        }
+                        freteOpcoes.style.display = 'block';
 
-                    freteOpcoes.style.display = 'block';
-
-                    document.querySelectorAll('input[name="shipping_service"]').forEach(function(radio) {
-                        radio.addEventListener('change', function() {
-                            document.getElementById('frete-pac-label').style.borderColor   = '#3a3020';
-                            document.getElementById('frete-sedex-label').style.borderColor = '#3a3020';
-                            var label = this.value === 'pac' ? 'frete-pac-label' : 'frete-sedex-label';
-                            document.getElementById(label).style.borderColor = '#c9a84c';
-                            document.getElementById('shipping_service_hidden').value = this.value;
-                            document.getElementById('shipping_value_hidden').value   = this.value === 'pac' ? data.pac.valor : data.sedex.valor;
+                        document.querySelectorAll('input[name="shipping_service"]').forEach(radio => {
+                            radio.addEventListener('change', function () {
+                                document.getElementById('frete-pac-label').style.borderColor   = 'var(--au-stone)';
+                                document.getElementById('frete-sedex-label').style.borderColor = 'var(--au-stone)';
+                                const label = this.value === 'pac' ? 'frete-pac-label' : 'frete-sedex-label';
+                                document.getElementById(label).style.borderColor = 'var(--au-gold)';
+                                document.getElementById('shipping_service_hidden').value = this.value;
+                                document.getElementById('shipping_value_hidden').value   = this.value === 'pac' ? data.pac.valor : data.sedex.valor;
+                            });
                         });
-                    });
-                })
-                .catch(function() {
-                    freteLoading.style.display = 'none';
-                    freteError.style.display   = 'block';
-                });
-        }
-    </script>
-
-</body>
+                    })
+                    .catch(() => { freteLoading.style.display = 'none'; freteError.style.display = 'block'; });
+            }
+        </script>
+    </body>
 </html>

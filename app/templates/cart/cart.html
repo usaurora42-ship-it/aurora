@@ -1,677 +1,701 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aurora Semijóias — Carrinho</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/vegas.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
-
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-        }
-
-        html, body { min-height: 100%; }
-
-        body.reservation-page {
-            background:
-                radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
-                radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
-                radial-gradient(ellipse at 60% 30%, rgba(130,80,30,0.25) 0%, transparent 50%),
-                linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
-            background-attachment: fixed !important;
-            background-size: cover !important;
-            background-repeat: no-repeat !important;
-            font-family: 'Montserrat', sans-serif;
-            color: #e8d5a3;
-            line-height: 1.6;
-        }
-
-        body.reservation-page::before { display: none !important; }
-
-        .booking-section { background: transparent !important; }
-
-        body.reservation-page::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        main { position: relative; z-index: 1; }
-
-        /* ── Cart Badge ── */
-        .cart-badge {
-            position: absolute;
-            top: -6px; right: -8px;
-            background: #e74c3c;
-            color: #fff;
-            font-size: 0.65rem;
-            font-weight: 700;
-            border-radius: 50%;
-            width: 18px; height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cart-btn-wrap { position: relative; display: inline-block; }
-
-        /* ── Page Header ── */
-        .page-header {
-            text-align: center;
-            margin-bottom: 48px;
-            padding-top: 40px;
-        }
-
-        .page-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 48px;
-            font-weight: 300;
-            color: #f0e6c8;
-            margin-bottom: 12px;
-        }
-
-        .page-subtitle {
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #8a7a60;
-            font-weight: 400;
-        }
-
-        /* ── Main Layout ── */
-        .cart-layout {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 32px;
-            margin-bottom: 48px;
-        }
-
-        @media (max-width: 1024px) {
-            .cart-layout { grid-template-columns: 1fr; }
-        }
-
-        /* ── Cart Table ── */
-        .cart-table-wrapper {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .cart-table { width: 100%; border-collapse: collapse; }
-
-        .cart-table thead {
-            background: rgba(201, 168, 76, 0.1);
-            border-bottom: 2px solid #c9a84c;
-        }
-
-        .cart-table th {
-            color: #c9a84c;
-            font-size: 18px;
-            font-weight: 700;
-            padding: 20px;
-            text-align: left;
-            letter-spacing: 1px;
-        }
-
-        .cart-table td {
-            padding: 24px 20px;
-            border-bottom: 1px solid #3a3020;
-            color: #e8d5a3;
-            font-size: 17px;
-            vertical-align: middle;
-        }
-
-        .cart-table tbody tr:last-child td { border-bottom: none; }
-        .cart-table tbody tr:hover { background: rgba(201, 168, 76, 0.05); }
-
-        /* ── Product Info ── */
-        .product-info {
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-        }
-
-        .product-image {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border: 1px solid #3a3020;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .product-image-ph {
-            width: 80px;
-            height: 80px;
-            background: #1a1a1a;
-            border: 1px solid #3a3020;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #8a7a60;
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-
-        .product-details h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #f0e6c8;
-            margin-bottom: 4px;
-        }
-
-        .product-details p {
-            font-size: 16px;
-            color: #8a7a60;
-        }
-
-        /* ── Quantity Control ── */
-        .qty-control {
-            display: inline-flex;
-            align-items: center;
-            background: #1a1a1a;
-            border: 2px solid #3a3020;
-            border-radius: 4px;
-            padding: 4px;
-        }
-
-        .qty-btn {
-            background: none;
-            border: none;
-            color: #c9a84c;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-            border-radius: 2px;
-        }
-
-        .qty-btn:hover { background: rgba(201, 168, 76, 0.1); }
-
-        .qty-input {
-            width: 50px;
-            background: none;
-            border: none;
-            color: #e8d5a3;
-            text-align: center;
-            font-size: 18px;
-            font-weight: 700;
-            padding: 0;
-            -moz-appearance: textfield;
-        }
-
-        .qty-input::-webkit-outer-spin-button,
-        .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-        .qty-input:focus { outline: none; }
-
-        /* ── Price ── */
-        .price {
-            font-size: 18px;
-            font-weight: 700;
-            color: #c9a84c;
-            text-align: right;
-        }
-
-        /* ── Remove Button ── */
-        .btn-remove {
-            background: none;
-            border: none;
-            color: #ff9999;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 8px;
-            transition: color 0.3s;
-            border-radius: 4px;
-        }
-
-        .btn-remove:hover {
-            color: #ff6b6b;
-            background: rgba(255, 100, 100, 0.1);
-        }
-
-        /* ── Cart Footer ── */
-        .cart-footer {
-            padding: 24px 20px;
-            background: rgba(201, 168, 76, 0.05);
-            border-top: 2px solid #c9a84c;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .btn-clear {
-            background: none;
-            border: 2px solid #ff9999;
-            color: #ff9999;
-            padding: 12px 24px;
-            font-size: 17px;
-            font-weight: 700;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        .btn-clear:hover {
-            background: rgba(255, 100, 100, 0.1);
-            color: #ff6b6b;
-            border-color: #ff6b6b;
-        }
-
-        /* ── Summary Panel ── */
-        .cart-summary {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-            padding: 32px;
-            position: sticky;
-            top: 20px;
-            height: fit-content;
-        }
-
-        .summary-title {
-            font-size: 19px;
-            font-weight: 700;
-            color: #c9a84c;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #3a3020;
-            letter-spacing: 1px;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 17px;
-            color: #8a7a60;
-            margin-bottom: 12px;
-        }
-
-        .summary-row span:last-child { color: #e8d5a3; }
-
-        .summary-total {
-            display: flex;
-            justify-content: space-between;
-            font-size: 20px;
-            font-weight: 700;
-            color: #f0e6c8;
-            border-top: 2px solid #c9a84c;
-            padding-top: 20px;
-            margin-top: 16px;
-            margin-bottom: 24px;
-        }
-
-        .btn-checkout {
-            display: block;
-            width: 100%;
-            background: #c9a84c;
-            color: #0a0a0a;
-            border: none;
-            padding: 16px;
-            font-size: 17px;
-            font-weight: 700;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background 0.3s;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
-        }
-
-        .btn-checkout:hover { background: #d4b55a; color: #0a0a0a; }
-
-        .btn-continue {
-            display: block;
-            width: 100%;
-            background: none;
-            border: 2px solid #3a3020;
-            color: #8a7a60;
-            padding: 14px;
-            font-size: 16px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        .btn-continue:hover {
-            border-color: #c9a84c;
-            color: #c9a84c;
-        }
-
-        /* ── Empty Cart ── */
-        .empty-cart {
-            text-align: center;
-            padding: 80px 20px;
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-        }
-
-        .empty-cart i {
-            font-size: 64px;
-            color: #c9a84c;
-            display: block;
-            margin-bottom: 24px;
-            opacity: 0.3;
-        }
-
-        .empty-cart h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #f0e6c8;
-            margin-bottom: 12px;
-        }
-
-        .empty-cart p {
-            font-size: 18px;
-            color: #8a7a60;
-            margin-bottom: 32px;
-        }
-
-        .empty-cart a {
-            display: inline-block;
-            background: #c9a84c;
-            color: #0a0a0a;
-            padding: 16px 32px;
-            font-size: 17px;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: background 0.3s;
-        }
-
-        .empty-cart a:hover { background: #d4b55a; }
-
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .page-title { font-size: 32px; }
-
-            .cart-table th,
-            .cart-table td { padding: 16px 12px; font-size: 15px; }
-
-            .cart-table th { font-size: 16px; }
-
-            .product-image, .product-image-ph { width: 60px; height: 60px; }
-
-            .qty-btn { width: 36px; height: 36px; font-size: 16px; }
-            .qty-input { width: 40px; font-size: 16px; }
-
-            .cart-summary { position: static; }
-
-            .cart-footer { flex-direction: column; align-items: stretch; }
-            .btn-clear { width: 100%; }
-        }
-
-        /* ── Accessibility ── */
-        *:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
-    </style>
-</head>
-
-<body class="reservation-page">
-    <main>
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 80px; width: auto; transform: scale(1.8);"
-                        alt="Aurora Semijóias">
-                </a>
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
-                        alt="Aurora Semijóias">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-lg-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_1">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_2">Sobre Nós</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_4">Avaliações</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_5">Contato</a></li>
-                    </ul>
-                    {% if session.get('client_id') %}
-                        <span style="color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-right: 8px;">
-                            Olá, {{ session.get('client_name', '').split()[0] }}
-                        </span>
-                        <a href="/logout" style="color: #c9a84c; font-size: 0.82rem; text-decoration: none; border-bottom: 0.5px solid #c9a84c; padding-bottom: 1px; margin-right: 12px;">
-                            Sair
-                        </a>
-                    {% endif %}
-                    <div class="ms-lg-3">
-                        <a class="btn custom-btn custom-border-btn cart-btn-wrap" href="/cart">
-                            <strong class="small-text">Carrinho</strong>
-                            <img src="{{ url_for('static', filename='images/shopping/cart.png') }}" class="custom-btn-bg-hover-color ms-1" width="20" height="20">
-                            {% set total_items = items | sum(attribute='quantity') %}
-                            {% if total_items > 0 %}
-                            <span class="cart-badge">{{ total_items }}</span>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Aurora Semijóias — Carrinho de compras">
+        <title>Aurora Semijóias — Carrinho</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/vegas.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">
+
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+            body {
+                background: #ffffff !important;
+                color: #333333;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            body::before { display: none !important; }
+
+            main { padding-top: 190px; }
+
+            /* ── Barra superior salmão ── */
+            .aurora-topbar {
+                background: #e8886a;
+                color: #fff;
+                font-size: 13px;
+                font-weight: 500;
+                padding: 9px 24px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                letter-spacing: 0.01em;
+                position: fixed;
+                top: 0; left: 0; right: 0;
+                z-index: 1001;
+                height: 38px;
+            }
+            .aurora-topbar a { color: #fff; text-decoration: underline; }
+            .aurora-topbar-center { flex: 1; text-align: center; }
+            .aurora-topbar-side { width: 160px; font-size: 12px; }
+            .aurora-topbar-side:last-child { text-align: right; }
+
+            /* ── Navbar ── */
+            .navbar {
+                background: #4a2e10 !important;
+                border-bottom: 1px solid #3a2008 !important;
+                padding: 0 !important;
+                position: fixed !important;
+                top: 38px !important;
+                left: 0 !important; right: 0 !important;
+                width: 100% !important;
+                z-index: 999 !important;
+                box-shadow: none !important;
+                transform: none !important;
+            }
+            .navbar .container {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 32px;
+                gap: 16px;
+            }
+            .navbar-brand-wrap {
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+            }
+            .navbar-brand, .navbar-brand:hover {
+                background: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* Busca */
+            .aurora-search {
+                display: flex;
+                align-items: center;
+                border: 1px solid #6a4a28;
+                border-radius: 4px;
+                padding: 7px 14px;
+                gap: 8px;
+                background: #5a3a18;
+                min-width: 200px;
+            }
+            .aurora-search input {
+                border: none; background: none; outline: none;
+                font-size: 13px; color: #f0e6c8; width: 100%;
+            }
+            .aurora-search input::placeholder { color: #b09070; }
+            .aurora-search i { color: #b09070; font-size: 16px; }
+
+            /* Ícones direita */
+            .aurora-nav-icons { display: flex; align-items: center; gap: 20px; }
+            .aurora-nav-icons a {
+                color: #f0e6c8; text-decoration: none; font-size: 12px;
+                display: flex; flex-direction: column; align-items: center;
+                gap: 2px; transition: color 0.2s;
+            }
+            .aurora-nav-icons a:hover { color: #f5d98a; }
+            .aurora-nav-icons i { font-size: 20px; }
+
+            .cart-btn-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+            .cart-badge {
+                position: absolute; top: -6px; right: -8px;
+                background: #e8886a; color: #fff; font-size: 10px;
+                font-weight: 700; border-radius: 50%;
+                width: 17px; height: 17px;
+                display: flex; align-items: center; justify-content: center;
+            }
+
+            /* ── Variáveis ── */
+            :root {
+                --au-gold:   #c9a84c;
+                --au-brown:  #4a2e10;
+                --au-salmon: #e8886a;
+                --au-cream:  #f9f7f5;
+                --au-warm:   #f0ebe3;
+                --au-stone:  #d4c8bc;
+                --au-muted:  #888;
+                --au-dark:   #1a1a1a;
+            }
+
+            /* ── Breadcrumb ── */
+            .au-breadcrumb {
+                padding: 18px 0 0;
+                margin-bottom: 32px;
+            }
+            .au-breadcrumb a {
+                font-size: 12px; color: var(--au-muted);
+                text-decoration: none; letter-spacing: 0.06em;
+            }
+            .au-breadcrumb a:hover { color: var(--au-dark); }
+            .au-breadcrumb span { font-size: 12px; color: var(--au-stone); margin: 0 6px; }
+            .au-breadcrumb strong { font-size: 12px; color: var(--au-dark); }
+
+            /* ── Título da página ── */
+            .page-header { margin-bottom: 40px; }
+            .page-title {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 2.8rem; font-weight: 400;
+                color: var(--au-dark) !important;
+                line-height: 1.1;
+            }
+            .page-subtitle {
+                font-size: 11px; letter-spacing: 0.18em;
+                text-transform: uppercase; color: var(--au-muted);
+                margin-top: 6px;
+            }
+
+            /* ── Layout grid ── */
+            .cart-layout {
+                display: grid;
+                grid-template-columns: 1fr 360px;
+                gap: 28px;
+                margin-bottom: 60px;
+                align-items: start;
+            }
+            @media (max-width: 1024px) { .cart-layout { grid-template-columns: 1fr; } }
+
+            /* ── Tabela ── */
+            .cart-table-wrapper {
+                background: #fff;
+                border: 1px solid var(--au-stone);
+                overflow: hidden;
+            }
+            .cart-table { width: 100%; border-collapse: collapse; }
+            .cart-table thead {
+                background: var(--au-warm);
+                border-bottom: 1px solid var(--au-stone);
+            }
+            .cart-table th {
+                color: var(--au-dark);
+                font-size: 10px; font-weight: 700;
+                letter-spacing: 0.14em; text-transform: uppercase;
+                padding: 16px 20px; text-align: left;
+            }
+            .cart-table td {
+                padding: 20px; border-bottom: 1px solid #f0ebe3;
+                color: #333; font-size: 14px; vertical-align: middle;
+            }
+            .cart-table tbody tr:last-child td { border-bottom: none; }
+            .cart-table tbody tr:hover { background: var(--au-cream); }
+
+            /* ── Produto info ── */
+            .product-info { display: flex; gap: 14px; align-items: flex-start; }
+            .product-image {
+                width: 72px; height: 72px; object-fit: cover;
+                border: 1px solid var(--au-stone); flex-shrink: 0;
+            }
+            .product-image-ph {
+                width: 72px; height: 72px;
+                background: var(--au-warm);
+                border: 1px solid var(--au-stone);
+                display: flex; align-items: center; justify-content: center;
+                color: var(--au-stone); font-size: 24px; flex-shrink: 0;
+            }
+            .product-details h3 {
+                font-size: 14px; font-weight: 600;
+                color: var(--au-dark); margin-bottom: 4px;
+            }
+            .product-details p {
+                font-size: 12px; color: var(--au-muted); margin: 0;
+            }
+
+            /* ── Preço ── */
+            .price { color: var(--au-dark) !important; font-weight: 600; }
+
+            /* ── Qty control ── */
+            .qty-control {
+                display: flex; align-items: center;
+                border: 1px solid var(--au-stone);
+                width: fit-content; margin: 0 auto;
+            }
+            .qty-btn {
+                width: 34px; height: 36px; background: transparent;
+                border: none; color: var(--au-dark);
+                font-size: 1rem; cursor: pointer; transition: background 0.15s;
+            }
+            .qty-btn:hover { background: var(--au-warm); }
+            .qty-input {
+                width: 44px; height: 36px; border: none;
+                border-left: 1px solid var(--au-stone);
+                border-right: 1px solid var(--au-stone);
+                background: transparent; text-align: center;
+                font-size: 13px; color: var(--au-dark);
+            }
+            .qty-input:focus { outline: none; }
+
+            /* ── Remover ── */
+            .btn-remove {
+                background: transparent; border: none;
+                color: var(--au-stone); font-size: 14px;
+                cursor: pointer; padding: 6px;
+                transition: color 0.2s;
+            }
+            .btn-remove:hover { color: #e74c3c; }
+
+            /* ── Rodapé da tabela ── */
+            .cart-footer {
+                display: flex; justify-content: space-between;
+                align-items: center; padding: 16px 20px;
+                background: var(--au-cream);
+                border-top: 1px solid var(--au-stone);
+                font-size: 13px; color: var(--au-muted);
+            }
+            .btn-clear {
+                background: transparent; border: 1px solid var(--au-stone);
+                color: var(--au-muted); font-size: 11px;
+                letter-spacing: 0.1em; text-transform: uppercase;
+                padding: 8px 16px; cursor: pointer; transition: all 0.2s;
+            }
+            .btn-clear:hover { border-color: #e74c3c; color: #e74c3c; }
+
+            /* ── Resumo ── */
+            .cart-summary {
+                background: var(--au-cream);
+                border: 1px solid var(--au-stone);
+                padding: 28px;
+                position: sticky;
+                top: 200px;
+            }
+            .summary-title {
+                font-size: 11px; font-weight: 700;
+                letter-spacing: 0.18em; text-transform: uppercase;
+                color: var(--au-dark) !important;
+                padding-bottom: 16px;
+                border-bottom: 1px solid var(--au-stone);
+                margin-bottom: 18px;
+            }
+            .summary-row {
+                display: flex; justify-content: space-between;
+                font-size: 13px; color: #555;
+                margin-bottom: 10px;
+            }
+            .summary-total {
+                display: flex; justify-content: space-between;
+                font-size: 15px; font-weight: 700;
+                color: var(--au-dark) !important;
+                padding-top: 16px;
+                border-top: 1px solid var(--au-stone);
+                margin: 16px 0 24px;
+            }
+            .btn-checkout {
+                display: block; width: 100%; text-align: center;
+                background: var(--au-dark) !important;
+                color: #fff !important; text-decoration: none;
+                font-size: 11px; font-weight: 700;
+                letter-spacing: 0.14em; text-transform: uppercase;
+                padding: 15px; border: none; cursor: pointer;
+                transition: background 0.2s;
+            }
+            .btn-checkout:hover { background: var(--au-gold) !important; color: #fff !important; }
+            .btn-continue {
+                display: block; text-align: center; margin-top: 12px;
+                font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+                color: var(--au-muted) !important; text-decoration: none;
+                padding: 10px; border: 1px solid var(--au-stone);
+                transition: all 0.2s;
+            }
+            .btn-continue:hover { border-color: var(--au-dark); color: var(--au-dark) !important; }
+
+            /* ── Carrinho vazio ── */
+            .empty-cart {
+                text-align: center; padding: 80px 20px;
+                background: var(--au-cream);
+                border: 1px solid var(--au-stone);
+            }
+            .empty-cart i { font-size: 3rem; color: var(--au-stone); margin-bottom: 20px; }
+            .empty-cart h3 {
+                font-family: 'Cormorant Garamond', serif;
+                font-size: 1.8rem; font-weight: 400;
+                color: var(--au-dark) !important; margin-bottom: 10px;
+            }
+            .empty-cart p { font-size: 14px; color: var(--au-muted); margin-bottom: 28px; }
+            .empty-cart a {
+                display: inline-block;
+                background: var(--au-dark); color: #fff !important;
+                text-decoration: none; font-size: 11px;
+                font-weight: 700; letter-spacing: 0.14em;
+                text-transform: uppercase; padding: 14px 32px;
+                transition: background 0.2s;
+            }
+            .empty-cart a:hover { background: var(--au-gold); }
+
+            /* ── Footer ── */
+            .site-footer {
+                background: #2a1505 !important;
+                color: #c9a88a !important;
+                padding: 60px 0 0;
+            }
+            .site-footer a { color: #999 !important; }
+            .site-footer a:hover { color: var(--au-gold) !important; }
+            .site-footer .text-white { color: #fff !important; }
+
+            /* ── Responsive ── */
+            @media (max-width: 991px) {
+                .aurora-topbar-side { display: none; }
+                .aurora-search { min-width: 130px; }
+            }
+            @media (max-width: 576px) {
+                main { padding-top: 175px; }
+                .page-title { font-size: 2rem; }
+                .cart-table th, .cart-table td { padding: 12px 10px; font-size: 12px; }
+            }
+        </style>
+
+        <!-- Força catbar após todos os CSS externos -->
+        <style>
+            .aurora-catbar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: fixed !important;
+                top: 142px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                height: 44px !important;
+                z-index: 99999 !important;
+                background: #3a2008 !important;
+                pointer-events: all !important;
+                clip: auto !important;
+                clip-path: none !important;
+                transform: none !important;
+                overflow: visible !important;
+                align-items: center !important;
+                justify-content: center !important;
+                gap: 36px !important;
+                padding: 0 24px !important;
+                font-size: 11px !important;
+                font-weight: 700 !important;
+                letter-spacing: 0.1em !important;
+                text-transform: uppercase !important;
+                border-bottom: 1px solid #2a1505 !important;
+            }
+            .aurora-catbar a {
+                color: #aaa !important;
+                text-decoration: none !important;
+                padding: 12px 2px !important;
+                border-bottom: 2px solid transparent !important;
+                transition: color 0.2s, border-color 0.2s !important;
+                white-space: nowrap !important;
+            }
+            .aurora-catbar a:hover { color: #c9a84c !important; border-bottom-color: #c9a84c !important; }
+        </style>
+
+        <script>
+            function fixCatbar() {
+                const topbar = document.querySelector('.aurora-topbar');
+                const navbar  = document.querySelector('.navbar');
+                const catbar  = document.querySelector('.aurora-catbar');
+                const main    = document.querySelector('main');
+                if (!navbar || !catbar) return;
+                const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+                const navbarH = navbar.getBoundingClientRect().height;
+                const offset  = topbarH + navbarH;
+                catbar.style.top = offset + 'px';
+                catbar.style.visibility = 'visible';
+                if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
+            }
+            window.addEventListener('load', fixCatbar);
+            window.addEventListener('resize', fixCatbar);
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(fixCatbar, 100);
+                setTimeout(fixCatbar, 500);
+            });
+        </script>
+    </head>
+
+    <body>
+        <main>
+
+            <!-- ── Barra superior salmão ── -->
+            <div class="aurora-topbar">
+                <div class="aurora-topbar-side"><i class="bi-headset me-1"></i> Atendimento ao cliente</div>
+                <div class="aurora-topbar-center">✨ Frete grátis acima de R$ 200 &nbsp;|&nbsp; Parcele em até 12x sem juros</div>
+                <div class="aurora-topbar-side"><i class="bi-shield-check me-1"></i> Compra segura</div>
+            </div>
+
+            <!-- ── Navbar ── -->
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
+                        <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                            style="height: 110px; width: auto;" alt="Aurora Semijóias">
+                        <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
+                            style="height: 130px; width: auto; margin-left: 8px;" alt="Aurora Semijóias">
+                    </a>
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="aurora-search d-none d-lg-flex">
+                            <i class="bi-search"></i>
+                            <input type="text" placeholder="Buscar produto...">
+                        </div>
+                        <div class="aurora-nav-icons">
+                            {% if session.get('client_id') %}
+                                <a href="/logout" title="Sair">
+                                    <i class="bi-person-check"></i>
+                                    <span>{{ session.get('client_name', '').split()[0] }}</span>
+                                </a>
+                            {% else %}
+                                <a href="/login" title="Entrar">
+                                    <i class="bi-person"></i>
+                                    <span>Entrar</span>
+                                </a>
                             {% endif %}
-                        </a>
+                            <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                                <i class="bi-bag"></i>
+                                <span>Sacola</span>
+                                <span class="cart-badge" id="cartBadge">{{ items|length if items else 0 }}</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
+            </nav>
+
+            <!-- ── Catbar ── -->
+            <div class="aurora-catbar">
+                <a href="/products/category_products">Todos</a>
+                <a href="/products/category_products?cat=colares">Colares</a>
+                <a href="/products/category_products?cat=brincos">Brincos</a>
+                <a href="/products/category_products?cat=aneis">Anéis</a>
+                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
+                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
+                <a href="/products/category_products?cat=bolsas">Bolsas</a>
+                <a href="/products/category_products?cat=presentes">Presentes</a>
             </div>
-        </nav>
 
-        <!-- Page Content -->
-        <section class="booking-section section-padding">
-            <div class="container">
+            <!-- ── Conteúdo ── -->
+            <section class="py-5">
+                <div class="container">
 
-                <!-- Header -->
-                <div class="page-header">
-                    <h1 class="page-title">Seu <em style="color: #c9a84c; font-style: italic;">Carrinho</em></h1>
-                    <p class="page-subtitle">
-                        {% if items %}
-                            {{ items | sum(attribute='quantity') }} ITEM(NS) SELECIONADO(S)
-                        {% else %}
-                            REVISE SEUS ITENS ANTES DE FINALIZAR
-                        {% endif %}
-                    </p>
-                </div>
+                    <!-- Breadcrumb -->
+                    <nav class="au-breadcrumb">
+                        <a href="{{ url_for('site_bp.index') }}">Início</a>
+                        <span>/</span>
+                        <strong>Carrinho</strong>
+                    </nav>
 
-                {% if items %}
+                    <!-- Título -->
+                    <div class="page-header">
+                        <h1 class="page-title">Meu carrinho</h1>
+                        <p class="page-subtitle">Revise seus itens antes de finalizar</p>
+                    </div>
 
-                <div class="cart-layout">
+                    {% if items %}
 
-                    <!-- Cart Table -->
-                    <div>
-                        <div class="cart-table-wrapper">
-                            <table class="cart-table">
-                                <thead>
-                                    <tr>
-                                        <th>PRODUTO</th>
-                                        <th style="text-align: center;">PREÇO</th>
-                                        <th style="text-align: center;">QUANTIDADE</th>
-                                        <th style="text-align: right;">SUBTOTAL</th>
-                                        <th style="text-align: center;">AÇÃO</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in items %}
-                                    <tr>
-                                        <td>
-                                            <div class="product-info">
-                                                {% if item.path %}
-                                                <img src="{{ item.path }}" class="product-image" alt="{{ item.name }}">
-                                                {% else %}
-                                                <div class="product-image-ph">
-                                                    <i class="fas fa-gem"></i>
+                    <div class="cart-layout">
+
+                        <!-- Tabela de itens -->
+                        <div>
+                            <div class="cart-table-wrapper">
+                                <table class="cart-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Produto</th>
+                                            <th style="text-align:center;">Preço</th>
+                                            <th style="text-align:center;">Quantidade</th>
+                                            <th style="text-align:right;">Subtotal</th>
+                                            <th style="text-align:center;">Remover</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    {% if item.path %}
+                                                        <img src="{{ item.path }}" class="product-image" alt="{{ item.name }}">
+                                                    {% else %}
+                                                        <div class="product-image-ph">
+                                                            <i class="fas fa-gem"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="product-details">
+                                                        <h3>{{ item.name }}</h3>
+                                                        <p>{{ item.description }}</p>
+                                                    </div>
                                                 </div>
-                                                {% endif %}
-                                                <div class="product-details">
-                                                    <h3>{{ item.name }}</h3>
-                                                    <p>{{ item.description }}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="price" style="text-align: center;">R$ {{ "%.2f"|format(item.value) }}</td>
-                                        <td style="text-align: center;">
-                                            <form action="/cart/update/{{ item.id }}" method="POST" id="form-{{ item.id }}">
-                                                <div class="qty-control">
-                                                    <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, -1)">−</button>
-                                                    <input type="number" name="quantity" value="{{ item.quantity }}"
-                                                           min="1" max="99" class="qty-input" id="qty-{{ item.id }}"
-                                                           onchange="submitQty({{ item.id }})"
-                                                           aria-label="Quantidade de {{ item.name }}">
-                                                    <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, 1)">+</button>
-                                                </div>
-                                            </form>
-                                        </td>
-                                        <td class="price">R$ {{ "%.2f"|format(item.subtotal) }}</td>
-                                        <td style="text-align: center;">
-                                            <form action="/cart/remove/{{ item.id }}" method="POST" style="display: inline;">
-                                                <button type="submit" class="btn-remove" aria-label="Remover {{ item.name }} do carrinho" title="Remover do carrinho">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                            </td>
+                                            <td class="price" style="text-align:center;">R$ {{ "%.2f"|format(item.value) }}</td>
+                                            <td style="text-align:center;">
+                                                <form action="/cart/update/{{ item.id }}" method="POST" id="form-{{ item.id }}">
+                                                    <div class="qty-control">
+                                                        <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, -1)">−</button>
+                                                        <input type="number" name="quantity" value="{{ item.quantity }}"
+                                                               min="1" max="99" class="qty-input" id="qty-{{ item.id }}"
+                                                               onchange="submitQty({{ item.id }})"
+                                                               aria-label="Quantidade de {{ item.name }}">
+                                                        <button type="button" class="qty-btn" onclick="changeQty({{ item.id }}, 1)">+</button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                            <td class="price" style="text-align:right;">R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                                            <td style="text-align:center;">
+                                                <form action="/cart/remove/{{ item.id }}" method="POST" style="display:inline;">
+                                                    <button type="submit" class="btn-remove"
+                                                        aria-label="Remover {{ item.name }}" title="Remover">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="cart-footer">
+                                <form action="/cart/clear" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn-clear"
+                                        onclick="return confirm('Deseja limpar todo o carrinho?')">
+                                        <i class="fas fa-trash me-1"></i> Limpar carrinho
+                                    </button>
+                                </form>
+                                <span>Total de itens: <strong style="color:var(--au-gold);">{{ items|sum(attribute='quantity') }}</strong></span>
+                            </div>
                         </div>
 
-                        <div class="cart-footer">
-                            <form action="/cart/clear" method="POST" style="display: inline;">
-                                <button type="submit" class="btn-clear"
-                                    onclick="return confirm('Deseja limpar todo o carrinho?')">
-                                    <i class="fas fa-trash"></i> Limpar Carrinho
-                                </button>
-                            </form>
-                            <span style="font-size: 17px; color: #8a7a60;">
-                                Total de itens: <strong style="color: #c9a84c;">{{ items | sum(attribute='quantity') }}</strong>
-                            </span>
+                        <!-- Resumo -->
+                        <div class="cart-summary">
+                            <h2 class="summary-title">Resumo do pedido</h2>
+
+                            {% for item in items %}
+                            <div class="summary-row">
+                                <span>{{ item.name }} <span style="color:var(--au-stone);">×{{ item.quantity }}</span></span>
+                                <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
+                            </div>
+                            {% endfor %}
+
+                            <div class="summary-total">
+                                <span>Total</span>
+                                <span>R$ {{ "%.2f"|format(total) }}</span>
+                            </div>
+
+                            <a href="/cart/checkout" class="btn-checkout">Finalizar pedido</a>
+                            <a href="/products/category_products" class="btn-continue">← Continuar comprando</a>
+
+                            <div class="text-center mt-4">
+                                <small style="font-size:11px;color:var(--au-stone);">
+                                    <i class="fas fa-shield-alt me-1"></i> Pagamento 100% seguro
+                                </small>
+                            </div>
                         </div>
+
                     </div>
 
-                    <!-- Summary Panel -->
-                    <div class="cart-summary">
-                        <h2 class="summary-title">RESUMO DO PEDIDO</h2>
+                    {% else %}
 
-                        {% for item in items %}
-                        <div class="summary-row">
-                            <span>{{ item.name }} <span style="color:#555;">×{{ item.quantity }}</span></span>
-                            <span>R$ {{ "%.2f"|format(item.subtotal) }}</span>
-                        </div>
-                        {% endfor %}
-
-                        <div class="summary-total">
-                            <span>TOTAL:</span>
-                            <span>R$ {{ "%.2f"|format(total) }}</span>
-                        </div>
-
-                        <a href="/cart/checkout" class="btn-checkout">FINALIZAR PEDIDO</a>
-                        <a href="/products/category_products" class="btn-continue">← CONTINUAR COMPRANDO</a>
-
-                        <div class="text-center mt-3">
-                            <small style="color:#444; font-size:0.75rem;">
-                                <i class="fas fa-shield-alt me-1"></i> Compra segura
-                            </small>
-                        </div>
+                    <!-- Carrinho vazio -->
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>Seu carrinho está vazio</h3>
+                        <p>Que tal explorar nossa coleção de semijoias?</p>
+                        <a href="/products/category_products">Ver produtos</a>
                     </div>
+
+                    {% endif %}
 
                 </div>
+            </section>
 
-                {% else %}
+            <!-- ── Footer ── -->
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row pt-2 pb-4">
 
-                <!-- Empty Cart -->
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <h3>Seu carrinho está vazio</h3>
-                    <p>Que tal explorar nossa coleção de semijoias?</p>
-                    <a href="/products/category_products">VER PRODUTOS</a>
+                        <div class="col-lg-4 col-12 me-auto mb-4 mb-lg-0">
+                            <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                                style="height:60px;width:auto;margin-bottom:16px;" alt="Aurora Semijóias"
+                                onerror="this.style.display='none'">
+                            <p style="font-size:13px;">Semijoias folheadas a ouro 18k. Feitas para durar, desenhadas para encantar.</p>
+                            <ul class="social-icon mt-4 d-flex gap-3 list-unstyled">
+                                <li><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram" style="font-size:20px;"></a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp" style="font-size:20px;"></a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
+                            <ul class="list-unstyled" style="font-size:13px;">
+                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="col-lg-3 col-6">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Contato</em>
+                            <p class="d-flex mb-2" style="font-size:13px;">
+                                <strong class="me-2">Telefone:</strong>
+                                <a href="tel:(34)984104546">(34) 98410-4546</a>
+                            </p>
+                            <p class="d-flex mb-2" style="font-size:13px;">
+                                <strong class="me-2">WhatsApp:</strong>
+                                <a href="https://api.whatsapp.com/send?phone=5534984104546">Falar agora</a>
+                            </p>
+                            <p class="d-flex" style="font-size:13px;">
+                                <strong class="me-2">Email:</strong>
+                                <a href="mailto:aurorasemijoiasudi@gmail.com">aurorasemijoiasudi@gmail.com</a>
+                            </p>
+                            <ul class="opening-hours-list mt-3" style="font-size:12px;">
+                                <li class="d-flex mb-1">Seg – Sex <span class="underline mx-2"></span> <strong>9h – 18h</strong></li>
+                                <li class="d-flex mb-1">Sábado <span class="underline mx-2"></span> <strong>11h – 16h</strong></li>
+                                <li class="d-flex">Domingo <span class="underline mx-2"></span> <strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="border-top pt-4 pb-4" style="border-color:rgba(255,255,255,0.1)!important;">
+                        <p class="copyright-text mb-0" style="font-size:12px;">
+                            © 2025 Aurora Semijóias. Todos os direitos reservados.
+                            &nbsp;|&nbsp; Pagamento seguro: Visa · Mastercard · Pix · Boleto
+                        </p>
+                    </div>
                 </div>
+            </footer>
 
-                {% endif %}
+        </main>
 
-            </div>
-        </section>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <!-- jquery.sticky desativado — navbar é fixed via CSS -->
+        <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
+        <script>
+            if (typeof $.fn.vegas !== 'undefined') {
+                $.fn.vegasOff = $.fn.vegas;
+                $.fn.vegas = function() { return this; };
+            }
+        </script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
 
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-12 me-auto">
-                        <em class="text-white d-block mb-4">Onde nos encontrar?</em>
-                        <a href="https://api.whatsapp.com/send?phone=5534984104546">Send Message</a>
-                        <ul class="social-icon mt-4">
-                            <li class="social-icon-item"><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram"></a></li>
-                            <li class="social-icon-item"><a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a></li>
-                            <li class="social-icon-item"><a href="https://api.whatsapp.com/send?phone=+5534984104546" class="social-icon-link bi-whatsapp"></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-3 col-12 mt-4 mb-3 mt-lg-0 mb-lg-0">
-                        <em class="text-white d-block mb-4">Contato</em>
-                        <p class="d-flex mb-1"><strong class="me-2">Telefone:</strong><a href="tel:984104546" class="site-footer-link">(34) 984104546</a></p>
-                        <p class="d-flex"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com" class="site-footer-link">aurorasemijoiasudi@gmail.com</a></p>
-                    </div>
-                    <div class="col-lg-5 col-12">
-                        <em class="text-white d-block mb-4">Horário de funcionamento.</em>
-                        <ul class="opening-hours-list">
-                            <li class="d-flex">Segunda - Sexta<span class="underline"></span><strong>7:00 - 19:00</strong></li>
-                            <li class="d-flex">Sábado<span class="underline"></span><strong>8:00 - 12:00</strong></li>
-                            <li class="d-flex">Domingo<span class="underline"></span><strong>Fechado</strong></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-8 col-12 mt-4">
-                        <p class="copyright-text mb-0">Copyright © Aurora 2026 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-    </main>
-
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
-
-    <script>
-        function changeQty(productId, delta) {
-            const input = document.getElementById('qty-' + productId);
-            let val = parseInt(input.value) + delta;
-            if (val < 1) val = 1;
-            if (val > 99) val = 99;
-            input.value = val;
-            submitQty(productId);
-        }
-
-        function submitQty(productId) {
-            document.getElementById('form-' + productId).submit();
-        }
-    </script>
-
-</body>
+        <script>
+            function changeQty(productId, delta) {
+                const input = document.getElementById('qty-' + productId);
+                let val = parseInt(input.value) + delta;
+                if (val < 1) val = 1;
+                if (val > 99) val = 99;
+                input.value = val;
+                submitQty(productId);
+            }
+            function submitQty(productId) {
+                document.getElementById('form-' + productId).submit();
+            }
+        </script>
+    </body>
 </html>

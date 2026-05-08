@@ -27,7 +27,9 @@
             }
             body::before { display: none !important; }
 
-            /* ── Barra superior salmão ── */
+            main {
+                padding-top: 190px;
+            }
             .aurora-topbar {
                 background: #e8886a;
                 color: #fff;
@@ -38,8 +40,12 @@
                 align-items: center;
                 justify-content: space-between;
                 letter-spacing: 0.01em;
-                position: relative;
-                z-index: 1000;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1001;
+                height: 38px;
             }
             .aurora-topbar a { color: #fff; text-decoration: underline; }
             .aurora-topbar-center { flex: 1; text-align: center; }
@@ -51,10 +57,14 @@
                 background: #4a2e10 !important;
                 border-bottom: 1px solid #3a2008 !important;
                 padding: 0 !important;
-                position: sticky !important;
-                top: 0;
-                z-index: 999;
+                position: fixed !important;
+                top: 38px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                z-index: 999 !important;
                 box-shadow: none !important;
+                transform: none !important;
             }
             .navbar .container {
                 display: flex;
@@ -145,9 +155,13 @@
                 font-weight: 700;
                 letter-spacing: 0.1em;
                 text-transform: uppercase;
-                position: sticky;
-                top: 142px;
-                z-index: 998;
+                position: fixed !important;
+                top: 142px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                z-index: 998 !important;
+                visibility: visible !important;
             }
             .aurora-catbar a {
                 color: #aaa;
@@ -483,6 +497,32 @@
                 .section-padding { padding: 50px 0; }
             }
         </style>
+        <script>
+            function fixCatbar() {
+                const topbar = document.querySelector('.aurora-topbar');
+                const navbar  = document.querySelector('.navbar');
+                const catbar  = document.querySelector('.aurora-catbar');
+                const main    = document.querySelector('main');
+                if (!navbar || !catbar) return;
+
+                const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
+                const navbarH = navbar.getBoundingClientRect().height;
+                const offset  = topbarH + navbarH;
+
+                catbar.style.top       = offset + 'px';
+                catbar.style.visibility = 'visible';
+
+                if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
+            }
+            // Roda após imagens carregarem (logo afeta altura da navbar)
+            window.addEventListener('load', fixCatbar);
+            window.addEventListener('resize', fixCatbar);
+            // Fallback rápido caso load já tenha passado
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(fixCatbar, 100);
+                setTimeout(fixCatbar, 500);
+            });
+        </script>
     </head>
 
     <body>
@@ -549,11 +589,12 @@
             <!-- ── Menu de categorias ── -->
             <div class="aurora-catbar">
                 <a href="/products/category_products">Todos</a>
-                <a href="/products/category_products?cat=aneis">Anéis</a>
-                <a href="/products/category_products?cat=brincos">Brincos</a>
                 <a href="/products/category_products?cat=colares">Colares</a>
+                <a href="/products/category_products?cat=brincos">Brincos</a>
+                <a href="/products/category_products?cat=aneis">Anéis</a>
                 <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
                 <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
+                <a href="/products/category_products?cat=bolsas">Bolsas</a>
                 <a href="/products/category_products?cat=presentes">Presentes</a>
             </div>
 
@@ -700,6 +741,18 @@
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Pulseiras'">
                                     <div class="cat-card-overlay">
                                         <span class="cat-card-label">Pulseiras</span>
+                                        <span class="cat-card-btn">Ver peças</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a href="/products/category_products?cat=bolsas" class="d-block text-decoration-none">
+                                <div class="cat-card">
+                                    <img src="{{ url_for('static', filename='images/cat-bolsas.jpg') }}" alt="Bolsas"
+                                        onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Bolsas'">
+                                    <div class="cat-card-overlay">
+                                        <span class="cat-card-label">Bolsas</span>
                                         <span class="cat-card-btn">Ver peças</span>
                                     </div>
                                 </div>
@@ -933,10 +986,12 @@
                         <div class="col-lg-3 col-6 mb-4 mb-lg-0">
                             <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
                             <ul class="list-unstyled" style="font-size:13px;">
-                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
                                 <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
                                 <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
                                 <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
                                 <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
                             </ul>
                         </div>
@@ -976,9 +1031,32 @@
         </main>
 
         <!-- JAVASCRIPT FILES -->
+        <!-- Força catbar após todos os CSS externos -->
+        <style>
+            .aurora-catbar {
+                display: flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                position: fixed !important;
+                top: 142px !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                height: 44px !important;
+                z-index: 99999 !important;
+                background: #3a2008 !important;
+                pointer-events: all !important;
+                clip: auto !important;
+                clip-path: none !important;
+                transform: none !important;
+                overflow: visible !important;
+            }
+        </style>
+
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script>
+        <!-- jquery.sticky desativado — navbar é fixed via CSS -->
+        <!-- <script src="{{ url_for('static', filename='js/jquery.sticky.js') }}"></script> -->
         <script src="{{ url_for('static', filename='js/click-scroll.js') }}"></script>
         <script src="{{ url_for('static', filename='js/vegas.min.js') }}"></script>
         <script>

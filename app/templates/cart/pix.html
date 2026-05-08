@@ -1,470 +1,474 @@
 <!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aurora Semijóias - Pagamento PIX</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-    <link href="{{url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/bootstrap-icons.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/tooplate-barista.css')}}" rel="stylesheet">
-    <link href="{{url_for('static', filename='css/breakfast.css')}}" rel="stylesheet">
-
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-        }
-
-        html, body { min-height: 100%; }
-
-        body.reservation-page,
-        body.reservation-page * { background-image: none !important; }
-
-        body.reservation-page {
-            background-color: #2e1f0a !important;
-            background:
-                radial-gradient(ellipse at 0% 0%, rgba(220,160,80,0.30) 0%, transparent 55%),
-                radial-gradient(ellipse at 100% 100%, rgba(170,110,50,0.35) 0%, transparent 55%),
-                linear-gradient(160deg, #5a3a18 0%, #4a2e10 40%, #3d250c 70%, #52320f 100%) !important;
-            background-attachment: fixed !important;
-            font-family: 'Montserrat', sans-serif;
-            color: #e8d5a3;
-            line-height: 1.6;
-        }
-
-        main { position: relative; z-index: 1; }
-
-        .vegas-overlay, .vegas-slide, .vegas-wrapper, .vegas-timer {
-            display: none !important; opacity: 0 !important; visibility: hidden !important;
-        }
-
-        /* ── Page Header ── */
-        .page-header {
-            text-align: center;
-            margin-bottom: 48px;
-            padding-top: 40px;
-        }
-
-        .page-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 48px;
-            font-weight: 300;
-            color: #f0e6c8;
-            margin-bottom: 12px;
-        }
-
-        .page-subtitle {
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #8a7a60;
-            font-weight: 400;
-            margin-bottom: 0;
-        }
-
-        /* ── Steps ── */
-        .checkout-steps {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            margin-bottom: 48px;
-            flex-wrap: wrap;
-        }
-
-        .step { display: flex; align-items: center; gap: 12px; font-size: 18px; color: #8a7a60; font-weight: 600; }
-        .step.active { color: #c9a84c; }
-        .step.done { color: #7ac97a; }
-
-        .step-num {
-            width: 40px; height: 40px; border-radius: 50%;
-            border: 2px solid #3a3020;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; font-weight: 700; flex-shrink: 0;
-        }
-
-        .step.active .step-num { border-color: #c9a84c; background: rgba(201,168,76,0.1); color: #c9a84c; }
-        .step.done .step-num { border-color: #7ac97a; background: rgba(122,201,122,0.1); color: #7ac97a; }
-        .step-line { width: 60px; height: 2px; background: #3a3020; margin: 0 12px; }
-
-        @media (max-width: 768px) {
-            .step-line { display: none; }
-            .checkout-steps { flex-direction: column; gap: 16px; }
-        }
-
-        /* ── Layout central ── */
-        .pix-wrap {
-            max-width: 560px;
-            margin: 0 auto;
-            padding-bottom: 60px;
-        }
-
-        .btn-back {
-            display: inline-flex; align-items: center; gap: 8px;
-            font-size: 18px; color: #8a7a60;
-            text-decoration: none; margin-bottom: 32px;
-            transition: color 0.3s; font-weight: 600;
-        }
-        .btn-back:hover { color: #c9a84c; }
-
-        /* ── PIX Card ── */
-        .pix-card {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-
-        .pix-header {
-            background: rgba(201,168,76,0.08);
-            border-bottom: 2px solid #c9a84c;
-            padding: 24px 32px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .pix-logo {
-            width: 48px; height: 48px;
-            background: #32BCAD;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; flex-shrink: 0;
-        }
-
-        .pix-header-text h5 {
-            font-family: 'Cormorant Garamond', serif;
-            color: #f0e6c8; font-weight: 400;
-            font-size: 1.4rem; margin: 0 0 2px;
-        }
-
-        .pix-header-text p { color: #8a7a60; font-size: 0.85rem; margin: 0; }
-
-        .pix-valor { margin-left: auto; text-align: right; }
-        .pix-valor span { display: block; color: #8a7a60; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; }
-        .pix-valor strong { color: #c9a84c; font-size: 1.4rem; font-weight: 700; }
-
-        .pix-body { padding: 32px; }
-
-        /* ── Steps list ── */
-        .pix-steps-list {
-            list-style: none; padding: 0; margin: 0 0 28px;
-            display: flex; flex-direction: column; gap: 12px;
-        }
-
-        .pix-steps-list li {
-            display: flex; align-items: flex-start; gap: 12px;
-            color: #8a7a60; font-size: 0.9rem; line-height: 1.5;
-        }
-
-        .pix-step-num {
-            width: 24px; height: 24px;
-            background: rgba(50,188,173,0.12);
-            border: 1px solid rgba(50,188,173,0.3);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.75rem; font-weight: 700;
-            color: #32BCAD; flex-shrink: 0; margin-top: 1px;
-        }
-
-        /* ── QR Code ── */
-        .qrcode-wrap {
-            background: #fff;
-            border-radius: 8px;
-            padding: 16px;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 28px;
-            position: relative;
-        }
-
-        .qrcode-wrap img { width: 100%; max-width: 260px; height: auto; display: block; }
-
-        .qrcode-overlay {
-            position: absolute; inset: 0;
-            background: rgba(255,255,255,0.92);
-            border-radius: 8px;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center; gap: 8px;
-            opacity: 0; transition: opacity 0.2s; pointer-events: none;
-        }
-
-        .qrcode-wrap:hover .qrcode-overlay { opacity: 1; }
-        .qrcode-overlay span { color: #333; font-size: 0.85rem; font-weight: 600; }
-
-        /* ── Copia e Cola ── */
-        .copypaste-label {
-            color: #8a7a60; font-size: 0.75rem; font-weight: 700;
-            text-transform: uppercase; letter-spacing: 0.1em;
-            margin-bottom: 8px; display: block;
-        }
-
-        .copypaste-wrap { display: flex; gap: 8px; margin-bottom: 28px; }
-
-        .copypaste-input {
-            flex: 1;
-            background: #0a0a0a;
-            border: 2px solid #3a3020;
-            border-radius: 2px;
-            padding: 12px 16px;
-            color: #8a7a60;
-            font-size: 0.78rem;
-            font-family: 'Courier New', monospace;
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .btn-copy {
-            background: rgba(50,188,173,0.12);
-            border: 2px solid rgba(50,188,173,0.3);
-            color: #32BCAD;
-            border-radius: 2px;
-            padding: 12px 20px;
-            font-size: 0.88rem; font-weight: 700;
-            cursor: pointer; white-space: nowrap;
-            transition: background 0.2s;
-            display: flex; align-items: center; gap: 6px;
-        }
-
-        .btn-copy:hover { background: rgba(50,188,173,0.22); }
-
-        .btn-copy.copied {
-            background: rgba(76,175,80,0.15);
-            border-color: rgba(76,175,80,0.4);
-            color: #7ac97a;
-        }
-
-        /* ── Timer ── */
-        .pix-timer {
-            background: rgba(255,193,7,0.07);
-            border: 2px solid rgba(255,193,7,0.2);
-            border-radius: 2px;
-            padding: 12px 16px;
-            display: flex; align-items: center; gap: 10px;
-            color: #ffc107; font-size: 0.88rem;
-            margin-bottom: 24px;
-        }
-
-        /* ── Botão confirmar ── */
-        .btn-confirmar {
-            display: block; width: 100%;
-            background: #32BCAD; color: #fff;
-            border: none; border-radius: 4px;
-            padding: 18px; font-size: 18px; font-weight: 700;
-            letter-spacing: 1px;
-            text-align: center; text-decoration: none;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.15s;
-        }
-
-        .btn-confirmar:hover { background: #28a99b; transform: translateY(-1px); color: #fff; }
-
-        *:focus-visible { outline: 2px solid #c9a84c; outline-offset: 2px; }
-    </style>
-</head>
-
-<body class="reservation-page">
-    <main>
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 80px; width: auto; transform: scale(1.8);"
-                        alt="Aurora Semijóias">
-                </a>
-                <a class="navbar-brand d-flex align-items-center" href="{{ url_for('site_bp.index') }}">
-                    <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
-                        class="navbar-brand-image img-fluid"
-                        style="height: 100px; width: auto; transform: scale(1.8); margin-left: 20px;"
-                        alt="Aurora Semijóias">
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-lg-auto">
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_1">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('site_bp.index') }}#section_2">Sobre Nós</a></li>
-                        <li class="nav-item"><a class="nav-link" href="/products/category_products">Nossos Produtos</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <section class="booking-section section-padding">
-            <div class="container">
-
-                <!-- Header -->
-                <div class="page-header">
-                    <h1 class="page-title">Pagamento via <em style="color: #32BCAD; font-style: italic;">PIX</em></h1>
-                    <p class="page-subtitle">ESCANEIE O QR CODE OU COPIE O CÓDIGO PARA PAGAR</p>
-                </div>
-
-                <!-- Steps -->
-                <div class="checkout-steps">
-                    <div class="step done">
-                        <div class="step-num"><i class="bi-check2"></i></div>
-                        <span>Carrinho</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step done">
-                        <div class="step-num"><i class="bi-check2"></i></div>
-                        <span>Dados</span>
-                    </div>
-                    <div class="step-line"></div>
-                    <div class="step active">
-                        <div class="step-num">3</div>
-                        <span>Pagamento</span>
-                    </div>
-                </div>
-
-                <div class="pix-wrap">
-                    <a href="/cart/checkout" class="btn-back">← Voltar</a>
-
-                    <div class="pix-card">
-                        <!-- Header -->
-                        <div class="pix-header">
-                            <div class="pix-logo">🏦</div>
-                            <div class="pix-header-text">
-                                <h5>Pagamento PIX</h5>
-                                <p>Pedido #{{ order_id }}</p>
-                            </div>
-                            <div class="pix-valor">
-                                <span>Total</span>
-                                <strong>{{ pix.valor_fmt }}</strong>
-                            </div>
-                        </div>
-
-                        <!-- Body -->
-                        <div class="pix-body">
-
-                            <!-- Instruções -->
-                            <ul class="pix-steps-list">
-                                <li>
-                                    <div class="pix-step-num">1</div>
-                                    Abra o app do seu banco e acesse a opção <strong style="color:#e8d5a3;">PIX</strong>
-                                </li>
-                                <li>
-                                    <div class="pix-step-num">2</div>
-                                    Escolha <strong style="color:#e8d5a3;">Pagar com QR Code</strong> ou <strong style="color:#e8d5a3;">Copia e Cola</strong>
-                                </li>
-                                <li>
-                                    <div class="pix-step-num">3</div>
-                                    Confirme os dados e o valor de <strong style="color:#32BCAD;">{{ pix.valor_fmt }}</strong>
-                                </li>
-                                <li>
-                                    <div class="pix-step-num">4</div>
-                                    Após pagar, clique em <strong style="color:#e8d5a3;">"Já paguei"</strong> abaixo
-                                </li>
-                            </ul>
-
-                            <!-- QR Code -->
-                            <div class="qrcode-wrap">
-                                <img src="data:image/png;base64,{{ pix.qrcode_b64 }}" alt="QR Code PIX">
-                                <div class="qrcode-overlay">
-                                    <i class="bi-zoom-in" style="font-size:1.5rem; color:#333;"></i>
-                                    <span>QR Code PIX</span>
-                                </div>
-                            </div>
-
-                            <!-- Copia e Cola -->
-                            <span class="copypaste-label">
-                                <i class="bi-clipboard me-1"></i> PIX COPIA E COLA
-                            </span>
-                            <div class="copypaste-wrap">
-                                <div class="copypaste-input" id="pixCode" title="{{ pix.payload }}">
-                                    {{ pix.payload[:60] }}...
-                                </div>
-                                <button class="btn-copy" id="btnCopy" onclick="copiarPix()">
-                                    <i class="bi-clipboard"></i> Copiar
-                                </button>
-                            </div>
-
-                            <!-- Timer -->
-                            <div class="pix-timer">
-                                <i class="bi-clock"></i>
-                                <span>Este QR Code é válido por <strong id="timer">30:00</strong> minutos</span>
-                            </div>
-
-                            <!-- Botão confirmar -->
-                            <a href="{{ whatsapp_url }}" target="_blank" class="btn-confirmar">
-                                <i class="bi-whatsapp me-2"></i> Já paguei — Confirmar pelo WhatsApp
-                            </a>
-
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="site-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8 col-12 mt-4">
-                        <p class="copyright-text mb-0">Copyright © Aurora 2026</p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-
-    </main>
-
-    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
-
-    <script>
-        // Remove Vegas ao carregar
-        $(document).ready(function() {
-            try { $('body').vegas('destroy'); } catch(e) {}
-            $('.vegas-slide, .vegas-overlay, .vegas-wrapper, .vegas-timer').remove();
-            $('body').css({
-                'background': 'linear-gradient(160deg, #3d2a0f 0%, #2e1f0a 40%, #251a08 70%, #342210 100%)',
-                'background-attachment': 'fixed'
-            });
-        });
-
-        // Copia o payload PIX
-        const fullPayload = "{{ pix.payload }}";
-
-        function copiarPix() {
-            navigator.clipboard.writeText(fullPayload).then(() => {
-                const btn = document.getElementById('btnCopy');
-                btn.classList.add('copied');
-                btn.innerHTML = '<i class="bi-check2"></i> Copiado!';
-                setTimeout(() => {
-                    btn.classList.remove('copied');
-                    btn.innerHTML = '<i class="bi-clipboard"></i> Copiar';
-                }, 3000);
-            });
-        }
-
-        // Timer 30 minutos
-        let seconds = 30 * 60;
-        const timerEl = document.getElementById('timer');
-
-        setInterval(() => {
-            if (seconds <= 0) {
-                timerEl.textContent = 'Expirado';
-                timerEl.style.color = '#ff6b6b';
-                return;
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Aurora Semijóias — Pagamento PIX">
+        <title>Aurora Semijóias — Pagamento PIX</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700;1,200;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">
+
+        <style>
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+            body {
+                background: #ffffff !important;
+                color: #333;
+                font-family: 'Plus Jakarta Sans', sans-serif;
             }
-            seconds--;
-            const m = String(Math.floor(seconds / 60)).padStart(2, '0');
-            const s = String(seconds % 60).padStart(2, '0');
-            timerEl.textContent = `${m}:${s}`;
-        }, 1000);
-    </script>
+            body::before { display: none !important; }
+            .vegas-overlay, .vegas-slide, .vegas-wrapper, .vegas-timer {
+                display: none !important; opacity: 0 !important; visibility: hidden !important;
+            }
+            main { padding-top: 190px; }
 
-</body>
+            /* ── Topbar ── */
+            .aurora-topbar {
+                background: #e8886a; color: #fff;
+                font-size: 13px; font-weight: 500; padding: 9px 24px;
+                display: flex; align-items: center; justify-content: space-between;
+                position: fixed; top: 0; left: 0; right: 0; z-index: 1001; height: 38px;
+            }
+            .aurora-topbar a { color: #fff; text-decoration: underline; }
+            .aurora-topbar-center { flex: 1; text-align: center; }
+            .aurora-topbar-side { width: 160px; font-size: 12px; }
+            .aurora-topbar-side:last-child { text-align: right; }
+
+            /* ── Navbar ── */
+            .navbar {
+                background: #4a2e10 !important; border-bottom: 1px solid #3a2008 !important;
+                padding: 0 !important; position: fixed !important;
+                top: 38px !important; left: 0 !important; right: 0 !important;
+                width: 100% !important; z-index: 999 !important;
+                box-shadow: none !important; transform: none !important;
+            }
+            .navbar .container { display: flex; align-items: center; justify-content: space-between; padding: 8px 32px; gap: 16px; }
+            .navbar-brand-wrap { display: flex; align-items: center; text-decoration: none; }
+            .navbar-brand, .navbar-brand:hover { background: none !important; padding: 0 !important; margin: 0 !important; }
+
+            .aurora-search {
+                display: flex; align-items: center;
+                border: 1px solid #6a4a28; border-radius: 4px;
+                padding: 7px 14px; gap: 8px; background: #5a3a18; min-width: 200px;
+            }
+            .aurora-search input { border: none; background: none; outline: none; font-size: 13px; color: #f0e6c8; width: 100%; }
+            .aurora-search input::placeholder { color: #b09070; }
+            .aurora-search i { color: #b09070; font-size: 16px; }
+
+            .aurora-nav-icons { display: flex; align-items: center; gap: 20px; }
+            .aurora-nav-icons a { color: #f0e6c8; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: color 0.2s; }
+            .aurora-nav-icons a:hover { color: #f5d98a; }
+            .aurora-nav-icons i { font-size: 20px; }
+            .cart-btn-wrap { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+            .cart-badge { position: absolute; top: -6px; right: -8px; background: #e8886a; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; width: 17px; height: 17px; display: flex; align-items: center; justify-content: center; }
+
+            /* ── Variáveis ── */
+            :root {
+                --au-gold:   #c9a84c;
+                --au-cream:  #f9f7f5;
+                --au-warm:   #f0ebe3;
+                --au-stone:  #d4c8bc;
+                --au-muted:  #888;
+                --au-dark:   #1a1a1a;
+                --pix-green: #32BCAD;
+            }
+
+            /* ── Breadcrumb ── */
+            .au-breadcrumb { padding: 18px 0 0; margin-bottom: 28px; }
+            .au-breadcrumb a { font-size: 12px; color: var(--au-muted); text-decoration: none; letter-spacing: 0.06em; }
+            .au-breadcrumb a:hover { color: var(--au-dark); }
+            .au-breadcrumb span { font-size: 12px; color: var(--au-stone); margin: 0 6px; }
+            .au-breadcrumb strong { font-size: 12px; color: var(--au-dark); }
+
+            /* ── Header ── */
+            .page-header { margin-bottom: 32px; }
+            .page-title { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 400; color: var(--au-dark) !important; line-height: 1.1; }
+            .page-title em { color: var(--pix-green); font-style: italic; }
+            .page-subtitle { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--au-muted); margin-top: 6px; }
+
+            /* ── Steps ── */
+            .checkout-steps { display: flex; align-items: center; justify-content: center; gap: 0; margin-bottom: 36px; flex-wrap: wrap; }
+            .step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--au-stone); font-weight: 600; }
+            .step.active { color: var(--au-gold); }
+            .step.done { color: #7ac97a; }
+            .step-num { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--au-stone); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+            .step.active .step-num { border-color: var(--au-gold); background: rgba(201,168,76,0.08); color: var(--au-gold); }
+            .step.done .step-num { border-color: #7ac97a; background: rgba(122,201,122,0.08); color: #7ac97a; }
+            .step-line { width: 50px; height: 1px; background: var(--au-stone); margin: 0 10px; }
+            @media (max-width: 576px) { .step-line { display: none; } .checkout-steps { flex-direction: column; gap: 14px; } }
+
+            /* ── Layout central ── */
+            .pix-wrap { max-width: 560px; margin: 0 auto; padding-bottom: 60px; }
+
+            .btn-back { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--au-muted); text-decoration: none; margin-bottom: 24px; letter-spacing: 0.08em; transition: color 0.2s; }
+            .btn-back:hover { color: var(--au-dark); }
+
+            /* ── PIX Card ── */
+            .pix-card { background: #fff; border: 1px solid var(--au-stone); overflow: hidden; }
+
+            .pix-header {
+                background: var(--au-warm);
+                border-bottom: 1px solid var(--au-stone);
+                padding: 22px 28px;
+                display: flex; align-items: center; gap: 16px;
+            }
+            .pix-logo { width: 46px; height: 46px; background: var(--pix-green); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+            .pix-header-text h5 { font-family: 'Cormorant Garamond', serif; color: var(--au-dark); font-weight: 400; font-size: 1.3rem; margin: 0 0 2px; }
+            .pix-header-text p { color: var(--au-muted); font-size: 12px; margin: 0; }
+            .pix-valor { margin-left: auto; text-align: right; }
+            .pix-valor span { display: block; color: var(--au-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+            .pix-valor strong { color: var(--au-gold); font-size: 1.4rem; font-weight: 700; }
+
+            .pix-body { padding: 28px; }
+
+            /* ── Steps list ── */
+            .pix-steps-list { list-style: none; padding: 0; margin: 0 0 24px; display: flex; flex-direction: column; gap: 10px; }
+            .pix-steps-list li { display: flex; align-items: flex-start; gap: 12px; color: var(--au-muted); font-size: 13px; line-height: 1.6; }
+            .pix-step-num { width: 22px; height: 22px; background: rgba(50,188,173,0.1); border: 1px solid rgba(50,188,173,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--pix-green); flex-shrink: 0; margin-top: 2px; }
+
+            /* ── QR Code ── */
+            .qrcode-wrap { background: var(--au-cream); border: 1px solid var(--au-stone); padding: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; position: relative; }
+            .qrcode-wrap img { width: 100%; max-width: 240px; height: auto; display: block; }
+            .qrcode-overlay { position: absolute; inset: 0; background: rgba(249,247,245,0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+            .qrcode-wrap:hover .qrcode-overlay { opacity: 1; }
+            .qrcode-overlay span { color: var(--au-dark); font-size: 12px; font-weight: 600; }
+
+            /* ── Copia e Cola ── */
+            .copypaste-label { color: var(--au-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px; display: block; }
+            .copypaste-wrap { display: flex; gap: 8px; margin-bottom: 24px; }
+            .copypaste-input { flex: 1; background: var(--au-cream); border: 1px solid var(--au-stone); padding: 12px 14px; color: var(--au-muted); font-size: 12px; font-family: 'Courier New', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+            .btn-copy { background: rgba(50,188,173,0.08); border: 1px solid rgba(50,188,173,0.3); color: var(--pix-green); padding: 12px 18px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
+            .btn-copy:hover { background: rgba(50,188,173,0.18); }
+            .btn-copy.copied { background: rgba(76,175,80,0.1); border-color: rgba(76,175,80,0.35); color: #7ac97a; }
+
+            /* ── Timer ── */
+            .pix-timer { background: rgba(255,193,7,0.06); border: 1px solid rgba(255,193,7,0.2); padding: 12px 16px; display: flex; align-items: center; gap: 10px; color: #b8860b; font-size: 13px; margin-bottom: 22px; }
+
+            /* ── Botão confirmar ── */
+            .btn-confirmar { display: block; width: 100%; background: var(--pix-green); color: #fff; border: none; padding: 16px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; text-decoration: none; cursor: pointer; transition: background 0.2s, transform 0.15s; }
+            .btn-confirmar:hover { background: #28a99b; transform: translateY(-1px); color: #fff; }
+
+            /* ── Footer ── */
+            .site-footer { background: #2a1505 !important; color: #c9a88a !important; padding: 60px 0 0; }
+            .site-footer a { color: #999 !important; }
+            .site-footer a:hover { color: var(--au-gold) !important; }
+            .site-footer .text-white { color: #fff !important; }
+
+            @media (max-width: 991px) { .aurora-topbar-side { display: none; } .aurora-search { min-width: 130px; } }
+            @media (max-width: 576px) { main { padding-top: 175px; } .page-title { font-size: 2rem; } .pix-body { padding: 20px; } }
+
+            *:focus-visible { outline: 2px solid var(--au-gold); outline-offset: 2px; }
+        </style>
+
+        <!-- Força catbar -->
+        <style>
+            .aurora-catbar {
+                display: flex !important; visibility: visible !important; opacity: 1 !important;
+                position: fixed !important; top: 142px !important;
+                left: 0 !important; right: 0 !important; width: 100% !important;
+                height: 44px !important; z-index: 99999 !important;
+                background: #3a2008 !important; pointer-events: all !important;
+                clip: auto !important; clip-path: none !important;
+                transform: none !important; overflow: visible !important;
+                align-items: center !important; justify-content: center !important;
+                gap: 36px !important; padding: 0 24px !important;
+                font-size: 11px !important; font-weight: 700 !important;
+                letter-spacing: 0.1em !important; text-transform: uppercase !important;
+                border-bottom: 1px solid #2a1505 !important;
+            }
+            .aurora-catbar a { color: #aaa !important; text-decoration: none !important; padding: 12px 2px !important; border-bottom: 2px solid transparent !important; transition: color 0.2s, border-color 0.2s !important; white-space: nowrap !important; }
+            .aurora-catbar a:hover { color: #c9a84c !important; border-bottom-color: #c9a84c !important; }
+        </style>
+
+        <script>
+            function fixCatbar() {
+                const topbar = document.querySelector('.aurora-topbar');
+                const navbar = document.querySelector('.navbar');
+                const catbar = document.querySelector('.aurora-catbar');
+                const main   = document.querySelector('main');
+                if (!navbar || !catbar) return;
+                const offset = (topbar ? topbar.getBoundingClientRect().height : 0) + navbar.getBoundingClientRect().height;
+                catbar.style.top = offset + 'px';
+                catbar.style.visibility = 'visible';
+                if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
+            }
+            window.addEventListener('load', fixCatbar);
+            window.addEventListener('resize', fixCatbar);
+            document.addEventListener('DOMContentLoaded', function() { setTimeout(fixCatbar, 100); setTimeout(fixCatbar, 500); });
+        </script>
+    </head>
+
+    <body>
+        <main>
+
+            <!-- ── Topbar salmão ── -->
+            <div class="aurora-topbar">
+                <div class="aurora-topbar-side"><i class="bi-headset me-1"></i> Atendimento ao cliente</div>
+                <div class="aurora-topbar-center">✨ Frete grátis acima de R$ 200 &nbsp;|&nbsp; Parcele em até 12x sem juros</div>
+                <div class="aurora-topbar-side"><i class="bi-shield-check me-1"></i> Compra segura</div>
+            </div>
+
+            <!-- ── Navbar ── -->
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
+                        <img src="{{ url_for('static', filename='images/aurora-04.png') }}" style="height:110px;width:auto;" alt="Aurora Semijóias">
+                        <img src="{{ url_for('static', filename='images/aurora-06.png') }}" style="height:130px;width:auto;margin-left:8px;" alt="Aurora Semijóias">
+                    </a>
+                    <div class="d-flex align-items-center gap-4">
+                        <div class="aurora-search d-none d-lg-flex">
+                            <i class="bi-search"></i>
+                            <input type="text" placeholder="Buscar produto...">
+                        </div>
+                        <div class="aurora-nav-icons">
+                            {% if session.get('client_id') %}
+                                <a href="/logout" title="Sair"><i class="bi-person-check"></i><span>{{ session.get('client_name', '').split()[0] }}</span></a>
+                            {% else %}
+                                <a href="/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>
+                            {% endif %}
+                            <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                                <i class="bi-bag"></i><span>Sacola</span>
+                                <span class="cart-badge" id="cartBadge">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- ── Catbar ── -->
+            <div class="aurora-catbar">
+                <a href="/products/category_products">Todos</a>
+                <a href="/products/category_products?cat=colares">Colares</a>
+                <a href="/products/category_products?cat=brincos">Brincos</a>
+                <a href="/products/category_products?cat=aneis">Anéis</a>
+                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
+                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
+                <a href="/products/category_products?cat=bolsas">Bolsas</a>
+                <a href="/products/category_products?cat=presentes">Presentes</a>
+            </div>
+
+            <!-- ── Conteúdo ── -->
+            <section class="py-5">
+                <div class="container">
+
+                    <!-- Breadcrumb -->
+                    <nav class="au-breadcrumb">
+                        <a href="{{ url_for('site_bp.index') }}">Início</a>
+                        <span>/</span>
+                        <a href="/cart">Carrinho</a>
+                        <span>/</span>
+                        <a href="/cart/checkout">Finalizar pedido</a>
+                        <span>/</span>
+                        <strong>Pagamento PIX</strong>
+                    </nav>
+
+                    <!-- Título -->
+                    <div class="page-header">
+                        <h1 class="page-title">Pagamento via <em>PIX</em></h1>
+                        <p class="page-subtitle">Escaneie o QR Code ou copie o código para pagar</p>
+                    </div>
+
+                    <!-- Steps -->
+                    <div class="checkout-steps">
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Carrinho</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step done">
+                            <div class="step-num"><i class="bi-check2"></i></div>
+                            <span>Dados</span>
+                        </div>
+                        <div class="step-line"></div>
+                        <div class="step active">
+                            <div class="step-num">3</div>
+                            <span>Pagamento</span>
+                        </div>
+                    </div>
+
+                    <div class="pix-wrap">
+                        <a href="/cart/checkout" class="btn-back">← Voltar</a>
+
+                        <div class="pix-card">
+
+                            <!-- Header do card -->
+                            <div class="pix-header">
+                                <div class="pix-logo">🏦</div>
+                                <div class="pix-header-text">
+                                    <h5>Pagamento PIX</h5>
+                                    <p>Pedido #{{ order_id }}</p>
+                                </div>
+                                <div class="pix-valor">
+                                    <span>Total</span>
+                                    <strong>{{ pix.valor_fmt }}</strong>
+                                </div>
+                            </div>
+
+                            <!-- Body do card -->
+                            <div class="pix-body">
+
+                                <!-- Instruções -->
+                                <ul class="pix-steps-list">
+                                    <li>
+                                        <div class="pix-step-num">1</div>
+                                        Abra o app do seu banco e acesse a opção <strong style="color:var(--au-dark);">PIX</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">2</div>
+                                        Escolha <strong style="color:var(--au-dark);">Pagar com QR Code</strong> ou <strong style="color:var(--au-dark);">Copia e Cola</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">3</div>
+                                        Confirme os dados e o valor de <strong style="color:var(--pix-green);">{{ pix.valor_fmt }}</strong>
+                                    </li>
+                                    <li>
+                                        <div class="pix-step-num">4</div>
+                                        Após pagar, clique em <strong style="color:var(--au-dark);">"Já paguei"</strong> abaixo
+                                    </li>
+                                </ul>
+
+                                <!-- QR Code -->
+                                <div class="qrcode-wrap">
+                                    <img src="data:image/png;base64,{{ pix.qrcode_b64 }}" alt="QR Code PIX">
+                                    <div class="qrcode-overlay">
+                                        <i class="bi-zoom-in" style="font-size:1.4rem;color:var(--au-dark);"></i>
+                                        <span>QR Code PIX</span>
+                                    </div>
+                                </div>
+
+                                <!-- Copia e Cola -->
+                                <span class="copypaste-label">
+                                    <i class="bi-clipboard me-1"></i> PIX Copia e Cola
+                                </span>
+                                <div class="copypaste-wrap">
+                                    <div class="copypaste-input" id="pixCode" title="{{ pix.payload }}">
+                                        {{ pix.payload[:60] }}...
+                                    </div>
+                                    <button class="btn-copy" id="btnCopy" onclick="copiarPix()">
+                                        <i class="bi-clipboard"></i> Copiar
+                                    </button>
+                                </div>
+
+                                <!-- Timer -->
+                                <div class="pix-timer">
+                                    <i class="bi-clock"></i>
+                                    <span>Este QR Code é válido por <strong id="timer">30:00</strong></span>
+                                </div>
+
+                                <!-- Botão confirmar -->
+                                <a href="{{ whatsapp_url }}" target="_blank" class="btn-confirmar">
+                                    <i class="bi-whatsapp me-2"></i> Já paguei — Confirmar pelo WhatsApp
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ── Footer ── -->
+            <footer class="site-footer">
+                <div class="container">
+                    <div class="row pt-2 pb-4">
+                        <div class="col-lg-4 col-12 me-auto mb-4 mb-lg-0">
+                            <img src="{{ url_for('static', filename='images/aurora-04.png') }}" style="height:60px;width:auto;margin-bottom:16px;" alt="Aurora Semijóias" onerror="this.style.display='none'">
+                            <p style="font-size:13px;">Semijoias folheadas a ouro 18k. Feitas para durar, desenhadas para encantar.</p>
+                            <ul class="social-icon mt-4 d-flex gap-3 list-unstyled">
+                                <li><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram" style="font-size:20px;"></a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp" style="font-size:20px;"></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-6 mb-4 mb-lg-0">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
+                            <ul class="list-unstyled" style="font-size:13px;">
+                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 col-6">
+                            <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Contato</em>
+                            <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">Telefone:</strong><a href="tel:(34)984104546">(34) 98410-4546</a></p>
+                            <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">WhatsApp:</strong><a href="https://api.whatsapp.com/send?phone=5534984104546">Falar agora</a></p>
+                            <p class="d-flex" style="font-size:13px;"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com">aurorasemijoiasudi@gmail.com</a></p>
+                            <ul class="opening-hours-list mt-3" style="font-size:12px;">
+                                <li class="d-flex mb-1">Seg – Sex <span class="underline mx-2"></span> <strong>9h – 18h</strong></li>
+                                <li class="d-flex mb-1">Sábado <span class="underline mx-2"></span> <strong>11h – 16h</strong></li>
+                                <li class="d-flex">Domingo <span class="underline mx-2"></span> <strong>Fechado</strong></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="border-top pt-4 pb-4" style="border-color:rgba(255,255,255,0.1)!important;">
+                        <p class="copyright-text mb-0" style="font-size:12px;">
+                            © 2025 Aurora Semijóias. Todos os direitos reservados.
+                            &nbsp;|&nbsp; Pagamento seguro: Visa · Mastercard · Pix · Boleto
+                        </p>
+                    </div>
+                </div>
+            </footer>
+
+        </main>
+
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
+
+        <script>
+            // Remove Vegas
+            $(document).ready(function() {
+                try { $('body').vegas('destroy'); } catch(e) {}
+                $('.vegas-slide, .vegas-overlay, .vegas-wrapper, .vegas-timer').remove();
+            });
+
+            // Badge carrinho
+            fetch('/cart/count')
+                .then(r => r.json())
+                .then(data => {
+                    const b = document.getElementById('cartBadge');
+                    if (b && data.count > 0) { b.textContent = data.count; b.style.display = 'flex'; }
+                }).catch(() => {});
+
+            // Copia o payload PIX completo
+            const fullPayload = "{{ pix.payload }}";
+
+            function copiarPix() {
+                navigator.clipboard.writeText(fullPayload).then(() => {
+                    const btn = document.getElementById('btnCopy');
+                    btn.classList.add('copied');
+                    btn.innerHTML = '<i class="bi-check2"></i> Copiado!';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btn.innerHTML = '<i class="bi-clipboard"></i> Copiar';
+                    }, 3000);
+                });
+            }
+
+            // Timer 30 minutos
+            let seconds = 30 * 60;
+            const timerEl = document.getElementById('timer');
+            setInterval(() => {
+                if (seconds <= 0) {
+                    timerEl.textContent = 'Expirado';
+                    timerEl.style.color = '#e74c3c';
+                    return;
+                }
+                seconds--;
+                const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+                const s = String(seconds % 60).padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+            }, 1000);
+        </script>
+    </body>
 </html>

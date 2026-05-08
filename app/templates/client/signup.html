@@ -7,406 +7,289 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,400;0,600;0,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Respeitar preferência de movimento reduzido */
         @media (prefers-reduced-motion: reduce) {
-            * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+
+        :root {
+            --au-gold:   #c9a84c;
+            --au-brown:  #4a2e10;
+            --au-cream:  #f9f7f5;
+            --au-warm:   #f0ebe3;
+            --au-stone:  #d4c8bc;
+            --au-muted:  #888;
+            --au-dark:   #1a1a1a;
         }
 
         body {
-            background: #0a0a0a;
+            background: var(--au-cream);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Montserrat', sans-serif;
-            padding: 40px 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding: 40px 20px 60px;
             line-height: 1.6;
+            position: relative;
         }
 
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px; right: -200px;
+            width: 500px; height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }
+
+        /* ── Wrapper ── */
         .signup-wrapper {
             width: 100%;
-            max-width: 700px;
+            max-width: 680px;
+            margin: 0 auto;
             position: relative;
             z-index: 2;
         }
 
-        /* Header */
+        /* ── Voltar ── */
+        .back-link {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .back-link a {
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--au-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .back-link a:hover { color: var(--au-dark); }
+
+        /* ── Header ── */
         .signup-header {
             text-align: center;
-            margin-bottom: 48px;
+            margin-bottom: 40px;
         }
-
-        .signup-header img {
-            display: block;
-            margin: 0 auto 24px;
-            max-width: 150px;
-            height: auto;
+        .signup-header-logos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
         }
-
         .signup-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 42px;
-            font-weight: 300;
-            color: #f0e6c8;
-            margin-bottom: 12px;
-        }
-
-        .signup-title em {
-            color: #c9a84c;
-            font-style: italic;
-        }
-
-        .signup-subtitle {
-            font-size: 18px;
-            letter-spacing: 3px;
-            color: #8a7a60;
+            font-size: 2.6rem;
             font-weight: 400;
-            margin-bottom: 8px;
+            color: var(--au-dark);
+            margin-bottom: 4px;
+            line-height: 1.1;
+        }
+        .signup-title em { color: var(--au-gold); font-style: italic; }
+        .signup-subtitle {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--au-muted);
         }
 
-        /* Card */
+        /* ── Card ── */
         .signup-card {
-            background: #0f0d09;
-            border: 2px solid #c9a84c;
-            padding: 48px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            background: #fff;
+            border: 1px solid var(--au-stone);
+            padding: 44px 48px;
             position: relative;
         }
-
         .signup-card::before,
         .signup-card::after {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            border-color: #c9a84c;
+            width: 18px; height: 18px;
+            border-color: var(--au-gold);
             border-style: solid;
         }
-        .signup-card::before {
-            top: -1px; left: -1px;
-            border-width: 1px 0 0 1px;
-        }
-        .signup-card::after {
-            bottom: -1px; right: -1px;
-            border-width: 0 1px 1px 0;
-        }
+        .signup-card::before { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; }
+        .signup-card::after  { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
 
-        /* Section labels */
+        /* ── Section labels ── */
         .section-label {
-            font-size: 19px;
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 3px;
-            color: #c9a84c;
-            margin-top: 32px;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #3a3020;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--au-gold);
+            margin-top: 28px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--au-stone);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
+        .section-label:first-of-type { margin-top: 0; }
+        .section-label::after { content: ''; flex: 1; height: 0.5px; background: var(--au-warm); }
 
-        .section-label:first-of-type {
-            margin-top: 0;
-        }
-
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 0.5px;
-            background: #2a2414;
-        }
-
-        /* Alerts */
+        /* ── Alertas ── */
         .alert-login {
-            background: #2a1a1a;
-            border-left: 4px solid #d32f2f;
-            color: #ff9999;
-            font-size: 17px;
-            padding: 16px 20px;
+            background: #fff5f5;
+            border-left: 3px solid #e74c3c;
+            color: #c0392b;
+            font-size: 13px;
+            padding: 14px 18px;
             margin-bottom: 24px;
-            border-radius: 2px;
         }
-
         .alert-success {
-            background: #1a2a1a;
-            border-left: 4px solid #7ac97a;
-            color: #a8ff9a;
-            font-size: 17px;
-            padding: 16px 20px;
+            background: #f0faf0;
+            border-left: 3px solid #7ac97a;
+            color: #27ae60;
+            font-size: 13px;
+            padding: 14px 18px;
             margin-bottom: 24px;
-            border-radius: 2px;
         }
+        .alert-success a { color: var(--au-gold); font-weight: 700; text-decoration: none; }
+        .alert-success a:hover { text-decoration: underline; }
 
-        .alert-success a {
-            color: #c9a84c;
-            font-weight: 700;
-            text-decoration: none;
-        }
+        /* ── Form group ── */
+        .form-group { margin-bottom: 20px; }
 
-        .alert-success a:hover {
-            text-decoration: underline;
-        }
-
-        /* Form group */
-        .form-group {
-            margin-bottom: 28px;
-        }
-
-        /* Labels */
+        /* ── Labels ── */
         .form-label-custom {
             display: block;
-            font-size: 18px;
+            font-size: 10px;
             font-weight: 700;
-            color: #e8d5a3;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--au-muted);
+            margin-bottom: 7px;
         }
-
-        .form-label-custom .required {
-            color: #ff9999;
-        }
+        .form-label-custom .required { color: #e74c3c; }
 
         .form-hint {
             display: block;
-            font-size: 16px;
-            color: #8a7a60;
-            margin-top: 4px;
-            margin-bottom: 8px;
+            font-size: 11px;
+            color: var(--au-stone);
+            margin-top: 2px;
+            margin-bottom: 6px;
         }
 
-        /* Inputs */
+        /* ── Inputs ── */
         .form-input-custom {
             width: 100%;
-            background: #0a0a0a;
-            border: 2px solid #3a3020;
-            border-radius: 2px;
-            color: #e8d5a3;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
+            background: var(--au-cream);
+            border: 1px solid var(--au-stone);
+            color: var(--au-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
             font-weight: 400;
-            padding: 16px 20px;
+            padding: 13px 16px;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
         .form-input-custom:focus {
-            border-color: #c9a84c;
-            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+            border-color: var(--au-gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+            background: #fff;
         }
+        .form-input-custom::placeholder { color: var(--au-stone); }
+        .form-input-custom.input-error { border-color: #e74c3c; background: #fff8f8; }
 
-        .form-input-custom::placeholder {
-            color: #5a4a30;
-            font-size: 17px;
-        }
-
-        .form-input-custom.input-error {
-            border-color: #d32f2f;
-            background: #1a0a0a;
-        }
-
-        .field-error {
-            display: block;
-            font-size: 17px;
-            color: #ff9999;
-            font-weight: 700;
-            margin-top: 8px;
-        }
-
-        /* Select */
+        /* ── Select ── */
         .form-select-custom {
             width: 100%;
-            background: #0a0a0a;
-            border: 2px solid #3a3020;
-            border-radius: 2px;
-            color: #e8d5a3;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
+            background: var(--au-cream);
+            border: 1px solid var(--au-stone);
+            color: var(--au-dark);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
             font-weight: 400;
-            padding: 16px 20px;
+            padding: 13px 40px 13px 16px;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: border-color 0.2s, box-shadow 0.2s;
             appearance: none;
             cursor: pointer;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23c9a84c' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 20px center;
-            padding-right: 48px;
+            background-position: right 16px center;
         }
-
         .form-select-custom:focus {
-            border-color: #c9a84c;
-            box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+            border-color: var(--au-gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+            background-color: #fff;
+        }
+        .form-select-custom.input-error { border-color: #e74c3c; }
+        .form-select-custom option { background: #fff; color: var(--au-dark); }
+
+        /* ── Field error ── */
+        .field-error {
+            display: block;
+            font-size: 11px;
+            color: #e74c3c;
+            margin-top: 5px;
         }
 
-        .form-select-custom option {
-            background: #0f0d09;
-            color: #e8d5a3;
-            font-size: 18px;
-        }
+        /* ── Two cols ── */
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        @media (max-width: 600px) { .row-2 { grid-template-columns: 1fr; } }
 
-        /* Two columns */
-        .row-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        @media (max-width: 600px) {
-            .row-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Checkbox */
+        /* ── Checkbox ── */
         .form-checkbox-custom {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
-
         .form-checkbox-custom input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
+            width: 18px; height: 18px;
             margin-top: 2px;
             cursor: pointer;
-            accent-color: #c9a84c;
+            accent-color: var(--au-gold);
+            flex-shrink: 0;
         }
+        .form-checkbox-custom label { font-size: 13px; color: var(--au-muted); cursor: pointer; line-height: 1.5; }
+        .form-checkbox-custom a { color: var(--au-gold); text-decoration: none; font-weight: 600; }
+        .form-checkbox-custom a:hover { text-decoration: underline; }
 
-        .form-checkbox-custom label {
-            font-size: 18px;
-            color: #d4c4a0;
-            cursor: pointer;
-            line-height: 1.4;
-        }
-
-        .form-checkbox-custom a {
-            color: #c9a84c;
-            text-decoration: none;
-            font-weight: 700;
-        }
-
-        .form-checkbox-custom a:hover {
-            text-decoration: underline;
-        }
-
-        /* Button */
+        /* ── Botão ── */
         .btn-signup {
             width: 100%;
-            background: #c9a84c;
-            color: #0a0a0a;
+            background: var(--au-dark);
+            color: #fff;
             border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 18px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 2px;
-            padding: 20px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            padding: 16px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.1s;
-            border-radius: 2px;
-            margin-top: 12px;
+            transition: background 0.2s;
+            margin-top: 8px;
         }
+        .btn-signup:hover { background: var(--au-gold); }
+        .btn-signup:active { opacity: 0.9; }
+        .btn-signup:disabled { background: var(--au-stone); cursor: not-allowed; }
 
-        .btn-signup:hover {
-            background: #d4b55a;
-        }
-
-        .btn-signup:active {
-            transform: scale(0.98);
-        }
-
-        .btn-signup:disabled {
-            background: #5a4a30;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
-
-        /* Links */
+        /* ── Link login ── */
         .login-link {
             text-align: center;
-            margin-top: 32px;
-            font-size: 18px;
-            color: #8a7a60;
+            margin-top: 24px;
+            font-size: 13px;
+            color: var(--au-muted);
         }
+        .login-link a { color: var(--au-gold); text-decoration: none; font-weight: 600; border-bottom: 0.5px solid var(--au-gold); padding-bottom: 1px; }
+        .login-link a:hover { color: #b8972a; }
 
-        .login-link a {
-            color: #c9a84c;
-            text-decoration: none;
-            font-weight: 700;
-            border-bottom: 0.5px solid #c9a84c;
-            padding-bottom: 1px;
-        }
+        *:focus-visible { outline: 2px solid var(--au-gold); outline-offset: 2px; }
 
-        .login-link a:hover {
-            color: #d4b55a;
-        }
-
-        /* Back link */
-        .back-link {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-
-        .back-link a {
-            font-size: 18px;
-            color: #8a7a60;
-            text-decoration: none;
-            font-weight: 700;
-            transition: color 0.3s;
-        }
-
-        .back-link a:hover {
-            color: #c9a84c;
-        }
-
-        /* Accessibility improvements */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
-        }
-
-        /* Focus visible for keyboard navigation */
-        *:focus-visible {
-            outline: 2px solid #c9a84c;
-            outline-offset: 2px;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .signup-card {
-                padding: 32px 24px;
-            }
-
-            .signup-title {
-                font-size: 32px;
-            }
-
-            .form-label-custom {
-                font-size: 16px;
-            }
-
-            .form-input-custom,
-            .form-select-custom {
-                font-size: 16px;
-                padding: 14px 16px;
-            }
-
-            .section-label {
-                font-size: 16px;
-            }
+            .signup-card { padding: 32px 24px; }
+            .signup-title { font-size: 2rem; }
         }
     </style>
 </head>
@@ -414,18 +297,24 @@
 
     <div class="signup-wrapper">
 
+        <!-- Voltar -->
         <div class="back-link">
-            <a href="/" aria-label="Voltar para página inicial">← Voltar</a>
+            <a href="/" aria-label="Voltar para página inicial">← Voltar para o início</a>
         </div>
 
+        <!-- Header -->
         <div class="signup-header">
-            <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
-                alt="Logo Aurora Semijóias"
-                style="height: 130px; width: auto;">
+            <div class="signup-header-logos">
+                <img src="{{ url_for('static', filename='images/aurora-04.png') }}"
+                    style="height:80px;width:auto;" alt="Aurora Semijóias">
+                <img src="{{ url_for('static', filename='images/aurora-06.png') }}"
+                    style="height:55px;width:auto;" alt="Aurora">
+            </div>
             <h1 class="signup-title">Criar <em>conta</em></h1>
-            <p class="signup-subtitle">PREENCHA SEUS DADOS</p>
+            <p class="signup-subtitle">Preencha seus dados</p>
         </div>
 
+        <!-- Card -->
         <div class="signup-card">
 
             {% if success %}
@@ -444,21 +333,17 @@
                 <input type="hidden" name="next" value="{{ next_url }}">
 
                 <!-- DADOS PESSOAIS -->
-                <h2 class="section-label">DADOS PESSOAIS</h2>
+                <h2 class="section-label">Dados pessoais</h2>
 
                 <div class="form-group">
                     <label class="form-label-custom" for="name">
-                        NOME COMPLETO <span class="required">*</span>
+                        Nome completo <span class="required">*</span>
                     </label>
                     <span class="form-hint">Seu nome como aparece no documento</span>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        name="name" 
+                    <input type="text" id="name" name="name"
                         class="form-input-custom {% if errors and errors.name %}input-error{% endif %}"
-                        placeholder="Ex: João Silva"
-                        required
-                        aria-required="true"
+                        placeholder="Ex: Maria Silva"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.name %}name-error{% endif %}">
                     {% if errors and errors.name %}
                         <span class="field-error" id="name-error">{{ errors.name[0] }}</span>
@@ -468,33 +353,25 @@
                 <div class="row-2">
                     <div class="form-group">
                         <label class="form-label-custom" for="birth_date">
-                            DATA DE NASCIMENTO <span class="required">*</span>
+                            Data de nascimento <span class="required">*</span>
                         </label>
-                        <input 
-                            type="date" 
-                            id="birth_date" 
-                            name="birth_date" 
+                        <input type="date" id="birth_date" name="birth_date"
                             class="form-input-custom {% if errors and errors.birth_date %}input-error{% endif %}"
-                            required
-                            aria-required="true"
+                            required aria-required="true"
                             aria-describedby="{% if errors and errors.birth_date %}birth_date-error{% endif %}">
                         {% if errors and errors.birth_date %}
                             <span class="field-error" id="birth_date-error">{{ errors.birth_date[0] }}</span>
                         {% endif %}
                     </div>
-
                     <div class="form-group">
                         <label class="form-label-custom" for="gender">
-                            GÊNERO <span class="required">*</span>
+                            Gênero <span class="required">*</span>
                         </label>
-                        <select 
-                            id="gender" 
-                            name="gender" 
+                        <select id="gender" name="gender"
                             class="form-select-custom {% if errors and errors.gender %}input-error{% endif %}"
-                            required
-                            aria-required="true"
+                            required aria-required="true"
                             aria-describedby="{% if errors and errors.gender %}gender-error{% endif %}">
-                            <option value="">Selecione uma opção</option>
+                            <option value="">Selecione</option>
                             <option value="M">Masculino</option>
                             <option value="F">Feminino</option>
                             <option value="O">Outro</option>
@@ -507,21 +384,17 @@
                 </div>
 
                 <!-- CONTATO -->
-                <h2 class="section-label">CONTATO</h2>
+                <h2 class="section-label">Contato</h2>
 
                 <div class="form-group">
                     <label class="form-label-custom" for="email">
-                        E-MAIL <span class="required">*</span>
+                        E-mail <span class="required">*</span>
                     </label>
                     <span class="form-hint">Você usará este e-mail para fazer login</span>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email" 
+                    <input type="email" id="email" name="email"
                         class="form-input-custom {% if errors and errors.email %}input-error{% endif %}"
-                        placeholder="Ex: joao@email.com"
-                        required
-                        aria-required="true"
+                        placeholder="Ex: maria@email.com"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.email %}email-error{% endif %}">
                     {% if errors and errors.email %}
                         <span class="field-error" id="email-error">{{ errors.email[0] }}</span>
@@ -530,17 +403,13 @@
 
                 <div class="form-group">
                     <label class="form-label-custom" for="phone">
-                        TELEFONE <span class="required">*</span>
+                        Telefone <span class="required">*</span>
                     </label>
                     <span class="form-hint">Formato: (11) 99999-9999</span>
-                    <input 
-                        type="tel" 
-                        id="phone" 
-                        name="phone" 
+                    <input type="tel" id="phone" name="phone"
                         class="form-input-custom {% if errors and errors.phone %}input-error{% endif %}"
                         placeholder="(11) 99999-9999"
-                        required
-                        aria-required="true"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.phone %}phone-error{% endif %}">
                     {% if errors and errors.phone %}
                         <span class="field-error" id="phone-error">{{ errors.phone[0] }}</span>
@@ -548,20 +417,16 @@
                 </div>
 
                 <!-- ENDEREÇO -->
-                <h2 class="section-label">ENDEREÇO</h2>
+                <h2 class="section-label">Endereço</h2>
 
                 <div class="form-group">
                     <label class="form-label-custom" for="address">
-                        ENDEREÇO <span class="required">*</span>
+                        Endereço <span class="required">*</span>
                     </label>
-                    <input 
-                        type="text" 
-                        id="address" 
-                        name="address" 
+                    <input type="text" id="address" name="address"
                         class="form-input-custom {% if errors and errors.address %}input-error{% endif %}"
                         placeholder="Ex: Rua das Flores, 123"
-                        required
-                        aria-required="true"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.address %}address-error{% endif %}">
                     {% if errors and errors.address %}
                         <span class="field-error" id="address-error">{{ errors.address[0] }}</span>
@@ -571,32 +436,24 @@
                 <div class="row-2">
                     <div class="form-group">
                         <label class="form-label-custom" for="city">
-                            CIDADE <span class="required">*</span>
+                            Cidade <span class="required">*</span>
                         </label>
-                        <input 
-                            type="text" 
-                            id="city" 
-                            name="city" 
+                        <input type="text" id="city" name="city"
                             class="form-input-custom {% if errors and errors.city %}input-error{% endif %}"
                             placeholder="Ex: São Paulo"
-                            required
-                            aria-required="true"
+                            required aria-required="true"
                             aria-describedby="{% if errors and errors.city %}city-error{% endif %}">
                         {% if errors and errors.city %}
                             <span class="field-error" id="city-error">{{ errors.city[0] }}</span>
                         {% endif %}
                     </div>
-
                     <div class="form-group">
                         <label class="form-label-custom" for="state">
-                            ESTADO <span class="required">*</span>
+                            Estado <span class="required">*</span>
                         </label>
-                        <select 
-                            id="state" 
-                            name="state" 
+                        <select id="state" name="state"
                             class="form-select-custom {% if errors and errors.state %}input-error{% endif %}"
-                            required
-                            aria-required="true"
+                            required aria-required="true"
                             aria-describedby="{% if errors and errors.state %}state-error{% endif %}">
                             <option value="">Selecione</option>
                             <option value="SP">São Paulo</option>
@@ -633,21 +490,17 @@
                 </div>
 
                 <!-- SEGURANÇA -->
-                <h2 class="section-label">SEGURANÇA</h2>
+                <h2 class="section-label">Segurança</h2>
 
                 <div class="form-group">
                     <label class="form-label-custom" for="password">
-                        SENHA <span class="required">*</span>
+                        Senha <span class="required">*</span>
                     </label>
                     <span class="form-hint">Mínimo 8 caracteres, com números e letras maiúsculas</span>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password" 
+                    <input type="password" id="password" name="password"
                         class="form-input-custom {% if errors and errors.password %}input-error{% endif %}"
                         placeholder="••••••••"
-                        required
-                        aria-required="true"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.password %}password-error{% endif %}"
                         minlength="8">
                     {% if errors and errors.password %}
@@ -657,16 +510,12 @@
 
                 <div class="form-group">
                     <label class="form-label-custom" for="password_confirm">
-                        CONFIRMAR SENHA <span class="required">*</span>
+                        Confirmar senha <span class="required">*</span>
                     </label>
-                    <input 
-                        type="password" 
-                        id="password_confirm" 
-                        name="password_confirm" 
+                    <input type="password" id="password_confirm" name="password_confirm"
                         class="form-input-custom {% if errors and errors.password_confirm %}input-error{% endif %}"
                         placeholder="••••••••"
-                        required
-                        aria-required="true"
+                        required aria-required="true"
                         aria-describedby="{% if errors and errors.password_confirm %}password_confirm-error{% endif %}"
                         minlength="8">
                     {% if errors and errors.password_confirm %}
@@ -675,14 +524,10 @@
                 </div>
 
                 <!-- TERMOS -->
-                <h2 class="section-label">TERMOS E CONDIÇÕES</h2>
+                <h2 class="section-label">Termos e condições</h2>
 
                 <div class="form-checkbox-custom">
-                    <input 
-                        type="checkbox" 
-                        id="terms" 
-                        name="terms" 
-                        required
+                    <input type="checkbox" id="terms" name="terms" required
                         aria-required="true"
                         aria-describedby="{% if errors and errors.terms %}terms-error{% endif %}">
                     <label for="terms">
@@ -694,29 +539,19 @@
                 </div>
 
                 <div class="form-checkbox-custom">
-                    <input 
-                        type="checkbox" 
-                        id="newsletter" 
-                        name="newsletter">
-                    <label for="newsletter">
-                        Desejo receber ofertas e novidades por e-mail
-                    </label>
+                    <input type="checkbox" id="newsletter" name="newsletter">
+                    <label for="newsletter">Desejo receber ofertas e novidades por e-mail</label>
                 </div>
 
-                <!-- SUBMIT -->
-                <button type="submit" class="btn-signup" aria-label="Criar conta">
-                    CRIAR CONTA
-                </button>
+                <button type="submit" class="btn-signup" aria-label="Criar conta">Criar conta</button>
 
             </form>
 
-            <!-- LOGIN LINK -->
             <div class="login-link">
-                Já tem uma conta? <a href="/client/login">Faça login aqui</a>
+                Já tem uma conta? <a href="/client/login">Faça login</a>
             </div>
 
         </div>
-
     </div>
 
     <script>
@@ -725,104 +560,66 @@
         const inputs = form.querySelectorAll('input[required], select[required]');
 
         inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                validateField(this);
-            });
-
+            input.addEventListener('blur', function() { validateField(this); });
             input.addEventListener('input', function() {
-                if (this.classList.contains('input-error')) {
-                    validateField(this);
-                }
+                if (this.classList.contains('input-error')) validateField(this);
             });
         });
 
         function validateField(field) {
             const errorId = field.getAttribute('aria-describedby');
-            const errorElement = errorId ? document.getElementById(errorId) : null;
-
-            let isValid = true;
-            let errorMessage = '';
+            const errorEl = errorId ? document.getElementById(errorId) : null;
+            let isValid = true, msg = '';
 
             if (field.type === 'email') {
                 isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
-                errorMessage = 'E-mail inválido';
+                msg = 'E-mail inválido';
             } else if (field.type === 'tel') {
                 isValid = /^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(field.value);
-                errorMessage = 'Telefone inválido. Use o formato: (11) 99999-9999';
+                msg = 'Use o formato: (11) 99999-9999';
             } else if (field.type === 'password') {
                 isValid = field.value.length >= 8 && /[A-Z]/.test(field.value) && /[0-9]/.test(field.value);
-                errorMessage = 'Senha deve ter 8+ caracteres, com números e letras maiúsculas';
+                msg = 'Mínimo 8 caracteres com números e letras maiúsculas';
             } else if (field.type === 'checkbox' && field.id === 'terms') {
                 isValid = field.checked;
-                errorMessage = 'Você deve concordar com os termos';
+                msg = 'Você deve concordar com os termos';
             } else if (field.value.trim() === '') {
                 isValid = false;
-                errorMessage = 'Este campo é obrigatório';
+                msg = 'Este campo é obrigatório';
             }
 
-            if (!isValid) {
-                field.classList.add('input-error');
-                if (errorElement) {
-                    errorElement.textContent = errorMessage;
-                }
-            } else {
-                field.classList.remove('input-error');
-                if (errorElement) {
-                    errorElement.textContent = '';
-                }
-            }
-
+            field.classList.toggle('input-error', !isValid);
+            if (errorEl) errorEl.textContent = isValid ? '' : msg;
             return isValid;
         }
 
-        // Máscara para telefone
+        // Máscara telefone
         const phoneInput = document.getElementById('phone');
         if (phoneInput) {
             phoneInput.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 11) value = value.slice(0, 11);
-                if (value.length >= 2) {
-                    value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
-                }
-                e.target.value = value;
+                let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+                if (v.length >= 2) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+                e.target.value = v;
             });
         }
 
-        // Validação de confirmação de senha
-        const passwordInput = document.getElementById('password');
-        const passwordConfirmInput = document.getElementById('password_confirm');
-
-        if (passwordConfirmInput) {
-            passwordConfirmInput.addEventListener('blur', function() {
-                if (this.value !== passwordInput.value) {
-                    this.classList.add('input-error');
-                    const errorElement = document.getElementById('password_confirm-error');
-                    if (errorElement) {
-                        errorElement.textContent = 'As senhas não coincidem';
-                    }
-                } else {
-                    this.classList.remove('input-error');
-                    const errorElement = document.getElementById('password_confirm-error');
-                    if (errorElement) {
-                        errorElement.textContent = '';
-                    }
-                }
+        // Confirmar senha
+        const pwdInput = document.getElementById('password');
+        const pwdConfirm = document.getElementById('password_confirm');
+        if (pwdConfirm) {
+            pwdConfirm.addEventListener('blur', function() {
+                const errorEl = document.getElementById('password_confirm-error');
+                const match = this.value === pwdInput.value;
+                this.classList.toggle('input-error', !match);
+                if (errorEl) errorEl.textContent = match ? '' : 'As senhas não coincidem';
             });
         }
 
-        // Validar formulário antes de enviar
+        // Submit
         form.addEventListener('submit', function(e) {
-            let isFormValid = true;
-            inputs.forEach(input => {
-                if (!validateField(input)) {
-                    isFormValid = false;
-                }
-            });
-
-            if (!isFormValid) {
-                e.preventDefault();
-                alert('Por favor, corrija os erros no formulário antes de enviar.');
-            }
+            let valid = true;
+            inputs.forEach(input => { if (!validateField(input)) valid = false; });
+            if (!valid) { e.preventDefault(); }
         });
     </script>
 
