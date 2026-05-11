@@ -99,6 +99,43 @@
             .aurora-search i { color: #b09070; font-size: 16px; }
 
             /* Ícones direita */
+                        /* ── Fix dropdown ── */
+            .navbar, .navbar .container, .aurora-nav-icons, .user-dropdown-wrap {
+                overflow: visible !important;
+            }
+            /* ── User dropdown ── */
+            .user-dropdown-wrap { position: relative; }
+            .user-dropdown-btn {
+                background: none; border: none; cursor: pointer;
+                color: #f0e6c8; font-size: 12px;
+                display: flex; flex-direction: column; align-items: center;
+                gap: 2px; transition: color 0.2s; padding: 0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .user-dropdown-btn:hover { color: #f5d98a; }
+            .user-dropdown-btn i { font-size: 20px; }
+            .user-dropdown-menu {
+                display: none;
+                position: fixed;
+                background: #fff;
+                border: 1px solid #d4c8bc;
+                min-width: 200px;
+                z-index: 999999;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            }
+            .user-dropdown-menu.open { display: block; }
+            .user-dropdown-item {
+                display: flex; align-items: center; gap: 10px;
+                padding: 12px 16px; font-size: 13px; color: #333;
+                text-decoration: none; transition: background 0.15s;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .user-dropdown-item:hover { background: #f9f7f5; color: #1a1a1a; }
+            .user-dropdown-item i { font-size: 15px; color: #888; }
+            .user-dropdown-divider { border-top: 1px solid #f0ebe3; margin: 4px 0; }
+            .user-dropdown-logout { color: #c0392b !important; }
+            .user-dropdown-logout i { color: #c0392b !important; }
+            .user-dropdown-logout:hover { background: #fff5f5 !important; }
             .aurora-nav-icons { display: flex; align-items: center; gap: 20px; }
             .aurora-nav-icons a {
                 color: #f0e6c8; text-decoration: none; font-size: 12px;
@@ -442,12 +479,26 @@
                         </div>
                         <div class="aurora-nav-icons">
                             {% if session.get('client_id') %}
-                                <a href="/logout" title="Sair">
-                                    <i class="bi-person-check"></i>
-                                    <span>{{ session.get('client_name', '').split()[0] }}</span>
-                                </a>
+                                <div class="user-dropdown-wrap">
+                                    <button class="user-dropdown-btn" onclick="toggleUserMenu()" aria-label="Menu do usuário">
+                                        <i class="bi-person-check"></i>
+                                        <span>{{ session.get('client_name', '').split()[0] }}</span>
+                                    </button>
+                                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                                        <a href="/client/profile" class="user-dropdown-item">
+                                            <i class="bi-person"></i> Minha conta
+                                        </a>
+                                        <a href="/cart" class="user-dropdown-item">
+                                            <i class="bi-bag"></i> Meus pedidos
+                                        </a>
+                                        <div class="user-dropdown-divider"></div>
+                                        <a href="/logout" class="user-dropdown-item user-dropdown-logout">
+                                            <i class="bi-box-arrow-right"></i> Sair
+                                        </a>
+                                    </div>
+                                </div>
                             {% else %}
-                                <a href="/login" title="Entrar">
+                                <a href="/client/login" title="Entrar">
                                     <i class="bi-person"></i>
                                     <span>Entrar</span>
                                 </a>
@@ -696,6 +747,25 @@
             function submitQty(productId) {
                 document.getElementById('form-' + productId).submit();
             }
+        </script>
+        <script>
+            function toggleUserMenu() {
+                const menu = document.getElementById('userDropdownMenu');
+                const btn  = document.querySelector('.user-dropdown-btn');
+                if (!menu || !btn) return;
+                if (menu.classList.contains('open')) { menu.classList.remove('open'); return; }
+                const rect = btn.getBoundingClientRect();
+                menu.style.top   = (rect.bottom + 8) + 'px';
+                menu.style.right = (window.innerWidth - rect.right) + 'px';
+                menu.classList.add('open');
+            }
+            document.addEventListener('click', function(e) {
+                const wrap = document.querySelector('.user-dropdown-wrap');
+                if (wrap && !wrap.contains(e.target)) document.getElementById('userDropdownMenu')?.classList.remove('open');
+            });
+            window.addEventListener('scroll', function() {
+                document.getElementById('userDropdownMenu')?.classList.remove('open');
+            });
         </script>
     </body>
 </html>

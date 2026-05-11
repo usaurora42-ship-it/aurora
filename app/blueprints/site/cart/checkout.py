@@ -9,6 +9,8 @@ from app.model.order_item import ModelOrderItem
 from app.model.client import ModelClient
 from app.model.checkout import ModelCheckout
 from app.model.enum import StatusEnum
+from app.model.address import ModelAddress
+from app.model.client_address import ModelClientAddress
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,6 +24,24 @@ def get_cart():
 
 @SiteBlueprint.route('/cart/checkout', methods=['GET'])
 def checkout_get():
+    # Dentro da rota GET, após verificar o client_id na sessão:
+    client_id = session.get('client_id')
+    if client_id:
+        address = ModelAddress.query.join(ModelClientAddress).filter(
+            ModelClientAddress.client_id == client_id
+        ).first()
+        
+        if address:
+            session['client_address'] = {
+                'zip_code':      address.zip_code,
+                'street':        address.street,
+                'street_number': address.street_number,
+                'complement':    address.complement or '',
+                'district':      address.district or '',
+                'city':          address.city,
+                'state':         address.state,
+            }
+
     """Exibe o formulário de finalização do pedido."""
     cart = get_cart()
     if not cart:

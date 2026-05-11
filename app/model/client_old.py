@@ -11,8 +11,8 @@ from app.lib.util import Util
 LOGGER = logging.getLogger(__name__)
 
 
-class ModelUser(db.Model):
-    __tablename__ = 'users'
+class ModelClient(db.Model):
+    __tablename__ = 'clients'
     __table_args__ = {
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
@@ -22,22 +22,29 @@ class ModelUser(db.Model):
 
     id = db.Column(
         INTEGER(unsigned=True),
-        db.Sequence('user_id_seq'),
+        db.Sequence('client_id_seq'),
         primary_key=True,
         autoincrement=True,
         nullable=False
     )
-    client_id = db.Column(
-        INTEGER(unsigned=True),
-        db.ForeignKey('clients.id', onupdate='CASCADE'),
+    uuid = db.Column(
+          db.String(36),
+          unique=True,
+          nullable=False
+    )
+    name = db.Column(
+        db.String(80),
         nullable=False
     )
-    user_name = db.Column(
-        db.String(150),  # aumentado para caber e-mail como username
-        nullable=False
+    type = db.Column(
+          db.String(2)
     )
-    pwd = db.Column(
-        db.String(255)   # aumentado para senhas modernas (hash ou texto longo)
+    email = db.Column(
+          db.String(150),
+          unique=True
+    )
+    document = db.Column(
+        db.String(20)
     )
     status = db.Column(
          db.Enum(StatusEnum, validate_strings=True),
@@ -51,16 +58,8 @@ class ModelUser(db.Model):
           default=lambda : format(datetime.now().timestamp(), '.3f')
     )
 
-    # RelationShip
-    client = db.relationship(
-        'ModelClient',
-        backref=db.backref('client_user', lazy=True)
-    )
-
-    errors = None
-
-    # Create user
-    def create_user(self, data):
+    # Create Client
+    def create_client(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
             self.errors = v.errors
@@ -68,7 +67,9 @@ class ModelUser(db.Model):
             
         data = v.document
 
-        util = Util()        
+        util = Util()
+
+        
 
         # # if exists
         # exists = self.query.filter_by(document=data['document']).first()
@@ -77,8 +78,8 @@ class ModelUser(db.Model):
         
         for k in data:            
             setattr(self, k, data[k])
-            # self.uuid = util.gen_uuid()
-                        
+            self.uuid = util.gen_uuid()
+            
 
         try:
             db.session.add(self)
@@ -137,37 +138,32 @@ class ModelUser(db.Model):
     # Validators
     def __val_create__(self):
         schema = '''
-        client_id:
-            min: 1
+        document:
+            maxlength: 20        
+        name:
+            maxlength: 80
             required: true
-            type: integer
-            coerce: integer 
-        user_name:
-            maxlength: 150
-            required: true
-            type: string   
-        pwd:
-            maxlength: 255
             type: string
+        type:
+            maxlength: 2
+        email:
+            maxlength: 150        
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __val_update__(self):
-        schema = '''  
-        client_id:
-            min: 1
-            required: true
-            type: integer
-            coerce: integer      
-        user_name:
-            maxlength: 150
-            required: true
-            type: string  
-        pwd:
-            maxlength: 255
-            type: string  
+        schema = '''        
+        document:
+            maxlength: 20       
+        name:
+            maxlength: 80
+            type: string   
+        type:
+            maxlength: 2  
+        email:
+            maxlength: 150   
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
    
     def __repr__(self):
-        return "<User %r>" % self.name
+        return "<Client %r>" % self.name

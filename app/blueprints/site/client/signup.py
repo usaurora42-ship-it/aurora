@@ -1,23 +1,72 @@
 # encoding: utf-8
-import re
 from flask import render_template, make_response, request, session, redirect
 
 from app.blueprints.site import SiteBlueprint
 
 from app import logging
-from app import environment
 from app.model.client import ModelClient
 from app.model.phones import ModelPhone
 from app.model.address import ModelAddress
 from app.model.client_phone import ModelClientPhone
 from app.model.client_address import ModelClientAddress
 from app.model.users import ModelUser
-from app.model.countries import ModelCountry
 from app.model.enum import StatusEnum
-from flask_session import Session
 
 LOGGER = logging.getLogger(__name__)
 
+
+# ─────────────────────────────────────────────
+#  Helpers de validação
+# ─────────────────────────────────────────────
+
+def _validate_step1(data):
+    """Valida os campos obrigatórios da etapa 1."""
+    errors = {}
+
+    name = data.get('name', '').strip()
+    if not name:
+        errors['name'] = ['Nome é obrigatório.']
+    elif len(name) > 80:
+        errors['name'] = ['Nome deve ter no máximo 80 caracteres.']
+
+    email = data.get('email', '').strip().lower()
+    if not email:
+        errors['email'] = ['E-mail é obrigatório.']
+    elif len(email) > 150:
+        errors['email'] = ['E-mail muito longo.']
+
+    password = data.get('password', '')
+    if not password:
+        errors['password'] = ['Senha é obrigatória.']
+    elif len(password) < 8:
+        errors['password'] = ['A senha deve ter pelo menos 8 caracteres.']
+
+    password_confirm = data.get('password_confirm', '')
+    if password and password_confirm != password:
+        errors['password_confirm'] = ['As senhas não coincidem.']
+
+    if not data.get('terms'):
+        errors['terms'] = ['Você deve aceitar os termos para continuar.']
+
+    return errors
+
+
+def _parse_phone(raw_phone):
+    """Extrai código de área e número de um telefone brasileiro formatado."""
+    digits = ''.join(filter(str.isdigit, raw_phone or ''))
+    if len(digits) < 10:
+        return None, None
+    # Remove DDI 55 se vier junto
+    if digits.startswith('55') and len(digits) >= 12:
+        digits = digits[2:]
+    code_area = digits[0:2]
+    number    = digits[2:]
+    return code_area, number
+
+
+# ─────────────────────────────────────────────
+#  GET /client/signup
+# ─────────────────────────────────────────────
 
 @SiteBlueprint.route('/client/signup')
 def signup_get():
@@ -28,262 +77,174 @@ def signup_get():
     data_input = None
     if checkout_data:
         data_input = {
-            'email':         checkout_data.get('email', ''),
-            'zip_code':      checkout_data.get('zip_code', ''),
-            'street':        checkout_data.get('street', ''),
-            'street_number': checkout_data.get('street_number', ''),
-            'complement':    checkout_data.get('complement', ''),
-            'district':      checkout_data.get('district', ''),
-            'city':          checkout_data.get('city', ''),
-            'state':         checkout_data.get('state', ''),
+            'email':   checkout_data.get('email', ''),
+            'city':    checkout_data.get('city', ''),
+            'state':   checkout_data.get('state', ''),
+            'address': checkout_data.get('street', ''),
         }
 
     next_url = request.args.get('next', '/client/login')
 
-    resp = make_response(render_template('client/signup.html',
+    return make_response(render_template(
+        'client/signup.html',
         success=False,
         errors=None,
         data_input=data_input,
-        next_url=next_url))
-    resp.mimetype = 'text/html'
-    return resp 
+        next_url=next_url
+    ))
 
+
+# ─────────────────────────────────────────────
+#  POST /client/signup
+# ─────────────────────────────────────────────
 
 @SiteBlueprint.route('/client/signup', methods=['POST'])
 def signup_post():
-    data = request.form.to_dict() or {}
+    data     = request.form.to_dict() or {}
+    next_url = request.args.get('next') or data.get('next') or '/client/login'
 
-    # record the user name
-    session["name"] = data['name']
+    def render_error(errors):
+        return make_response(render_template(
+            'client/signup.html',
+            success=False,
+            errors=errors,
+            data_input=data,
+            next_url=next_url
+        ))
 
-    # ── Verifica se o e-mail já está cadastrado ──
-    if data.get('email', '').strip():
-        email_exists = ModelClient.query.filter_by(
-            email=data['email'].strip().lower()
-        ).first()
-        if email_exists:
-            resp = make_response(render_template('client/signup.html',
-                        success=False,
-                        errors={'email': ['Este e-mail já está cadastrado. Faça login ou use outro e-mail.']},
-                        data_input=data))
-            resp.mimetype = 'text/html'
-            return resp
+    # ── 1. Valida campos obrigatórios ──────────────────────────────────────
+    errors = _validate_step1(data)
+    if errors:
+        return render_error(errors)
 
-    # query client
-    query_client = ModelClient.query.with_entities(
-        ModelClient.id
-    ).filter_by(
-        #status=StatusEnum.enabled,
-        document=data['document'].replace("-","").replace(".","").replace("/","")
-    )
-    
-    # query phone 
-    query_phone = ModelPhone.query.with_entities(
-        ModelPhone.id
-    ).filter_by(
-        status=StatusEnum.enabled
-    ).join(ModelClientPhone).join(ModelClient).filter_by(
-        status=StatusEnum.enabled
-    )
+    email = data['email'].strip().lower()
+    name  = data['name'].strip()
 
-    # query address 
-    query_address = ModelAddress.query.with_entities(
-        ModelAddress.id
-    ).filter_by(
-        status=StatusEnum.enabled
-    ).join(ModelClientAddress).join(ModelClient).filter_by(
-        status=StatusEnum.enabled
-    )
+    # ── 2. E-mail já cadastrado? ───────────────────────────────────────────
+    if ModelClient.query.filter_by(email=email).first():
+        return render_error({
+            'email': ['Este e-mail já está cadastrado. Faça login ou use outro e-mail.']
+        })
 
-    # query user 
-    query_user = ModelUser.query.with_entities(
-         ModelUser.client_id
-    ).filter_by(
-        status=StatusEnum.enabled
-    ).join(ModelClient).filter_by(
-        status=StatusEnum.enabled
-    )
-
-    # instance models
+    # ── 3. Cria o cliente ──────────────────────────────────────────────────
     model_client = ModelClient()
-    model_phone = ModelPhone()
-    model_client_phone = ModelClientPhone()
-    model_address = ModelAddress()
-    model_client_address = ModelClientAddress()
+    client = model_client.create_client({
+        'name':  name,
+        'email': email,
+        'type':  'PF',          # pessoa física por padrão
+    })
+
+    if client is None:
+        LOGGER.error('Erro ao criar cliente: %s', model_client.errors)
+        return render_error(model_client.errors)
+
+    # ── 4. Telefone (opcional) ─────────────────────────────────────────────
+    raw_phone = data.get('phone', '').strip()
+    if raw_phone:
+        code_area, number = _parse_phone(raw_phone)
+        if code_area and number:
+            model_phone        = ModelPhone()
+            model_client_phone = ModelClientPhone()
+
+            # verifica se já existe
+            phone = ModelPhone.query.with_entities(ModelPhone.id).filter_by(
+                code_country='55',
+                code_area=code_area,
+                number=number,
+                status=StatusEnum.enabled
+            ).first()
+
+            if phone is None:
+                phone = model_phone.create_phone({
+                    'code_country': '55',
+                    'code_area':    code_area,
+                    'number':       number,
+                })
+
+                if phone is None:
+                    LOGGER.warning('Erro ao criar telefone: %s', model_phone.errors)
+                    # não bloqueia o cadastro — só ignora o telefone
+                else:
+                    model_client_phone.create_client_phone({
+                        'client_id': client.id,
+                        'phone_id':  phone.id,
+                    })
+
+    # ── 5. Endereço (opcional) ─────────────────────────────────────────────
+    #
+    # O novo formulário envia campos simples (address, city, state).
+    # O checkout envia campos detalhados (street, street_number, district,
+    # zip_code, complement). Suportamos os dois formatos.
+    #
+    skip_optional = data.get('skip_optional')
+    city  = data.get('city', '').strip()
+    state = data.get('state', '').strip()
+
+    # Monta o endereço apenas se tiver pelo menos cidade e estado
+    if not skip_optional and city and state:
+        from app.model.countries import ModelCountry
+        model_address        = ModelAddress()
+        model_client_address = ModelClientAddress()
+
+        # Resolve campos que podem vir em dois formatos
+        street      = data.get('street') or data.get('address') or ''
+        street_num  = data.get('street_number', '')
+        complement  = data.get('complement', '')
+        district    = data.get('district', '')
+        zip_code    = ''.join(filter(str.isdigit, data.get('zip_code', '')))
+
+        country_id = ModelCountry().get_country_id('BRA')
+
+        address = model_address.create_address({
+            'state':         state,
+            'city':          city,
+            'district':      district,
+            'zip_code':      zip_code,
+            'street':        street,
+            'street_number': street_num,
+            'complement':    complement,
+            'country_id':    country_id,
+        })
+
+        if address is None:
+            LOGGER.warning('Erro ao criar endereço: %s', model_address.errors)
+            # não bloqueia o cadastro
+        else:
+            model_client_address.create_client_address({
+                'client_id':  client.id,
+                'address_id': address.id,
+            })
+
+    # ── 6. Cria o usuário (login/senha) ───────────────────────────────────
+    #
+    # O novo HTML envia 'email' + 'password'.
+    # O modelo ModelUser espera 'user_name' + 'pwd'.
+    # Usamos o e-mail como user_name para simplificar — sem exigir
+    # um campo separado de "nome de usuário".
+    #
     model_user = ModelUser()
 
-    try:
+    # Verifica se já existe usuário para este cliente
+    existing_user = ModelUser.query.with_entities(
+        ModelUser.client_id
+    ).filter_by(
+        status=StatusEnum.enabled
+    ).join(ModelClient).filter(
+        ModelClient.id == client.id
+    ).first()
 
-        #
-        # GET OR CREATE CLIENT
-        #
-        client = query_client.first()
+    if existing_user is None:
+        user = model_user.create_user({
+            'client_id': client.id,
+            'user_name': email,          # e-mail como username
+            'pwd':       data['password'],
+        })
 
-        # create client
-        if client is None:
-            data_client = {
-                'document': data['document'].replace("-","").replace(".","").replace("/",""),
-                'email': data['email'],
-                'name': data['name'],                
-                'type': data['typeperson']
-            }
-
-            client = model_client.create_client(data_client)
-
-            # error to create client
-            if client is None:
-                resp = make_response(render_template('client/signup.html',
-                            success=False,
-                            errors=model_client.errors,
-                            data_input=data))
-                resp.mimetype = 'text/html'
-                return resp 
-            
-        #
-        # GET OR CREATE A CLIENT PHONE
-        #
-        phone = query_phone.filter(
-            ModelPhone.code_country == '55', #data['phone'][0:2]'',
-            ModelPhone.code_area == data['phone'][1:3],            
-            ModelPhone.number == data['phone'][4:15].replace("-",""),
-            ModelClient.id == client.id
-        ).first()
-
-
-        # create client phone
-        if phone is None:
-            data_phone = {
-                'code_country': '55', #data['phone'][0:2]'',
-                'code_area': data['phone'][1:3],
-                'number': data['phone'][4:15].replace("-","")
-            }
-
-            phone = model_phone.create_phone(data_phone)
-            
-            # errors
-            if phone is None:
-                resp = make_response(render_template('client/signup.html',
-                            success=False,
-                            errors=model_phone.errors,
-                            data_input=data))
-                resp.mimetype = 'text/html'
-                return resp 
-            
-            # create client x phone
-            data_client_phone = {
-                'client_id': client.id,
-                'phone_id': phone.id
-            }
-
-            client_phone = model_client_phone.create_client_phone(data_client_phone)
-
-            # errors
-            if client_phone is None:
-                resp = make_response(render_template('client/signup.html',
-                            success=False,
-                            errors=model_client_phone.errors,
-                            data_input=data))
-                resp.mimetype = 'text/html'
-                return resp
-    
-        #
-        # GET OR CREATE CLIENT ADDRESS
-        #
-        address = query_address.filter(            
-            ModelClient.id == client.id
-        ).first()
-
-        # country fixo como Brasil
-        model_country = ModelCountry()
-        country_id = model_country.get_country_id('BRA')
-        data['country_id'] = country_id
-
-        # create client address
-        if address is None:
-            data_address = {
-                'state': data['state'],
-                'city': data['city'],
-                'district': data['district'],
-                'zip_code': data['zip_code'].replace("-",""),
-                'street': data['street'],
-                'street_number': data['street_number'],
-                'complement': data['complement'],
-                'country_id': data['country_id'] 
-            }
-
-            address = model_address.create_address(data_address)
-            
-            # errors
-            if address is None:
-                resp = make_response(render_template('client/signup.html',
-                            success=False,
-                            errors=model_address.errors,
-                            data_input=data))
-
-                resp.mimetype = 'text/html'
-                return resp 
-            
-            # create client x address
-            data_client_address = {
-                'client_id': client.id,
-                'address_id': address.id
-            }
-
-            client_address = model_client_address.create_client_address(data_client_address)
-
-            # errors
-            if client_address is None:
-                resp = make_response(render_template('client/signup.html',
-                            success=False,
-                            errors=model_client_phone.errors,
-                            data_input=data))
-                resp.mimetype = 'text/html'
-                return resp     
-
-
-        user = query_user.filter(
-            ModelClient.id == client.id
-        ).first()        
-
-
-        # # create client user
         if user is None:
-            data_client_user = {
-                'client_id': client.id,
-                'user_name': data['user_name'],
-                'pwd': data['pwd']         
-        }      
-       
-        
-        user = model_user.create_user(data_client_user)
-        
-        # errors
-        if user is None:
-            resp = make_response(render_template('client/signup.html',
-                        success=False,
-                        errors=model_address.errors,
-                            data_input=data))
+            LOGGER.error('Erro ao criar usuário: %s', model_user.errors)
+            return render_error({'login': ['Erro ao criar acesso. Tente novamente.']})
 
-            resp.mimetype = 'text/html'
-            return resp 
-        
-        # create client x user
-        data_client_user = {
-            'user_id': user.id,
-            'client_id': client.id            
-        }         
-        
-        # redireciona para next ou login
-        next_url = request.args.get('next') or request.form.get('next') or '/client/login'
-        return redirect(next_url)
+    # ── 7. Salva nome na sessão e redireciona ─────────────────────────────
+    session['name'] = name
 
-    except Exception as e:
-            LOGGER.exception(e)
-            resp = make_response(render_template('errors/500.html',                            
-                                    success=False,
-                                    errors=None))
-            resp.mimetype = 'text/html'
-            return resp, 500
-
-
-    
+    return redirect(next_url)

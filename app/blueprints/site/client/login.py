@@ -32,11 +32,13 @@ def login_post():
     data = request.form.to_dict() or {}
     errors = {}
 
-    user_name = data.get('user_name', '').strip()
-    pwd = data.get('pwd', '').strip()
+    # Suporta tanto 'email' (novo signup) quanto 'user_name' (formulário antigo)
+    user_name = (data.get('email') or data.get('user_name') or '').strip().lower()
+    # Suporta tanto 'password' (novo signup.html) quanto 'pwd' (formulário antigo)
+    pwd = (data.get('password') or data.get('pwd') or '').strip()
 
     if not user_name:
-        errors['user_name'] = ['Usuário obrigatório']
+        errors['user_name'] = ['E-mail obrigatório']
     if not pwd:
         errors['pwd'] = ['Senha obrigatória']
 
@@ -58,7 +60,7 @@ def login_post():
         if user is None:
             resp = make_response(render_template('client/login.html',
                 success=False,
-                errors={'login': ['Usuário ou senha inválidos']},
+                errors={'login': ['E-mail ou senha inválidos']},
                 data_input=data))
             resp.mimetype = 'text/html'
             return resp
@@ -77,11 +79,11 @@ def login_post():
             return resp
 
         # salva sessão do cliente
-        session['client_id'] = client.id
-        session['client_name'] = client.name
+        session['client_id']    = client.id
+        session['client_name']  = client.name
         session['client_email'] = client.email
-        session['user_id'] = user.id
-        session['role'] = 'client'
+        session['user_id']      = user.id
+        session['role']         = 'client'
 
         next_url = request.args.get('next') or request.form.get('next') or '/'
         return redirect(next_url)
@@ -170,4 +172,4 @@ def admin_login_post():
 @SiteBlueprint.route('/logout')
 def logout():
     session.clear()
-    return redirect('/client/login')
+    return redirect('/')

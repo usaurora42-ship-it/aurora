@@ -40,6 +40,40 @@
             .aurora-topbar-side { width: 160px; font-size: 12px; }
             .aurora-topbar-side:last-child { text-align: right; }
 
+            /* ── User dropdown ── */
+            .user-dropdown-wrap { position: relative; }
+            .user-dropdown-btn {
+                background: none; border: none; cursor: pointer;
+                color: #f0e6c8; font-size: 12px;
+                display: flex; flex-direction: column; align-items: center;
+                gap: 2px; transition: color 0.2s; padding: 0;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .user-dropdown-btn:hover { color: #f5d98a; }
+            .user-dropdown-btn i { font-size: 20px; }
+            .user-dropdown-menu {
+                display: none;
+                position: fixed;
+                background: #fff;
+                border: 1px solid #d4c8bc;
+                min-width: 200px;
+                z-index: 999999;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            }
+            .user-dropdown-menu.open { display: block; }
+            .user-dropdown-item {
+                display: flex; align-items: center; gap: 10px;
+                padding: 12px 16px; font-size: 13px; color: #333;
+                text-decoration: none; transition: background 0.15s;
+                font-family: 'Plus Jakarta Sans', sans-serif;
+            }
+            .user-dropdown-item:hover { background: #f9f7f5; color: #1a1a1a; }
+            .user-dropdown-item i { font-size: 15px; color: #888; }
+            .user-dropdown-divider { border-top: 1px solid #f0ebe3; margin: 4px 0; }
+            .user-dropdown-logout { color: #c0392b !important; }
+            .user-dropdown-logout i { color: #c0392b !important; }
+            .user-dropdown-logout:hover { background: #fff5f5 !important; }
+
             /* ── Navbar ── */
             .navbar {
                 background: #4a2e10 !important; border-bottom: 1px solid #3a2008 !important;
@@ -60,6 +94,15 @@
             .aurora-search input { border: none; background: none; outline: none; font-size: 13px; color: #f0e6c8; width: 100%; }
             .aurora-search input::placeholder { color: #b09070; }
             .aurora-search i { color: #b09070; font-size: 16px; }
+
+            /* ── Fix dropdown não ser cortado pela navbar ── */
+            .navbar, .navbar .container, .aurora-nav-icons, .user-dropdown-wrap {
+                overflow: visible !important;
+            }
+            .user-dropdown-menu {
+                z-index: 100000 !important;
+                margin-top: 8px !important;
+            }
 
             .aurora-nav-icons { display: flex; align-items: center; gap: 20px; }
             .aurora-nav-icons a { color: #f0e6c8; text-decoration: none; font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 2px; transition: color 0.2s; }
@@ -230,7 +273,7 @@
                             {% if session.get('client_id') %}
                                 <a href="/logout" title="Sair"><i class="bi-person-check"></i><span>{{ session.get('client_name', '').split()[0] }}</span></a>
                             {% else %}
-                                <a href="/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>
+                                <a href="/client/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>
                             {% endif %}
                             <a href="/cart" class="cart-btn-wrap" title="Sacola">
                                 <i class="bi-bag"></i><span>Sacola</span>
@@ -469,6 +512,30 @@
                 const s = String(seconds % 60).padStart(2, '0');
                 timerEl.textContent = `${m}:${s}`;
             }, 1000);
+        </script>
+        <script>
+            function toggleUserMenu() {
+                const menu = document.getElementById('userDropdownMenu');
+                const btn  = document.querySelector('.user-dropdown-btn');
+                if (!menu || !btn) return;
+                if (menu.classList.contains('open')) {
+                    menu.classList.remove('open');
+                    return;
+                }
+                const rect = btn.getBoundingClientRect();
+                menu.style.top   = (rect.bottom + 8) + 'px';
+                menu.style.right = (window.innerWidth - rect.right) + 'px';
+                menu.classList.add('open');
+            }
+            document.addEventListener('click', function(e) {
+                const wrap = document.querySelector('.user-dropdown-wrap');
+                if (wrap && !wrap.contains(e.target)) {
+                    document.getElementById('userDropdownMenu')?.classList.remove('open');
+                }
+            });
+            window.addEventListener('scroll', function() {
+                document.getElementById('userDropdownMenu')?.classList.remove('open');
+            });
         </script>
     </body>
 </html>

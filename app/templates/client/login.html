@@ -300,26 +300,26 @@
             <form action="/client/login" method="post">
                 <input type="hidden" name="next" value="{{ next_url }}">
 
-                <label class="form-label-custom" for="user_name">Usuário</label>
+                <label class="form-label-custom" for="email">E-mail</label>
                 <input
                     class="form-input-custom {% if errors and errors.user_name %}input-error{% endif %}"
-                    type="text"
-                    id="user_name"
-                    name="user_name"
-                    placeholder="seu usuário"
-                    value="{{ data_input.user_name if data_input else '' }}"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    value="{{ data_input.email if data_input else '' }}"
                     required
-                    autocomplete="username">
+                    autocomplete="email">
                 {% if errors and errors.user_name %}
                     <span class="field-error">{{ errors.user_name[0] }}</span>
                 {% endif %}
 
-                <label class="form-label-custom" for="pwd">Senha</label>
+                <label class="form-label-custom" for="password">Senha</label>
                 <input
                     class="form-input-custom {% if errors and errors.pwd %}input-error{% endif %}"
                     type="password"
-                    id="pwd"
-                    name="pwd"
+                    id="password"
+                    name="password"
                     placeholder="••••••••"
                     required
                     autocomplete="current-password">
