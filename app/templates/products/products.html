@@ -277,14 +277,14 @@
 
             <!-- ── Catbar ── -->
             <div class="aurora-catbar">
-                <a href="/products/category_products">Todos</a>
-                <a href="/products/category_products?cat=colares">Colares</a>
-                <a href="/products/category_products?cat=brincos">Brincos</a>
-                <a href="/products/category_products?cat=aneis">Anéis</a>
-                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
-                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
-                <a href="/products/category_products?cat=bolsas">Bolsas</a>
-                <a href="/products/category_products?cat=presentes">Presentes</a>
+                <a href="/products/todos">Todos</a>
+                <a href="/products/colares">Colares</a>
+                <a href="/products/brincos">Brincos</a>
+                <a href="/products/aneis">Anéis</a>
+                <a href="/products/pulseiras">Pulseiras</a>
+                <a href="/products/conjuntos">Conjuntos</a>
+                <a href="/products/bolsas">Bolsas</a>
+                <a href="/products/presentes">Presentes</a>
             </div>
 
             <!-- ── Conteúdo ── -->
@@ -295,7 +295,7 @@
                     <nav class="au-breadcrumb">
                         <a href="{{ url_for('site_bp.index') }}">Início</a>
                         <span>/</span>
-                        <a href="/products/category_products">Produtos</a>
+                        <a href="/products">Produtos</a>
                         <span>/</span>
                         <strong>Cadastro</strong>
                     </nav>
@@ -335,24 +335,39 @@
                                     <!-- Informações básicas -->
                                     <div class="form-section">
                                         <div class="form-section-title"><i class="bi-info-circle"></i> Informações básicas</div>
-                                        <div class="form-row">
-                                            <div class="form-group">
-                                                <label class="form-label">Nome *</label>
-                                                <input type="text" name="name" id="name" class="form-input"
-                                                    placeholder="Nome do produto"
-                                                    value="{{ data_input.name if data_input else '' }}" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">Descrição *</label>
-                                                <input type="text" name="description" id="description" class="form-input"
-                                                    placeholder="Breve descrição"
-                                                    value="{{ data_input.description if data_input else '' }}" required>
-                                            </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nome do produto *</label>
+                                            <input type="text" name="name" id="name" class="form-input"
+                                                placeholder="Ex: Pulseira Zircônia Rosa"
+                                                value="{{ data_input.name if data_input else '' }}" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Descrição curta *</label>
+                                            <input type="text" name="description" id="description" class="form-input"
+                                                placeholder="Ex: Pulseira folheada a ouro 18k com zircônia rosa, 19cm"
+                                                value="{{ data_input.description if data_input else '' }}" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Detalhes completos</label>
+                                            <textarea name="details" id="details" class="form-input"
+                                                style="min-height:100px;resize:vertical;"
+                                                placeholder="Descrição completa para a página do produto...">{{ data_input.details if data_input else '' }}</textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Material</label>
+                                            <input type="text" name="material" id="material" class="form-input"
+                                                placeholder="Ex: Folheado a ouro 18k, base em latão antialérgico"
+                                                value="{{ data_input.material if data_input else '' }}">
+                                        </div>
+                                    </div>
+
+                                    <!-- Categoria e unidade -->
+                                    <div class="form-section">
+                                        <div class="form-section-title"><i class="bi-tag"></i> Categoria e classificação</div>
                                         <div class="form-row">
                                             <div class="form-group">
                                                 <label class="form-label">Categoria *</label>
-                                                <select class="form-input" name="category" id="category">
+                                                <select class="form-input" name="category" id="category" required>
                                                     <option value="">Selecione...</option>
                                                     {% for categorie in categories %}
                                                         <option value="{{ categorie.id }}">{{ categorie.description }}</option>
@@ -361,7 +376,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="form-label">Unidade *</label>
-                                                <select class="form-input" name="unit" id="unit">
+                                                <select class="form-input" name="unit" id="unit" required>
                                                     <option value="">Selecione...</option>
                                                     {% for unit in units %}
                                                         <option value="{{ unit.id }}">{{ unit.description }}</option>
@@ -371,21 +386,36 @@
                                         </div>
                                     </div>
 
-                                    <!-- Preço e tamanho -->
+                                    <!-- Preço e estoque -->
                                     <div class="form-section">
-                                        <div class="form-section-title"><i class="bi-tag"></i> Preço e tamanho</div>
+                                        <div class="form-section-title"><i class="bi-currency-dollar"></i> Preço e estoque</div>
                                         <div class="form-row">
                                             <div class="form-group">
-                                                <label class="form-label">Valor (R$) *</label>
+                                                <label class="form-label">Preço de venda (R$) *</label>
                                                 <input type="text" name="value" id="value" class="form-input"
                                                     placeholder="0,00"
                                                     value="{{ data_input.value if data_input else '' }}" required>
                                             </div>
                                             <div class="form-group">
-                                                <label class="form-label">Tamanho</label>
+                                                <label class="form-label">Preço "de" riscado (R$)</label>
+                                                <input type="text" name="value_old" id="value_old" class="form-input"
+                                                    placeholder="0,00 (opcional)"
+                                                    value="{{ data_input.value_old if data_input else '' }}">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label class="form-label">Estoque</label>
+                                                <input type="number" name="stock" id="stock" class="form-input"
+                                                    placeholder="0" min="0"
+                                                    value="{{ data_input.stock if data_input else '0' }}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Tamanho(s)</label>
                                                 <input type="text" name="size" id="size" class="form-input"
-                                                    placeholder="Ex: P/M/G"
+                                                    placeholder="Ex: P, M, G ou 15, 16, 17"
                                                     value="{{ data_input.size if data_input else '' }}">
+                                                <small style="font-size:11px;color:#aaa;">Separe múltiplos tamanhos com vírgula</small>
                                             </div>
                                         </div>
                                     </div>
@@ -436,13 +466,13 @@
                         <div class="col-lg-3 col-6 mb-4 mb-lg-0">
                             <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
                             <ul class="list-unstyled" style="font-size:13px;">
-                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                                <li class="mb-2"><a href="/products/colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products/products/presentes">Kits presente</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-6">

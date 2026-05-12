@@ -64,11 +64,13 @@
             .user-dropdown-btn:hover { color: #f5d98a; }
             .user-dropdown-btn i { font-size: 20px; }
             .user-dropdown-menu {
-                display: none; position: absolute;
-                top: calc(100% + 12px); right: 0;
-                background: #fff; border: 1px solid #d4c8bc;
-                min-width: 180px; z-index: 9999;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+                display: none;
+                position: fixed;
+                background: #fff;
+                border: 1px solid #d4c8bc;
+                min-width: 200px;
+                z-index: 999999;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.18);
             }
             .user-dropdown-menu.open { display: block; }
             .user-dropdown-item {
@@ -141,6 +143,15 @@
             .aurora-search i { color: #b09070; font-size: 16px; }
 
             /* Ícones direita */
+            /* ── Fix dropdown não ser cortado pela navbar ── */
+            .navbar, .navbar .container, .aurora-nav-icons, .user-dropdown-wrap {
+                overflow: visible !important;
+            }
+            .user-dropdown-menu {
+                z-index: 100000 !important;
+                margin-top: 8px !important;
+            }
+
             .aurora-nav-icons {
                 display: flex;
                 align-items: center;
@@ -634,14 +645,14 @@
 
             <!-- ── Menu de categorias ── -->
             <div class="aurora-catbar">
-                <a href="/products/category_products">Todos</a>
-                <a href="/products/category_products?cat=colares">Colares</a>
-                <a href="/products/category_products?cat=brincos">Brincos</a>
-                <a href="/products/category_products?cat=aneis">Anéis</a>
-                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
-                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
-                <a href="/products/category_products?cat=bolsas">Bolsas</a>
-                <a href="/products/category_products?cat=presentes">Presentes</a>
+                <a href="/products/todos">Todos</a>
+                <a href="/products/colares">Colares</a>
+                <a href="/products/brincos">Brincos</a>
+                <a href="/products/aneis">Anéis</a>
+                <a href="/products/pulseiras">Pulseiras</a>
+                <a href="/products/conjuntos">Conjuntos</a>
+                <a href="/products/bolsas">Bolsas</a>
+                <a href="/products/presentes">Presentes</a>
             </div>
 
             <!-- ══════════════════════════════════════════
@@ -659,7 +670,7 @@
                                 Elegância pensada para o seu dia a dia.
                             </p>
                             <div class="d-flex flex-wrap gap-3">
-                                <a class="btn custom-btn" href="/products/category_products">
+                                <a class="btn custom-btn" href="/products">
                                     <strong>Ver coleção</strong>
                                 </a>
                                 <a class="btn custom-btn custom-border-btn" href="#section_sobre">
@@ -745,7 +756,7 @@
                     </div>
                     <div class="row g-3">
                         <div class="col-6 col-md-3">
-                            <a href="/products/category_products?cat=aneis" class="d-block text-decoration-none">
+                            <a href="/products//products/aneis" class="d-block text-decoration-none">
                                 <div class="cat-card">
                                     <img src="{{ url_for('static', filename='images/cat-aneis.jpg') }}" alt="Anéis"
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Anéis'">
@@ -757,7 +768,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <a href="/products/category_products?cat=colares" class="d-block text-decoration-none">
+                            <a href="/products//products/colares" class="d-block text-decoration-none">
                                 <div class="cat-card">
                                     <img src="{{ url_for('static', filename='images/cat-colares.jpg') }}" alt="Colares"
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Colares'">
@@ -769,7 +780,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <a href="/products/category_products?cat=brincos" class="d-block text-decoration-none">
+                            <a href="/products//products/brincos" class="d-block text-decoration-none">
                                 <div class="cat-card">
                                     <img src="{{ url_for('static', filename='images/cat-brincos.jpg') }}" alt="Brincos"
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Brincos'">
@@ -781,7 +792,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <a href="/products/category_products?cat=pulseiras" class="d-block text-decoration-none">
+                            <a href="/products//products/pulseiras" class="d-block text-decoration-none">
                                 <div class="cat-card">
                                     <img src="{{ url_for('static', filename='images/cat-pulseiras.jpg') }}" alt="Pulseiras"
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Pulseiras'">
@@ -793,7 +804,7 @@
                             </a>
                         </div>
                         <div class="col-6 col-md-3">
-                            <a href="/products/category_products?cat=bolsas" class="d-block text-decoration-none">
+                            <a href="/products//products/bolsas" class="d-block text-decoration-none">
                                 <div class="cat-card">
                                     <img src="{{ url_for('static', filename='images/cat-bolsas.jpg') }}" alt="Bolsas"
                                         onerror="this.src='https://placehold.co/400x530/f0ebe3/888?text=Bolsas'">
@@ -818,7 +829,7 @@
                             <span class="au-label">Recém chegados</span>
                             <h2 style="font-family:'Cormorant Garamond',serif;font-weight:400;font-size:2.2rem;margin:0;">Novidades</h2>
                         </div>
-                        <a href="/products/category_products" class="btn custom-btn custom-border-btn mt-3 mt-md-0">Ver todos</a>
+                        <a href="/products" class="btn custom-btn custom-border-btn mt-3 mt-md-0">Ver todos</a>
                     </div>
 
                     <div class="row g-4">
@@ -886,7 +897,7 @@
                             <span class="au-label" style="color:var(--au-gold);">Edição especial</span>
                             <h2 class="mt-2 mb-3">Kit presente<br><em>Aurora</em></h2>
                             <p class="mb-4">Monte o kit perfeito com duas ou mais peças e ganhe embalagem especial com laço, cartão personalizado e sacola exclusiva. Ideal para aniversários, Dia das Mães e datas especiais.</p>
-                            <a href="/products/category_products?cat=presentes" class="btn custom-btn">
+                            <a href="/products//products/presentes" class="btn custom-btn">
                                 <strong>Montar kit</strong>
                             </a>
                         </div>
@@ -1032,13 +1043,13 @@
                         <div class="col-lg-3 col-6 mb-4 mb-lg-0">
                             <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
                             <ul class="list-unstyled" style="font-size:13px;">
-                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                                <li class="mb-2"><a href="/products/colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products/products/presentes">Kits presente</a></li>
                             </ul>
                         </div>
 
@@ -1136,13 +1147,26 @@
 
         <script>
             function toggleUserMenu() {
-                document.getElementById('userDropdownMenu').classList.toggle('open');
+                const menu = document.getElementById('userDropdownMenu');
+                const btn  = document.querySelector('.user-dropdown-btn');
+                if (!menu || !btn) return;
+                if (menu.classList.contains('open')) {
+                    menu.classList.remove('open');
+                    return;
+                }
+                const rect = btn.getBoundingClientRect();
+                menu.style.top   = (rect.bottom + 8) + 'px';
+                menu.style.right = (window.innerWidth - rect.right) + 'px';
+                menu.classList.add('open');
             }
             document.addEventListener('click', function(e) {
                 const wrap = document.querySelector('.user-dropdown-wrap');
                 if (wrap && !wrap.contains(e.target)) {
                     document.getElementById('userDropdownMenu')?.classList.remove('open');
                 }
+            });
+            window.addEventListener('scroll', function() {
+                document.getElementById('userDropdownMenu')?.classList.remove('open');
             });
         </script>
     </body>

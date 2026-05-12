@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ product.name }} — Aurora Semijóias</title>
+    <meta name="description" content="{{ product.description }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/tooplate-barista.css') }}" rel="stylesheet">
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #fff !important; color: #333; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body::before { display: none !important; }
+        main { padding-top: 190px; }
+
+        :root {
+            --au-gold:   #c9a84c;
+            --au-brown:  #4a2e10;
+            --au-salmon: #e8886a;
+            --au-cream:  #f9f7f5;
+            --au-warm:   #f0ebe3;
+            --au-stone:  #d4c8bc;
+            --au-muted:  #888;
+            --au-dark:   #1a1a1a;
+        }
+
+        /* ── Topbar ── */
+        .aurora-topbar { background:#e8886a;color:#fff;font-size:13px;font-weight:500;padding:9px 24px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:1001;height:38px; }
+        .aurora-topbar-center { flex:1;text-align:center; }
+        .aurora-topbar-side { width:160px;font-size:12px; }
+        .aurora-topbar-side:last-child { text-align:right; }
+
+        /* ── Navbar ── */
+        .navbar { background:#4a2e10 !important;border-bottom:1px solid #3a2008 !important;padding:0 !important;position:fixed !important;top:38px !important;left:0 !important;right:0 !important;width:100% !important;z-index:999 !important;box-shadow:none !important;transform:none !important; }
+        .navbar .container { display:flex;align-items:center;justify-content:space-between;padding:8px 32px;gap:16px; }
+        .navbar-brand-wrap { display:flex;align-items:center;text-decoration:none; }
+        .navbar-brand,.navbar-brand:hover { background:none !important;padding:0 !important;margin:0 !important; }
+        .aurora-search { display:flex;align-items:center;border:1px solid #6a4a28;border-radius:4px;padding:7px 14px;gap:8px;background:#5a3a18;min-width:200px; }
+        .aurora-search input { border:none;background:none;outline:none;font-size:13px;color:#f0e6c8;width:100%; }
+        .aurora-search input::placeholder { color:#b09070; }
+        .aurora-search i { color:#b09070;font-size:16px; }
+        .aurora-nav-icons,.navbar,.navbar .container,.user-dropdown-wrap { overflow:visible !important; }
+        .aurora-nav-icons { display:flex;align-items:center;gap:20px; }
+        .aurora-nav-icons a { color:#f0e6c8;text-decoration:none;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s; }
+        .aurora-nav-icons a:hover { color:#f5d98a; }
+        .aurora-nav-icons i { font-size:20px; }
+        .cart-btn-wrap { position:relative;display:inline-flex;flex-direction:column;align-items:center; }
+        .cart-badge { position:absolute;top:-6px;right:-8px;background:#e8886a;color:#fff;font-size:10px;font-weight:700;border-radius:50%;width:17px;height:17px;display:flex;align-items:center;justify-content:center; }
+
+        /* ── User dropdown ── */
+        .user-dropdown-wrap { position:relative; }
+        .user-dropdown-btn { background:none;border:none;cursor:pointer;color:#f0e6c8;font-size:12px;display:flex;flex-direction:column;align-items:center;gap:2px;transition:color .2s;padding:0;font-family:'Plus Jakarta Sans',sans-serif; }
+        .user-dropdown-btn:hover { color:#f5d98a; }
+        .user-dropdown-btn i { font-size:20px; }
+        .user-dropdown-menu { display:none;position:fixed;background:#fff;border:1px solid #d4c8bc;min-width:200px;z-index:999999;box-shadow:0 8px 24px rgba(0,0,0,.18); }
+        .user-dropdown-menu.open { display:block; }
+        .user-dropdown-item { display:flex;align-items:center;gap:10px;padding:12px 16px;font-size:13px;color:#333;text-decoration:none;transition:background .15s;font-family:'Plus Jakarta Sans',sans-serif; }
+        .user-dropdown-item:hover { background:#f9f7f5;color:#1a1a1a; }
+        .user-dropdown-item i { font-size:15px;color:#888; }
+        .user-dropdown-divider { border-top:1px solid #f0ebe3;margin:4px 0; }
+        .user-dropdown-logout { color:#c0392b !important; }
+        .user-dropdown-logout i { color:#c0392b !important; }
+        .user-dropdown-logout:hover { background:#fff5f5 !important; }
+
+        /* ── Breadcrumb ── */
+        .au-breadcrumb { padding:18px 0 0;margin-bottom:24px; }
+        .au-breadcrumb a { font-size:12px;color:var(--au-muted);text-decoration:none;letter-spacing:.06em; }
+        .au-breadcrumb a:hover { color:var(--au-dark); }
+        .au-breadcrumb span { font-size:12px;color:var(--au-stone);margin:0 6px; }
+        .au-breadcrumb strong { font-size:12px;color:var(--au-dark); }
+
+        /* ── Layout produto ── */
+        .product-layout { display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:64px; }
+        @media(max-width:900px) { .product-layout { grid-template-columns:1fr;gap:32px; } }
+
+        /* ── Galeria ── */
+        .gallery-main {
+            background:var(--au-warm);
+            aspect-ratio:1/1;
+            overflow:hidden;
+            position:relative;
+            cursor:zoom-in;
+        }
+        .gallery-main img {
+            width:100%;height:100%;object-fit:cover;
+            transition:transform .4s ease;
+            display:block;
+        }
+        .gallery-main:hover img { transform:scale(1.05); }
+        .gallery-placeholder {
+            width:100%;aspect-ratio:1/1;
+            background:var(--au-warm);
+            display:flex;align-items:center;justify-content:center;
+            color:var(--au-stone);font-size:4rem;
+        }
+        .gallery-thumbs { display:flex;gap:10px;margin-top:12px;flex-wrap:wrap; }
+        .thumb {
+            width:72px;height:72px;
+            border:1.5px solid transparent;
+            overflow:hidden;cursor:pointer;
+            transition:border-color .2s;flex-shrink:0;
+        }
+        .thumb:hover,.thumb.active { border-color:var(--au-gold); }
+        .thumb img { width:100%;height:100%;object-fit:cover;display:block; }
+
+        /* ── Info produto ── */
+        .prod-category { font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--au-gold);margin-bottom:8px;display:block; }
+        .prod-name { font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:400;color:var(--au-dark);line-height:1.1;margin-bottom:6px; }
+        .prod-desc { font-size:14px;color:var(--au-muted);line-height:1.7;margin-bottom:20px; }
+
+        /* Preço */
+        .price-row { display:flex;align-items:baseline;gap:12px;margin-bottom:20px; }
+        .price-current { font-size:2rem;font-weight:700;color:var(--au-dark);font-family:'Plus Jakarta Sans',sans-serif; }
+        .price-old { font-size:1.1rem;color:var(--au-stone);text-decoration:line-through; }
+        .price-badge { font-size:11px;background:var(--au-salmon);color:#fff;padding:3px 10px;font-weight:700;letter-spacing:.06em; }
+
+        /* Estoque */
+        .stock-info { font-size:12px;color:var(--au-muted);margin-bottom:20px;display:flex;align-items:center;gap:6px; }
+        .stock-dot { width:8px;height:8px;border-radius:50%;background:#7ac97a;flex-shrink:0; }
+        .stock-dot.low { background:#f1c40f; }
+        .stock-dot.out { background:#e74c3c; }
+
+        /* Tamanho */
+        .option-label { font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--au-muted);margin-bottom:10px;display:block; }
+        .size-options { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px; }
+        .size-opt { padding:8px 16px;border:1px solid var(--au-stone);font-size:12px;font-weight:600;color:var(--au-dark);cursor:pointer;transition:all .15s;background:#fff; }
+        .size-opt:hover,.size-opt.active { background:var(--au-dark);color:#fff;border-color:var(--au-dark); }
+
+        /* CTAs */
+        .cta-row { display:flex;gap:10px;margin-bottom:20px; }
+        .btn-cart {
+            flex:1;background:var(--au-dark);color:#fff;border:none;
+            padding:15px;font-size:11px;font-weight:700;letter-spacing:.14em;
+            text-transform:uppercase;cursor:pointer;transition:background .2s;
+            display:flex;align-items:center;justify-content:center;gap:8px;
+            font-family:'Plus Jakarta Sans',sans-serif;
+        }
+        .btn-cart:hover { background:var(--au-gold); }
+        .btn-wish {
+            width:52px;height:52px;border:1px solid var(--au-stone);background:#fff;
+            display:flex;align-items:center;justify-content:center;
+            color:var(--au-muted);cursor:pointer;transition:all .2s;flex-shrink:0;
+        }
+        .btn-wish:hover { background:var(--au-dark);color:#fff;border-color:var(--au-dark); }
+        .btn-wish i { font-size:18px; }
+
+        .btn-whatsapp {
+            width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+            background:#25D366;color:#fff;border:none;padding:14px;
+            font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+            cursor:pointer;transition:background .2s;text-decoration:none;
+            font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:20px;
+        }
+        .btn-whatsapp:hover { background:#1da851;color:#fff; }
+        .btn-whatsapp i { font-size:18px; }
+
+        /* Diferenciais */
+        .features-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px; }
+        .feat { display:flex;align-items:flex-start;gap:8px; }
+        .feat i { font-size:15px;color:var(--au-gold);flex-shrink:0;margin-top:2px; }
+        .feat span { font-size:12px;color:var(--au-muted);line-height:1.4; }
+
+        /* Abas */
+        .tabs-nav { display:flex;border-bottom:1px solid var(--au-stone);margin-bottom:24px;gap:0; }
+        .tab-btn {
+            font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--au-muted);padding:12px 20px;background:none;border:none;
+            border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;
+            margin-bottom:-1px;font-family:'Plus Jakarta Sans',sans-serif;
+        }
+        .tab-btn.active { color:var(--au-dark);border-bottom-color:var(--au-gold); }
+        .tab-pane { display:none;font-size:14px;color:var(--au-muted);line-height:1.8; }
+        .tab-pane.active { display:block; }
+        .tab-pane ul { padding-left:16px;margin-top:8px; }
+        .tab-pane ul li { margin-bottom:6px; }
+
+        /* ── Relacionados ── */
+        .section-title { font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:400;color:var(--au-dark) !important;margin-bottom:4px; }
+        .section-label { font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--au-gold);display:block;margin-bottom:4px; }
+
+        .related-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:16px; }
+        @media(max-width:900px) { .related-grid { grid-template-columns:repeat(2,1fr); } }
+
+        .related-card { background:#fff;border:1px solid var(--au-stone);transition:border-color .2s,transform .2s;text-decoration:none;display:block; }
+        .related-card:hover { border-color:var(--au-gold);transform:translateY(-2px); }
+        .related-card-img { aspect-ratio:1/1;overflow:hidden;background:var(--au-warm);display:flex;align-items:center;justify-content:center; }
+        .related-card-img img { width:100%;height:100%;object-fit:cover;transition:transform .4s; }
+        .related-card:hover .related-card-img img { transform:scale(1.04); }
+        .related-card-ph { font-size:2rem;color:var(--au-stone); }
+        .related-card-body { padding:12px 14px 16px; }
+        .related-card-name { font-size:13px;font-weight:600;color:var(--au-dark) !important;margin-bottom:4px;line-height:1.3; }
+        .related-card-price { font-size:14px;font-weight:700;color:var(--au-dark) !important; }
+
+        /* ── Footer ── */
+        .site-footer { background:#2a1505 !important;color:#c9a88a !important;padding:60px 0 0; }
+        .site-footer a { color:#999 !important; }
+        .site-footer a:hover { color:var(--au-gold) !important; }
+        .site-footer .text-white { color:#fff !important; }
+
+        @media(max-width:991px) { .aurora-topbar-side { display:none; } .aurora-search { min-width:130px; } }
+        @media(max-width:576px) { main { padding-top:175px; } .prod-name { font-size:1.8rem; } .features-grid { grid-template-columns:1fr; } }
+        *:focus-visible { outline:2px solid var(--au-gold);outline-offset:2px; }
+    </style>
+
+    <!-- Força catbar -->
+    <style>
+        .aurora-catbar {
+            display:flex !important;visibility:visible !important;opacity:1 !important;
+            position:fixed !important;top:142px !important;left:0 !important;right:0 !important;
+            width:100% !important;height:44px !important;z-index:99999 !important;
+            background:#3a2008 !important;pointer-events:all !important;
+            clip:auto !important;clip-path:none !important;transform:none !important;overflow:visible !important;
+            align-items:center !important;justify-content:center !important;gap:36px !important;
+            padding:0 24px !important;font-size:11px !important;font-weight:700 !important;
+            letter-spacing:.1em !important;text-transform:uppercase !important;
+            border-bottom:1px solid #2a1505 !important;
+        }
+        .aurora-catbar a { color:#aaa !important;text-decoration:none !important;padding:12px 2px !important;border-bottom:2px solid transparent !important;transition:color .2s,border-color .2s !important;white-space:nowrap !important; }
+        .aurora-catbar a:hover { color:#c9a84c !important;border-bottom-color:#c9a84c !important; }
+    </style>
+
+    <script>
+        function fixCatbar() {
+            const topbar=document.querySelector('.aurora-topbar');
+            const navbar=document.querySelector('.navbar');
+            const catbar=document.querySelector('.aurora-catbar');
+            const main=document.querySelector('main');
+            if(!navbar||!catbar)return;
+            const offset=(topbar?topbar.getBoundingClientRect().height:0)+navbar.getBoundingClientRect().height;
+            catbar.style.top=offset+'px';catbar.style.visibility='visible';
+            if(main)main.style.paddingTop=(offset+catbar.getBoundingClientRect().height)+'px';
+        }
+        window.addEventListener('load',fixCatbar);window.addEventListener('resize',fixCatbar);
+        document.addEventListener('DOMContentLoaded',function(){setTimeout(fixCatbar,100);setTimeout(fixCatbar,500);});
+    </script>
+</head>
+
+<body>
+<main>
+
+    <!-- Topbar -->
+    <div class="aurora-topbar">
+        <div class="aurora-topbar-side"><i class="bi-headset me-1"></i> Atendimento ao cliente</div>
+        <div class="aurora-topbar-center">✨ Frete grátis acima de R$ 200 &nbsp;|&nbsp; Parcele em até 12x sem juros</div>
+        <div class="aurora-topbar-side"><i class="bi-shield-check me-1"></i> Compra segura</div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand-wrap" href="{{ url_for('site_bp.index') }}">
+                <img src="{{ url_for('static', filename='images/aurora-04.png') }}" style="height:110px;width:auto;" alt="Aurora Semijóias">
+                <img src="{{ url_for('static', filename='images/aurora-06.png') }}" style="height:130px;width:auto;margin-left:8px;" alt="Aurora Semijóias">
+            </a>
+            <div class="d-flex align-items-center gap-4">
+                <div class="aurora-search d-none d-lg-flex">
+                    <i class="bi-search"></i>
+                    <input type="text" placeholder="Buscar produto...">
+                </div>
+                <div class="aurora-nav-icons">
+                    {% if session.get('client_id') %}
+                        <div class="user-dropdown-wrap">
+                            <button class="user-dropdown-btn" onclick="toggleUserMenu()" aria-label="Menu do usuário">
+                                <i class="bi-person-check"></i>
+                                <span>{{ session.get('client_name', '').split()[0] }}</span>
+                            </button>
+                            <div class="user-dropdown-menu" id="userDropdownMenu">
+                                <a href="/client/profile" class="user-dropdown-item"><i class="bi-person"></i> Minha conta</a>
+                                <a href="/cart" class="user-dropdown-item"><i class="bi-bag"></i> Meus pedidos</a>
+                                <div class="user-dropdown-divider"></div>
+                                <a href="/logout" class="user-dropdown-item user-dropdown-logout"><i class="bi-box-arrow-right"></i> Sair</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="/client/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>
+                    {% endif %}
+                    <a href="/cart" class="cart-btn-wrap" title="Sacola">
+                        <i class="bi-bag"></i><span>Sacola</span>
+                        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Catbar -->
+    <div class="aurora-catbar">
+        <a href="/products/todos">Todos</a>
+        <a href="/products/colares">Colares</a>
+        <a href="/products/brincos">Brincos</a>
+        <a href="/products/aneis">Anéis</a>
+        <a href="/products/pulseiras">Pulseiras</a>
+        <a href="/products/conjuntos">Conjuntos</a>
+        <a href="/products/bolsas">Bolsas</a>
+        <a href="/products/presentes">Presentes</a>
+    </div>
+
+    <!-- Conteúdo -->
+    <section class="py-5">
+        <div class="container">
+
+            <!-- Breadcrumb -->
+            <nav class="au-breadcrumb">
+                <a href="{{ url_for('site_bp.index') }}">Início</a>
+                <span>/</span>
+                {% if category %}
+                    <a href="/products/{{ category.description | lower | replace('é','e') | replace('ê','e') | replace('â','a') | replace('ã','a') | replace('á','a') | replace('ó','o') | replace('ô','o') | replace('ú','u') | replace('ç','c') }}">{{ category.description }}</a>
+                    <span>/</span>
+                {% else %}
+                    <a href="/products/todos">Produtos</a>
+                    <span>/</span>
+                {% endif %}
+                <strong>{{ product.name }}</strong>
+            </nav>
+
+            <!-- Layout principal -->
+            <div class="product-layout">
+
+                <!-- GALERIA -->
+                <div>
+                    <div class="gallery-main" id="galleryMain" onclick="openZoom()">
+                        {% if product.path %}
+                            <img src="{{ product.path }}" alt="{{ product.name }}" id="mainImage">
+                        {% else %}
+                            <div class="gallery-placeholder"><i class="bi-gem"></i></div>
+                        {% endif %}
+                    </div>
+                    {% if product.path %}
+                    <div class="gallery-thumbs">
+                        <div class="thumb active" onclick="switchImage('{{ product.path }}', this)">
+                            <img src="{{ product.path }}" alt="{{ product.name }}">
+                        </div>
+                        <!-- Espaço para thumbs adicionais (múltiplas imagens futuro) -->
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- INFO -->
+                <div>
+                    {% if category %}
+                        <span class="prod-category">{{ category.description }}</span>
+                    {% endif %}
+
+                    <h1 class="prod-name">{{ product.name }}</h1>
+                    <p class="prod-desc">{{ product.description }}</p>
+
+                    <!-- Preço -->
+                    <div class="price-row">
+                        <span class="price-current">R$ {{ "%.2f"|format(product.value|float) }}</span>
+                        {% if product.value_old %}
+                            <span class="price-old">R$ {{ "%.2f"|format(product.value_old|float) }}</span>
+                            {% set pct = ((product.value_old|float - product.value|float) / product.value_old|float * 100)|int %}
+                            <span class="price-badge">-{{ pct }}%</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Estoque -->
+                    {% if product.stock is defined %}
+                        {% if product.stock > 10 %}
+                            <div class="stock-info"><div class="stock-dot"></div> Em estoque</div>
+                        {% elif product.stock > 0 %}
+                            <div class="stock-info"><div class="stock-dot low"></div> Últimas {{ product.stock }} unidades</div>
+                        {% else %}
+                            <div class="stock-info"><div class="stock-dot out"></div> Fora de estoque</div>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Tamanho -->
+                    {% if product.size %}
+                    <span class="option-label">Tamanho</span>
+                    <div class="size-options">
+                        {% for s in product.size.split(',') %}
+                            <div class="size-opt {% if loop.first %}active{% endif %}" onclick="selectSize(this)">{{ s.strip() }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!-- CTAs -->
+                    <form action="/cart/add/{{ product.id }}" method="POST" id="addCartForm">
+                        <input type="hidden" name="quantity" value="1">
+                        <div class="cta-row">
+                            <button type="submit" class="btn-cart">
+                                <i class="bi-cart-plus"></i> Adicionar ao carrinho
+                            </button>
+                            <button type="button" class="btn-wish" aria-label="Favoritar">
+                                <i class="bi-heart"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- WhatsApp -->
+                    {% set wpp_msg = "Olá! Tenho interesse no produto: " ~ product.name ~ " — R$ " ~ "%.2f"|format(product.value|float) %}
+                    <a href="https://api.whatsapp.com/send?phone=5534984104546&text={{ wpp_msg | urlencode }}"
+                       target="_blank" class="btn-whatsapp">
+                        <i class="bi-whatsapp"></i> Comprar pelo WhatsApp
+                    </a>
+
+                    <!-- Diferenciais -->
+                    <div class="features-grid">
+                        <div class="feat"><i class="bi-shield-check"></i><span>Garantia de 12 meses</span></div>
+                        <div class="feat"><i class="bi-truck"></i><span>Frete grátis acima de R$ 200</span></div>
+                        <div class="feat"><i class="bi-arrow-repeat"></i><span>Troca em 30 dias</span></div>
+                        <div class="feat"><i class="bi-box-seam"></i><span>Embalagem presente inclusa</span></div>
+                    </div>
+
+                    <!-- Abas -->
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" onclick="switchTab('details', this)">Detalhes</button>
+                        <button class="tab-btn" onclick="switchTab('material', this)">Material</button>
+                        <button class="tab-btn" onclick="switchTab('care', this)">Cuidados</button>
+                    </div>
+
+                    <div class="tab-pane active" id="tab-details">
+                        {% if product.details %}
+                            {{ product.details }}
+                        {% else %}
+                            <p>{{ product.description }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane" id="tab-material">
+                        {% if product.material %}
+                            <p>{{ product.material }}</p>
+                        {% else %}
+                            <ul>
+                                <li>Folheado a ouro 18k de alta espessura</li>
+                                <li>Base em latão antialérgico</li>
+                                <li>Sem níquel, sem chumbo</li>
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <div class="tab-pane" id="tab-care">
+                        <ul>
+                            <li>Evite contato prolongado com água, suor e perfume</li>
+                            <li>Guarde em local seco, na bolsinha de veludo</li>
+                            <li>Limpe com pano macio e seco após o uso</li>
+                            <li>Não use ultrassom nem produtos abrasivos</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Produtos relacionados -->
+            {% if related %}
+            <div style="border-top:1px solid var(--au-stone);padding-top:48px;margin-bottom:48px;">
+                <span class="section-label">Você também pode gostar</span>
+                <h2 class="section-title">Relacionados</h2>
+                <div class="related-grid mt-4">
+                    {% for r in related %}
+                    <a href="/products/{{ r.slug }}" class="related-card">
+                        <div class="related-card-img">
+                            {% if r.path %}
+                                <img src="{{ r.path }}" alt="{{ r.name }}">
+                            {% else %}
+                                <div class="related-card-ph"><i class="bi-gem"></i></div>
+                            {% endif %}
+                        </div>
+                        <div class="related-card-body">
+                            <div class="related-card-name">{{ r.name }}</div>
+                            <div class="related-card-price">R$ {{ "%.2f"|format(r.value|float) }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row pt-2 pb-4">
+                <div class="col-lg-4 col-12 me-auto mb-4 mb-lg-0">
+                    <img src="{{ url_for('static', filename='images/aurora-04.png') }}" style="height:60px;width:auto;margin-bottom:16px;" alt="Aurora Semijóias" onerror="this.style.display='none'">
+                    <p style="font-size:13px;">Semijoias folheadas a ouro 18k. Feitas para durar, desenhadas para encantar.</p>
+                    <ul class="social-icon mt-4 d-flex gap-3 list-unstyled">
+                        <li><a href="https://www.instagram.com/aurorasemijoiasudi/" class="social-icon-link bi-instagram" style="font-size:20px;"></a></li>
+                        <li><a href="https://api.whatsapp.com/send?phone=5534984104546" class="social-icon-link bi-whatsapp" style="font-size:20px;"></a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-6 mb-4 mb-lg-0">
+                    <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;">Coleções</em>
+                    <ul class="list-unstyled" style="font-size:13px;">
+                        <li class="mb-2"><a href="/products/colares">Colares</a></li>
+                        <li class="mb-2"><a href="/products/brincos">Brincos</a></li>
+                        <li class="mb-2"><a href="/products/aneis">Anéis</a></li>
+                        <li class="mb-2"><a href="/products/pulseiras">Pulseiras</a></li>
+                        <li class="mb-2"><a href="/products/conjuntos">Conjuntos</a></li>
+                        <li class="mb-2"><a href="/products/bolsas">Bolsas</a></li>
+                        <li class="mb-2"><a href="/products/presentes">Kits presente</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;">Contato</em>
+                    <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">Telefone:</strong><a href="tel:(34)984104546">(34) 98410-4546</a></p>
+                    <p class="d-flex mb-2" style="font-size:13px;"><strong class="me-2">WhatsApp:</strong><a href="https://api.whatsapp.com/send?phone=5534984104546">Falar agora</a></p>
+                    <p class="d-flex" style="font-size:13px;"><strong class="me-2">Email:</strong><a href="mailto:aurorasemijoiasudi@gmail.com">aurorasemijoiasudi@gmail.com</a></p>
+                </div>
+            </div>
+            <div class="border-top pt-4 pb-4" style="border-color:rgba(255,255,255,.1)!important;">
+                <p class="copyright-text mb-0" style="font-size:12px;">© 2025 Aurora Semijóias. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+<script src="{{ url_for('static', filename='js/manipulation_cookies.js') }}"></script>
+
+<script>
+    // ── Galeria ──
+    function switchImage(src, thumb) {
+        document.getElementById('mainImage').src = src;
+        document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+    }
+
+    // ── Tamanho ──
+    function selectSize(el) {
+        document.querySelectorAll('.size-opt').forEach(s => s.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // ── Abas ──
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // ── Dropdown usuário ──
+    function toggleUserMenu() {
+        const menu = document.getElementById('userDropdownMenu');
+        const btn  = document.querySelector('.user-dropdown-btn');
+        if (!menu || !btn) return;
+        if (menu.classList.contains('open')) { menu.classList.remove('open'); return; }
+        const rect = btn.getBoundingClientRect();
+        menu.style.top   = (rect.bottom + 8) + 'px';
+        menu.style.right = (window.innerWidth - rect.right) + 'px';
+        menu.classList.add('open');
+    }
+    document.addEventListener('click', function(e) {
+        const wrap = document.querySelector('.user-dropdown-wrap');
+        if (wrap && !wrap.contains(e.target)) document.getElementById('userDropdownMenu')?.classList.remove('open');
+    });
+    window.addEventListener('scroll', function() {
+        document.getElementById('userDropdownMenu')?.classList.remove('open');
+    });
+
+    // ── Badge carrinho ──
+    fetch('/cart/count')
+        .then(r => r.json())
+        .then(data => {
+            const b = document.getElementById('cartBadge');
+            if (b && data.count > 0) { b.textContent = data.count; b.style.display = 'flex'; }
+        }).catch(() => {});
+</script>
+</body>
+</html>

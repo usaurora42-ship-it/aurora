@@ -310,14 +310,14 @@
 
             <!-- ── Catbar ── -->
             <div class="aurora-catbar">
-                <a href="/products/category_products">Todos</a>
-                <a href="/products/category_products?cat=colares">Colares</a>
-                <a href="/products/category_products?cat=brincos">Brincos</a>
-                <a href="/products/category_products?cat=aneis">Anéis</a>
-                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
-                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
-                <a href="/products/category_products?cat=bolsas">Bolsas</a>
-                <a href="/products/category_products?cat=presentes">Presentes</a>
+                <a href="/products/todos" {% if active_slug == 'todos' %}class="active-cat"{% endif %}>Todos</a>
+                <a href="/products/colares" {% if active_slug == 'colares' %}class="active-cat"{% endif %}>Colares</a>
+                <a href="/products/brincos" {% if active_slug == 'brincos' %}class="active-cat"{% endif %}>Brincos</a>
+                <a href="/products/aneis" {% if active_slug == 'aneis' %}class="active-cat"{% endif %}>Anéis</a>
+                <a href="/products/pulseiras" {% if active_slug == 'pulseiras' %}class="active-cat"{% endif %}>Pulseiras</a>
+                <a href="/products/conjuntos" {% if active_slug == 'conjuntos' %}class="active-cat"{% endif %}>Conjuntos</a>
+                <a href="/products/bolsas" {% if active_slug == 'bolsas' %}class="active-cat"{% endif %}>Bolsas</a>
+                <a href="/products/presentes" {% if active_slug == 'presentes' %}class="active-cat"{% endif %}>Presentes</a>
             </div>
 
             <!-- ── Conteúdo ── -->
@@ -328,12 +328,16 @@
                     <nav class="au-breadcrumb">
                         <a href="{{ url_for('site_bp.index') }}">Início</a>
                         <span>/</span>
-                        <strong>Produtos</strong>
+                        <a href="/products">Produtos</a>
+                        {% if category_label %}
+                        <span>/</span>
+                        <strong>{{ category_label }}</strong>
+                        {% endif %}
                     </nav>
 
                     <!-- Título -->
                     <div class="mb-4">
-                        <h1 class="section-title">Nossas peças</h1>
+                        <h1 class="section-title">{{ category_label if category_label else 'Todas as peças' }}</h1>
                         <p class="section-subtitle">Semijoias folheadas a ouro 18k</p>
                     </div>
 
@@ -343,7 +347,9 @@
                         <div class="product-card">
                             <div class="product-card-img-wrap">
                                 {% if post.path %}
-                                    <img src="{{ post.path }}" class="product-card-img" alt="{{ post.description }}">
+                                    <a href="/products/{{ post.slug if post.slug else post.id }}">
+                                        <img src="{{ post.path }}" class="product-card-img" alt="{{ post.description }}">
+                                    </a>
                                 {% else %}
                                     <div class="product-card-img-placeholder">
                                         <i class="bi-gem"></i>
@@ -354,7 +360,8 @@
                                 <p class="product-card-material">
                                     {% if post.category_description %}{{ post.category_description }}{% else %}Semijoia{% endif %}
                                 </p>
-                                <div class="product-card-name">{{ post.description }}</div>
+                                <a href="/products/{{ post.slug if post.slug else post.id }}"
+                                   class="product-card-name d-block text-decoration-none">{{ post.description }}</a>
                                 <div class="product-card-price">R$ {{ "%.2f"|format(post.value|float) }}</div>
                                 <button class="btn-add-cart" onclick="addToCart({{ post.id }}, '{{ post.description }}', this)">
                                     <i class="bi-cart-plus"></i> Adicionar
@@ -415,13 +422,13 @@
                         <div class="col-lg-3 col-6 mb-4 mb-lg-0">
                             <em class="text-white d-block mb-4" style="font-style:normal;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Coleções</em>
                             <ul class="list-unstyled" style="font-size:13px;">
-                                <li class="mb-2"><a href="/products/category_products?cat=colares">Colares</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=brincos">Brincos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=aneis">Anéis</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=pulseiras">Pulseiras</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=conjuntos">Conjuntos</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=bolsas">Bolsas</a></li>
-                                <li class="mb-2"><a href="/products/category_products?cat=presentes">Kits presente</a></li>
+                                <li class="mb-2"><a href="/products/colares">Colares</a></li>
+                                <li class="mb-2"><a href="/products/brincos">Brincos</a></li>
+                                <li class="mb-2"><a href="/products/aneis">Anéis</a></li>
+                                <li class="mb-2"><a href="/products/pulseiras">Pulseiras</a></li>
+                                <li class="mb-2"><a href="/products/conjuntos">Conjuntos</a></li>
+                                <li class="mb-2"><a href="/products/bolsas">Bolsas</a></li>
+                                <li class="mb-2"><a href="/products/category_products/products/presentes">Kits presente</a></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 col-6">
