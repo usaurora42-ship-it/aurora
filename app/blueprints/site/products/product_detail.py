@@ -10,15 +10,21 @@ from app import logging
 LOGGER = logging.getLogger(__name__)
 
 
-@SiteBlueprint.route('/products/<slug>')
-def product_detail(slug):
-    """Página de detalhe do produto — URL: /products/pulseira-zirconia-rosa"""
+@SiteBlueprint.route('/products/<slug_or_id>')
+def product_detail(slug_or_id):
+    """Página de detalhe do produto — aceita slug ou ID numérico."""
 
-    # Busca pelo slug
-    product = ModelProduct.query.filter_by(
-        slug=slug,
-        status=StatusEnum.enabled
-    ).first()
+    # Tenta buscar por ID numérico primeiro, depois por slug
+    if slug_or_id.isdigit():
+        product = ModelProduct.query.filter_by(
+            id=int(slug_or_id),
+            status=StatusEnum.enabled
+        ).first()
+    else:
+        product = ModelProduct.query.filter_by(
+            slug=slug_or_id,
+            status=StatusEnum.enabled
+        ).first()
 
     if product is None:
         abort(404)

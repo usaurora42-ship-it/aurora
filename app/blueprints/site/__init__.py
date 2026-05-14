@@ -12,4 +12,4 @@ from app.blueprints.site.cart import cart  # importa as rotas do carrinho
 from app.blueprints.site.cart import checkout
 from app.blueprints.site.cart import pix
 from app.blueprints.site.cart import frete
-
+from app.blueprints.site.products import product_detail
