@@ -383,10 +383,10 @@
                     {% endif %}
 
                     <!-- CTAs -->
-                    <form action="/cart/add/{{ product.id }}" method="POST" id="addCartForm">
+                    <form id="addCartForm">
                         <input type="hidden" name="quantity" value="1">
                         <div class="cta-row">
-                            <button type="submit" class="btn-cart">
+                            <button type="button" class="btn-cart" id="btnAddCart" onclick="addToCart({{ product.id }})">
                                 <i class="bi-cart-plus"></i> Adicionar ao carrinho
                             </button>
                             <button type="button" class="btn-wish" aria-label="Favoritar">
@@ -394,6 +394,7 @@
                             </button>
                         </div>
                     </form>
+                    <div id="cart-msg" style="display:none;margin-top:10px;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;"></div>
 
                     <!-- WhatsApp -->
                     {% set wpp_msg = "Olá! Tenho interesse no produto: " ~ product.name ~ " — R$ " ~ "%.2f"|format(product.value|float) %}
@@ -570,5 +571,54 @@
             if (b && data.count > 0) { b.textContent = data.count; b.style.display = 'flex'; }
         }).catch(() => {});
 </script>
+
+    <script>
+    function addToCart(productId) {
+        var btn = document.getElementById('btnAddCart');
+        var msg = document.getElementById('cart-msg');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi-hourglass-split"></i> Adicionando...';
+
+        fetch('/cart/add/' + productId, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'quantity=1'
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                btn.innerHTML = '<i class="bi-cart-check"></i> Adicionado!';
+                msg.style.display = 'block';
+                msg.style.background = '#f0fdf4';
+                msg.style.color = '#166534';
+                msg.style.border = '1px solid #bbf7d0';
+                msg.textContent = data.message || 'Produto adicionado ao carrinho!';
+                // Atualiza badge do carrinho
+                var badge = document.getElementById('cartBadge');
+                if (badge && data.cart_count) {
+                    badge.textContent = data.cart_count;
+                    badge.style.display = 'flex';
+                }
+                setTimeout(function() {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi-cart-plus"></i> Adicionar ao carrinho';
+                    msg.style.display = 'none';
+                }, 3000);
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi-cart-plus"></i> Adicionar ao carrinho';
+                msg.style.display = 'block';
+                msg.style.background = '#fef2f2';
+                msg.style.color = '#991b1b';
+                msg.style.border = '1px solid #fecaca';
+                msg.textContent = data.message || 'Erro ao adicionar. Tente novamente.';
+            }
+        })
+        .catch(function() {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi-cart-plus"></i> Adicionar ao carrinho';
+        });
+    }
+    </script>
 </body>
 </html>

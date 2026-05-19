@@ -204,7 +204,47 @@
             @media (max-width: 576px) { main { padding-top: 175px; } .cadastro-body { padding: 20px; } }
 
             *:focus-visible { outline: 2px solid var(--au-gold); outline-offset: 2px; }
-        </style>
+        
+            /* ── Checkboxes de material ── */
+            .material-checkboxes {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 6px;
+            }
+            .material-check-label {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                background: #f9f7f5;
+                border: 1px solid #e0d8ce;
+                border-radius: 6px;
+                padding: 7px 14px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #555;
+                cursor: pointer;
+                transition: background 0.15s, border-color 0.15s, color 0.15s;
+                user-select: none;
+            }
+            .material-check-label:hover {
+                background: #f0ebe3;
+                border-color: #c9a84c;
+                color: #333;
+            }
+            .material-check-label input[type="checkbox"] {
+                accent-color: #c9a84c;
+                width: 15px;
+                height: 15px;
+                cursor: pointer;
+            }
+            .material-check-label:has(input:checked) {
+                background: #fdf8ee;
+                border-color: #c9a84c;
+                color: #8a6a00;
+                font-weight: 600;
+            }
+            </style>
 
         <!-- Força catbar -->
         <style>
@@ -355,9 +395,18 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="form-label">Material</label>
-                                            <input type="text" name="material" id="material" class="form-input"
-                                                placeholder="Ex: Folheado a ouro 18k, base em latão antialérgico"
-                                                value="{{ data_input.material if data_input else '' }}">
+                                            <div class="material-checkboxes">
+                                                {% set materiais_selecionados = (data_input.material if data_input and data_input.material else '').split(',') | map('trim') | list %}
+                                                {% set opcoes = ['Ouro 18k', 'Prata', 'Aço Inoxidável', 'Folheado', 'Zirconia', 'Ródio Branco'] %}
+                                                {% for opcao in opcoes %}
+                                                <label class="material-check-label">
+                                                    <input type="checkbox" name="material_check" value="{{ opcao }}"
+                                                        {% if opcao in materiais_selecionados %}checked{% endif %}>
+                                                    {{ opcao }}
+                                                </label>
+                                                {% endfor %}
+                                            </div>
+                                            <input type="hidden" name="material" id="material" value="{{ data_input.material if data_input else '' }}">
                                         </div>
                                     </div>
 
@@ -558,5 +607,24 @@
                 document.getElementById('userDropdownMenu')?.classList.remove('open');
             });
         </script>
-    </body>
+    
+    <script>
+    // Atualiza o campo hidden #material com os checkboxes selecionados
+    document.querySelectorAll('input[name="material_check"]').forEach(function(cb) {
+        cb.addEventListener('change', function() {
+            var selecionados = Array.from(
+                document.querySelectorAll('input[name="material_check"]:checked')
+            ).map(function(el) { return el.value; });
+            document.getElementById('material').value = selecionados.join(', ');
+        });
+    });
+    // Inicializa o campo hidden no carregamento
+    (function() {
+        var selecionados = Array.from(
+            document.querySelectorAll('input[name="material_check"]:checked')
+        ).map(function(el) { return el.value; });
+        document.getElementById('material').value = selecionados.join(', ');
+    })();
+    </script>
+</body>
 </html>

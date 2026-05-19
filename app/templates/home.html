@@ -220,6 +220,58 @@
                 border-bottom-color: #c9a84c;
             }
 
+            /* ── Dropdown de subcategorias ── */
+            .catbar-item {
+                position: relative;
+                display: flex;
+                align-items: center;
+                height: 44px;
+            }
+            .catbar-item > a {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+            }
+            .catbar-item > a i {
+                font-size: 9px;
+                transition: transform 0.2s;
+            }
+            .catbar-item:hover > a i {
+                transform: rotate(180deg);
+            }
+            .catbar-dropdown {
+                display: none;
+                position: absolute;
+                top: 44px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #fff;
+                border: 1px solid #e8e0d6;
+                border-top: 2px solid #c9a84c;
+                min-width: 200px;
+                z-index: 999;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+                padding: 8px 0;
+            }
+            .catbar-item:hover .catbar-dropdown {
+                display: block;
+            }
+            .catbar-dropdown a {
+                display: block;
+                padding: 10px 20px;
+                color: #333 !important;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.08em;
+                border-bottom: none !important;
+                text-transform: uppercase;
+                transition: background 0.15s, color 0.15s;
+            }
+            .catbar-dropdown a:hover {
+                background: #f9f7f5;
+                color: #c9a84c !important;
+            }
+
             /* ── Variáveis de cor Aurora ── */
             :root {
                 --au-gold:      #c9a84c;
@@ -643,16 +695,26 @@
                 </div>
             </nav>
 
-            <!-- ── Menu de categorias ── -->
+            <!-- ── Menu de categorias (dinâmico) ── -->
             <div class="aurora-catbar">
-                <a href="/products/todos">Todos</a>
-                <a href="/products/colares">Colares</a>
-                <a href="/products/brincos">Brincos</a>
-                <a href="/products/aneis">Anéis</a>
-                <a href="/products/pulseiras">Pulseiras</a>
-                <a href="/products/conjuntos">Conjuntos</a>
-                <a href="/products/bolsas">Bolsas</a>
-                <a href="/products/presentes">Presentes</a>
+                <div class="catbar-item">
+                    <a href="/category/todos">Todos</a>
+                </div>
+                {% for item in menu %}
+                <div class="catbar-item">
+                    <a href="/category/{{ item.category.id }}">
+                        {{ item.category.description }}
+                        {% if item.subcategories %}<i class="bi-chevron-down"></i>{% endif %}
+                    </a>
+                    {% if item.subcategories %}
+                    <div class="catbar-dropdown">
+                        {% for sub in item.subcategories %}
+                        <a href="/category/{{ sub.id }}">{{ sub.description }}</a>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
 
             <!-- ══════════════════════════════════════════

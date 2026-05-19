@@ -17,7 +17,8 @@ class ModelCategory(db.Model):
         'mysql_engine': 'InnoDB',
         'mysql_charset': 'utf8mb4',
         'mysql_collate': 'utf8mb4_unicode_ci',
-        'sqlite_autoincrement': True
+        'sqlite_autoincrement': True,
+        'extend_existing': True   # ← adicione esta linha
     }
 
     id = db.Column(
@@ -27,21 +28,33 @@ class ModelCategory(db.Model):
         autoincrement=True,
         nullable=False
     )
+    parent_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('categories.id', onupdate='CASCADE', ondelete='SET NULL'),
+        nullable=True,   # NULL = categoria principal; preenchido = subcategoria
+    )
     description = db.Column(
-        db.String(40),
-        unique=True,
+        db.String(80),   # aumentado de 40 para suportar nomes mais descritivos
         nullable=False
-    )  
+    )
     status = db.Column(
         db.Enum(StatusEnum, validate_strings=True),
         server_default='enabled',
         default=StatusEnum.enabled,
         index=True
-    )  
+    )
+
+    # Subcategorias filhas desta categoria
+    subcategories = db.relationship(
+        'ModelCategory',
+        backref=db.backref('parent', remote_side='ModelCategory.id'),
+        lazy='dynamic',
+        primaryjoin='ModelCategory.parent_id == ModelCategory.id'
+    )
 
     errors = None
 
-    # Create Category
+    # Criar categoria (principal ou subcategoria)
     def create_category(self, data):
         v = ModelValidator()
         if not v.validate(data, self.__val_create__()):
@@ -50,7 +63,6 @@ class ModelCategory(db.Model):
 
         data = v.document
 
-        # pop data
         for k in data:
             setattr(self, k, data[k])
 
@@ -61,41 +73,32 @@ class ModelCategory(db.Model):
         except Exception as e:
             raise e
 
-    def get_category_id(self, value):
-        if not value:
-            return None
+    # Buscar categorias principais com subcategorias (para o menu dropdown)
+    @staticmethod
+    def get_menu():
+        parents = ModelCategory.query.filter_by(
+            parent_id=None,
+            status=StatusEnum.enabled
+        ).order_by(ModelCategory.description).all()
 
-        util = Util()
+        result = []
+        for cat in parents:
+            subs = ModelCategory.query.filter_by(
+                parent_id=cat.id,
+                status=StatusEnum.enabled
+            ).order_by(ModelCategory.description).all()
+            result.append({'category': cat, 'subcategories': subs})
 
-        unit_name = util.unit_lookup(value)
-        if unit_name is None:
-            return None
+        return result
 
-        query = ModelCategory.query.with_entities(ModelCategory.id).filter_by(
-            name=unit_name
-        )
-
-        try:
-            unit = query.first()
-            return unit.id if unit else None
-        except Exception as e:
-            raise e
-
-    # prepare response dict json
+    # Prepara dict para JSON
     def get_dict(obj, keys=None, exclude=[]):
         util = Util()
-
-        # default keys
         if keys is None:
-            keys = [
-                'id', 'description'
-            ]
-
-        # exclude
+            keys = ['id', 'description', 'parent_id']
         for e in exclude:
             if e in keys:
                 keys.remove(e)
-
         return util.get_dict(obj=obj, keys=keys)
 
     # Validators
@@ -103,10 +106,15 @@ class ModelCategory(db.Model):
         schema = '''
         description:
             type: string
-            maxlength: 40
-            required: true        
+            maxlength: 80
+            required: true
+        parent_id:
+            type: integer
+            coerce: integer
+            min: 1
+            nullable: true
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
     def __repr__(self):
-        return "<Category %r>" % self.name
+        return "<Category %r>" % self.description

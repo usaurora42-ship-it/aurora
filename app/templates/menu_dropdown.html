@@ -1,0 +1,23 @@
+{# Trecho do menu — cole dentro da sua navbar #}
+{# No blueprint/view que renderiza o layout base, passe: menu=ModelCategory.get_menu() #}
+
+<nav class="main-nav">
+    {% for item in menu %}
+    <div class="nav-item {% if item.subcategories %}has-dropdown{% endif %}">
+        <a href="/category/{{ item.category.id }}" class="nav-link">
+            {{ item.category.description }}
+            {% if item.subcategories %}<i class="bi-chevron-down"></i>{% endif %}
+        </a>
+
+        {% if item.subcategories %}
+        <div class="nav-dropdown">
+            {% for sub in item.subcategories %}
+            <a href="/category/{{ sub.id }}" class="nav-dropdown-item">
+                {{ sub.description }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</nav>

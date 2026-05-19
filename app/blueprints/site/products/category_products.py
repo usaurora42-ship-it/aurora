@@ -126,3 +126,58 @@ def category_product_legacy():
     if cat and cat in CATEGORY_SLUG_MAP:
         return redirect(f'/products/{cat}', code=301)
     return redirect('/products', code=301)
+
+
+# ── NOVA ROTA: categoria por ID (suporta subcategorias) ───────────────────
+
+@SiteBlueprint.route('/category/<int:category_id>')
+def category_products_get(category_id):
+    category = ModelCategory.query.filter_by(
+        id=category_id,
+        status=StatusEnum.enabled
+    ).first_or_404()
+
+    # Se for categoria principal, inclui produtos das subcategorias também
+    if category.parent_id is None:
+        sub_ids = [s.id for s in ModelCategory.query.filter_by(
+            parent_id=category.id,
+            status=StatusEnum.enabled
+        ).all()]
+        category_ids = [category.id] + sub_ids
+    else:
+        category_ids = [category.id]
+
+    query = ModelProduct.query.with_entities(
+        ModelProduct.id,
+        ModelProduct.description,
+        ModelProduct.path,
+        ModelProduct.value,
+        ModelProduct.value_old,
+        ModelProduct.slug,
+    ).join(
+        ModelProductCategory,
+        ModelProduct.id == ModelProductCategory.product_id
+    ).filter(
+        ModelProductCategory.category_id.in_(category_ids),
+        ModelProduct.status == StatusEnum.enabled
+    ).order_by(ModelProduct.description)
+
+    page = request.args.get('page', 1, type=int)
+    posts = query.paginate(page=page, per_page=16, error_out=False)
+
+    subcategories = []
+    if category.parent_id is None:
+        subcategories = ModelCategory.query.filter_by(
+            parent_id=category.id,
+            status=StatusEnum.enabled
+        ).order_by(ModelCategory.description).all()
+
+    return render_template(
+        '/products/category_products.html',
+        category=category,
+        items=posts.items,
+        pagination=posts,
+        subcategories=subcategories,
+        category_label=category.description,
+        active_slug=str(category_id),
+    )

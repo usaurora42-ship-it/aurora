@@ -123,6 +123,8 @@ def products_post():
         data_product = {
             'name':        data.get('name', '').strip(),
             'description': data.get('description', '').strip(),
+            'details':     data.get('details', '').strip() or None,
+            'material':    data.get('material', '').strip() or None,
             'value':       value,
             'size':        data.get('size', '').strip() or None,
             'unit_id':     int(data.get('unit', 0)),
