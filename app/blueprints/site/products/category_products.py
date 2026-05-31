@@ -87,7 +87,9 @@ def _render_catalog(category_slug=None):
 # ── ROTAS ──────────────────────────────────────────────────────────────────
 
 @SiteBlueprint.route('/products')
+@SiteBlueprint.route('/products')
 @SiteBlueprint.route('/products/todos')
+@SiteBlueprint.route('/category/todos')
 def category_product_all():
     return _render_catalog()
 

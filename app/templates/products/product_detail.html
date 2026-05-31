@@ -208,38 +208,6 @@
         @media(max-width:576px) { main { padding-top:175px; } .prod-name { font-size:1.8rem; } .features-grid { grid-template-columns:1fr; } }
         *:focus-visible { outline:2px solid var(--au-gold);outline-offset:2px; }
     </style>
-
-    <!-- Força catbar -->
-    <style>
-        .aurora-catbar {
-            display:flex !important;visibility:visible !important;opacity:1 !important;
-            position:fixed !important;top:142px !important;left:0 !important;right:0 !important;
-            width:100% !important;height:44px !important;z-index:99999 !important;
-            background:#3a2008 !important;pointer-events:all !important;
-            clip:auto !important;clip-path:none !important;transform:none !important;overflow:visible !important;
-            align-items:center !important;justify-content:center !important;gap:36px !important;
-            padding:0 24px !important;font-size:11px !important;font-weight:700 !important;
-            letter-spacing:.1em !important;text-transform:uppercase !important;
-            border-bottom:1px solid #2a1505 !important;
-        }
-        .aurora-catbar a { color:#aaa !important;text-decoration:none !important;padding:12px 2px !important;border-bottom:2px solid transparent !important;transition:color .2s,border-color .2s !important;white-space:nowrap !important; }
-        .aurora-catbar a:hover { color:#c9a84c !important;border-bottom-color:#c9a84c !important; }
-    </style>
-
-    <script>
-        function fixCatbar() {
-            const topbar=document.querySelector('.aurora-topbar');
-            const navbar=document.querySelector('.navbar');
-            const catbar=document.querySelector('.aurora-catbar');
-            const main=document.querySelector('main');
-            if(!navbar||!catbar)return;
-            const offset=(topbar?topbar.getBoundingClientRect().height:0)+navbar.getBoundingClientRect().height;
-            catbar.style.top=offset+'px';catbar.style.visibility='visible';
-            if(main)main.style.paddingTop=(offset+catbar.getBoundingClientRect().height)+'px';
-        }
-        window.addEventListener('load',fixCatbar);window.addEventListener('resize',fixCatbar);
-        document.addEventListener('DOMContentLoaded',function(){setTimeout(fixCatbar,100);setTimeout(fixCatbar,500);});
-    </script>
 </head>
 
 <body>
@@ -289,18 +257,7 @@
             </div>
         </div>
     </nav>
-
-    <!-- Catbar -->
-    <div class="aurora-catbar">
-        <a href="/products/todos">Todos</a>
-        <a href="/products/colares">Colares</a>
-        <a href="/products/brincos">Brincos</a>
-        <a href="/products/aneis">Anéis</a>
-        <a href="/products/pulseiras">Pulseiras</a>
-        <a href="/products/conjuntos">Conjuntos</a>
-        <a href="/products/bolsas">Bolsas</a>
-        <a href="/products/presentes">Presentes</a>
-    </div>
+    {% include 'partials/_catbar.html' %}
 
     <!-- Conteúdo -->
     <section class="py-5">

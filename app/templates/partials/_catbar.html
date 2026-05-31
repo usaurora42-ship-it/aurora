@@ -1,0 +1,142 @@
+{# ── Catbar de categorias com dropdown ── #}
+{# Inclua em qualquer template com: {% include 'partials/_catbar.html' %} #}
+
+<style>
+    .aurora-catbar {
+        background: #3a2008;
+        border-bottom: 1px solid #2a1505;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 36px;
+        padding: 0 24px;
+        height: 44px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        position: fixed !important;
+        top: 0px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        z-index: 998 !important;
+        visibility: visible !important;
+    }
+    .aurora-catbar a {
+        color: #aaa;
+        text-decoration: none;
+        padding: 12px 2px;
+        border-bottom: 2px solid transparent;
+        transition: color 0.2s, border-color 0.2s;
+        white-space: nowrap;
+    }
+    .aurora-catbar a:hover,
+    .aurora-catbar a.active {
+        color: #c9a84c;
+        border-bottom-color: #c9a84c;
+    }
+    .catbar-item {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 44px;
+    }
+    .catbar-item > a {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .catbar-item > a i {
+        font-size: 9px;
+        transition: transform 0.2s;
+    }
+    .catbar-item:hover > a i {
+        transform: rotate(180deg);
+    }
+    .catbar-dropdown {
+        display: none;
+        position: absolute;
+        top: 44px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        border: 1px solid #e8e0d6;
+        border-top: 2px solid #c9a84c;
+        min-width: 200px;
+        z-index: 999;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        padding: 8px 0;
+    }
+    .catbar-item:hover .catbar-dropdown {
+        display: block;
+    }
+    .catbar-dropdown a {
+        display: block;
+        padding: 10px 20px;
+        color: #333 !important;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        border-bottom: none !important;
+        text-transform: uppercase;
+        transition: background 0.15s, color 0.15s;
+    }
+    .catbar-dropdown a:hover {
+        background: #f9f7f5;
+        color: #c9a84c !important;
+    }
+    @media (max-width: 768px) {
+        .aurora-catbar { gap: 16px; overflow-x: auto; justify-content: flex-start; font-size: 10px; }
+        .catbar-dropdown { min-width: 160px; }
+    }
+    .aurora-catbar {
+        margin-top: 185px;  /* ajuste esse valor se necessário */
+    }
+</style>
+
+<div class="aurora-catbar">
+    <div class="catbar-item">
+        <a href="/category/todos" {% if active_slug == 'todos' %}class="active"{% endif %}>Todos</a>
+    </div>
+    {% for item in menu %}
+    <div class="catbar-item">
+        <a href="/category/{{ item.category.id }}"
+           {% if active_slug == item.category.id|string %}class="active"{% endif %}>
+            {{ item.category.description }}
+            {% if item.subcategories %}<i class="bi-chevron-down"></i>{% endif %}
+        </a>
+        {% if item.subcategories %}
+        <div class="catbar-dropdown">
+            {% for sub in item.subcategories %}
+            <a href="/category/{{ sub.id }}"
+               {% if active_slug == sub.id|string %}class="active"{% endif %}>
+                {{ sub.description }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function fixCatbar() {
+        const topbar = document.querySelector('.aurora-topbar');
+        const navbar  = document.querySelector('.navbar');
+        const catbar  = document.querySelector('.aurora-catbar');
+        const main    = document.querySelector('main');
+        if (!navbar || !catbar) return;
+        const offset = (topbar ? topbar.getBoundingClientRect().height : 0)
+                     + navbar.getBoundingClientRect().height;
+        catbar.style.top        = offset + 'px';
+        catbar.style.visibility = 'visible';
+        if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
+    }
+    window.addEventListener('load', fixCatbar);
+    window.addEventListener('resize', fixCatbar);
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(fixCatbar, 100);
+        setTimeout(fixCatbar, 500);
+    });
+</script>

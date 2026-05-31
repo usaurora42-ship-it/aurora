@@ -389,68 +389,6 @@
                 .cart-table th, .cart-table td { padding: 12px 10px; font-size: 12px; }
             }
         </style>
-
-        <!-- Força catbar após todos os CSS externos -->
-        <style>
-            .aurora-catbar {
-                display: flex !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                position: fixed !important;
-                top: 142px !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100% !important;
-                height: 44px !important;
-                z-index: 99999 !important;
-                background: #3a2008 !important;
-                pointer-events: all !important;
-                clip: auto !important;
-                clip-path: none !important;
-                transform: none !important;
-                overflow: visible !important;
-                align-items: center !important;
-                justify-content: center !important;
-                gap: 36px !important;
-                padding: 0 24px !important;
-                font-size: 11px !important;
-                font-weight: 700 !important;
-                letter-spacing: 0.1em !important;
-                text-transform: uppercase !important;
-                border-bottom: 1px solid #2a1505 !important;
-            }
-            .aurora-catbar a {
-                color: #aaa !important;
-                text-decoration: none !important;
-                padding: 12px 2px !important;
-                border-bottom: 2px solid transparent !important;
-                transition: color 0.2s, border-color 0.2s !important;
-                white-space: nowrap !important;
-            }
-            .aurora-catbar a:hover { color: #c9a84c !important; border-bottom-color: #c9a84c !important; }
-        </style>
-
-        <script>
-            function fixCatbar() {
-                const topbar = document.querySelector('.aurora-topbar');
-                const navbar  = document.querySelector('.navbar');
-                const catbar  = document.querySelector('.aurora-catbar');
-                const main    = document.querySelector('main');
-                if (!navbar || !catbar) return;
-                const topbarH = topbar ? topbar.getBoundingClientRect().height : 0;
-                const navbarH = navbar.getBoundingClientRect().height;
-                const offset  = topbarH + navbarH;
-                catbar.style.top = offset + 'px';
-                catbar.style.visibility = 'visible';
-                if (main) main.style.paddingTop = (offset + catbar.getBoundingClientRect().height) + 'px';
-            }
-            window.addEventListener('load', fixCatbar);
-            window.addEventListener('resize', fixCatbar);
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(fixCatbar, 100);
-                setTimeout(fixCatbar, 500);
-            });
-        </script>
     </head>
 
     <body>
@@ -514,16 +452,7 @@
             </nav>
 
             <!-- ── Catbar ── -->
-            <div class="aurora-catbar">
-                <a href="/products/category_products">Todos</a>
-                <a href="/products/category_products?cat=colares">Colares</a>
-                <a href="/products/category_products?cat=brincos">Brincos</a>
-                <a href="/products/category_products?cat=aneis">Anéis</a>
-                <a href="/products/category_products?cat=pulseiras">Pulseiras</a>
-                <a href="/products/category_products?cat=conjuntos">Conjuntos</a>
-                <a href="/products/category_products?cat=bolsas">Bolsas</a>
-                <a href="/products/category_products?cat=presentes">Presentes</a>
-            </div>
+    {% include 'partials/_catbar.html' %}
 
             <!-- ── Conteúdo ── -->
             <section class="py-5">
