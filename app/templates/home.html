@@ -659,7 +659,23 @@
                         </div>
 
                         <div class="aurora-nav-icons">
-                            {% if session.get('client_id') %}
+      {% if session.get('role') == 'admin' %}
+                                <div class="user-dropdown-wrap">
+                                    <button class="user-dropdown-btn" onclick="toggleUserMenu()" aria-label="Menu do admin" style="color:#c9a84c">
+                                        <i class="bi-shield-check"></i>
+                                        <span>{{ session.get('admin_name', 'Admin') }}</span>
+                                    </button>
+                                    <div class="user-dropdown-menu" id="userDropdownMenu">
+                                        <a href="/products/products" class="user-dropdown-item">
+                                            <i class="bi-box-seam"></i> Cadastrar produto
+                                        </a>
+                                        <div class="user-dropdown-divider"></div>
+                                        <a href="/logout" class="user-dropdown-item user-dropdown-logout">
+                                            <i class="bi-box-arrow-right"></i> Sair
+                                        </a>
+                                    </div>
+                                </div>
+                            {% elif session.get('client_id') %}
                                 <div class="user-dropdown-wrap">
                                     <button class="user-dropdown-btn" onclick="toggleUserMenu()" aria-label="Menu do usuário">
                                         <i class="bi-person-check"></i>
@@ -679,10 +695,7 @@
                                     </div>
                                 </div>
                             {% else %}
-                                <a href="/client/login" title="Entrar">
-                                    <i class="bi-person"></i>
-                                    <span>Entrar</span>
-                                </a>
+                                <a href="/client/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>
                             {% endif %}
                             <a href="/cart" class="cart-btn-wrap" title="Sacola">
                                 <i class="bi-bag"></i>

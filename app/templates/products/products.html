@@ -301,7 +301,9 @@
                             <input type="text" placeholder="Buscar produto...">
                         </div>
                         <div class="aurora-nav-icons">
-                            {% if session.get('client_id') %}
+                            {% if session.get('role') == 'admin' %}
+                                <a href="/logout" title="Sair" style="color:#c9a84c"><i class="bi-shield-check"></i><span>{{ session.get('admin_name', 'Admin') }}</span></a>
+                            {% elif session.get('client_id') %}
                                 <a href="/logout" title="Sair"><i class="bi-person-check"></i><span>{{ session.get('client_name', '').split()[0] }}</span></a>
                             {% else %}
                                 <a href="/client/login" title="Entrar"><i class="bi-person"></i><span>Entrar</span></a>

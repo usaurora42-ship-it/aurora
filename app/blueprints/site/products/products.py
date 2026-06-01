@@ -8,6 +8,7 @@ from os.path import join, dirname, realpath
 from werkzeug.utils import secure_filename
 
 from app import logging
+from app.lib.auth import admin_required
 from app import environment
 from app.model.products import ModelProduct
 from app.model.category import ModelCategory
@@ -50,6 +51,7 @@ def products_get():
 
 
 @SiteBlueprint.route('/products/products', methods=['GET'])
+@admin_required
 def product_get():
     categories = categories_get()
     units = units_get()
@@ -123,8 +125,6 @@ def products_post():
         data_product = {
             'name':        data.get('name', '').strip(),
             'description': data.get('description', '').strip(),
-            'details':     data.get('details', '').strip() or None,
-            'material':    data.get('material', '').strip() or None,
             'value':       value,
             'size':        data.get('size', '').strip() or None,
             'unit_id':     int(data.get('unit', 0)),

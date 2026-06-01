@@ -102,7 +102,7 @@ def login_post():
 @SiteBlueprint.route('/admin/login')
 def admin_login_get():
     if session.get('role') == 'admin':
-        return redirect('/admin')
+        return redirect('/')
     resp = make_response(render_template('admin/login.html',
         success=False,
         errors=None,
@@ -156,7 +156,7 @@ def admin_login_post():
         session['admin_name'] = user.user_name
         session['role'] = 'admin'
 
-        return redirect('/admin')
+        return redirect('/')
 
     except Exception as e:
         LOGGER.exception(e)
