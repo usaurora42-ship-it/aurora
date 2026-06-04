@@ -157,7 +157,7 @@
             }
 
             /* ── Toast ── */
-            .amora-toast {
+            .aurora-toast {
                 position: fixed;
                 bottom: 28px;
                 right: 28px;
@@ -167,7 +167,7 @@
                 gap: 10px;
                 pointer-events: none;
             }
-            .amora-toast-item {
+            .aurora-toast-item {
                 background: rgba(20,20,20,0.95);
                 border: 1px solid rgba(255,255,255,0.12);
                 color: #fff;
@@ -185,7 +185,7 @@
                 pointer-events: auto;
                 min-width: 260px;
             }
-            .amora-toast-item i {
+            .aurora-toast-item i {
                 font-size: 1.1rem;
                 color: #2ed573;
                 flex-shrink: 0;
@@ -228,7 +228,7 @@
     
     <body class="reservation-page">      
         <!-- Toast container -->
-        <div class="amora-toast" id="toastContainer"></div>
+        <div class="aurora-toast" id="toastContainer"></div>
 
         <main>
             <nav class="navbar navbar-expand-lg">                
@@ -363,7 +363,7 @@
                             <a href="https://api.whatsapp.com/send?phone=5534984104546">Send Message</a>
                             <ul class="social-icon mt-4">
                                 <li class="social-icon-item">
-                                    <a href="https://www.instagram.com/amoraplatterbox/" class="social-icon-link bi-instagram"></a>
+                                    <a href="https://www.instagram.com/auroraplatterbox/" class="social-icon-link bi-instagram"></a>
                                 </li>
                                 <li class="social-icon-item">
                                     <a href="https://x.com/minthu" target="_new" class="social-icon-link bi-twitter"></a>
@@ -381,7 +381,7 @@
                             </p>
                             <p class="d-flex">
                                 <strong class="me-2">Email:</strong>
-                                <a href="mailto:amoraplatterbox@gmail.com" class="site-footer-link">amoraplatterbox@gmail.com</a>
+                                <a href="mailto:auroraplatterbox@gmail.com" class="site-footer-link">auroraplatterbox@gmail.com</a>
                             </p>
                         </div>
                         <div class="col-lg-5 col-12">
@@ -393,7 +393,7 @@
                             </ul>
                         </div>
                         <div class="col-lg-8 col-12 mt-4">
-                            <p class="copyright-text mb-0">Copyright © Amora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
+                            <p class="copyright-text mb-0">Copyright © aurora 2024 - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
                         </div>
                     </div>
                 </div>
@@ -425,7 +425,7 @@
             function showToast(message) {
                 const container = document.getElementById('toastContainer');
                 const item = document.createElement('div');
-                item.className = 'amora-toast-item';
+                item.className = 'aurora-toast-item';
                 item.innerHTML = `<i class="bi-check-circle-fill"></i><span>${message}</span>`;
                 container.appendChild(item);
                 setTimeout(() => item.remove(), 3300);

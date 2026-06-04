@@ -8,11 +8,11 @@ LOGGER = logging.getLogger(__name__)
 
 class Home(Resource):
     def get(self):
-        return {'name': 'Amora API', 'version': 1}, 200
+        return {'name': 'aurora API', 'version': 1}, 200
 
 """ class Version(Resource):
     def get(self):
-        return {'name': 'Amora API', 'version': git_tag_version}, 200
+        return {'name': 'aurora API', 'version': git_tag_version}, 200
 
 class ClientIp(Resource):
     def get(self):

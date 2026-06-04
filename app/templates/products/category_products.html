@@ -200,11 +200,11 @@
             .pag-btn.disabled { opacity: 0.3; pointer-events: none; }
 
             /* ── Toast ── */
-            .amora-toast {
+            .aurora-toast {
                 position: fixed; bottom: 28px; right: 28px;
                 z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
             }
-            .amora-toast-item {
+            .aurora-toast-item {
                 background: var(--au-dark); border: 1px solid rgba(255,255,255,0.1);
                 color: #fff; border-radius: 2px; padding: 12px 18px; font-size: 13px;
                 display: flex; align-items: center; gap: 10px;
@@ -213,7 +213,7 @@
                 animation: toastIn 0.3s ease forwards, toastOut 0.3s ease 2.8s forwards;
                 pointer-events: auto; min-width: 240px;
             }
-            .amora-toast-item i { font-size: 1rem; color: var(--au-gold); flex-shrink: 0; }
+            .aurora-toast-item i { font-size: 1rem; color: var(--au-gold); flex-shrink: 0; }
             @keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
             @keyframes toastOut { to { opacity: 0; transform: translateY(10px); } }
 
@@ -235,7 +235,7 @@
 
     <body>
         <!-- Toast container -->
-        <div class="amora-toast" id="toastContainer"></div>
+        <div class="aurora-toast" id="toastContainer"></div>
 
         <main>
             <!-- ── Topbar ── -->
@@ -433,7 +433,7 @@
             function showToast(message) {
                 const container = document.getElementById('toastContainer');
                 const item = document.createElement('div');
-                item.className = 'amora-toast-item';
+                item.className = 'aurora-toast-item';
                 item.innerHTML = `<i class="bi-check-circle-fill"></i><span>${message}</span>`;
                 container.appendChild(item);
                 setTimeout(() => item.remove(), 3300);

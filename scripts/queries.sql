@@ -1,4 +1,4 @@
-use amora_dev;
+use aurora_dev;
 
 select * from clients;
 select * from client_phones;
