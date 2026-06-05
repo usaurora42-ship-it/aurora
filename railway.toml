@@ -2,4 +2,4 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python -c \"from app import FlaskApp; print('App loaded OK')\""
+startCommand = "python -c \"from app import FlaskApp; print('OK')\""
