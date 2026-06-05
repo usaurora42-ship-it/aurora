@@ -51,6 +51,9 @@ Session(FlaskApp)
 FlaskApp.config.from_pyfile('config/default.cfg')
 FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
 
+db_url = os.environ.get('DATABASE_URL')
+if db_url:
+    FlaskApp.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
 # LOGGER
 # RequestID(FlaskApp)
