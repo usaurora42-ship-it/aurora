@@ -2,4 +2,4 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python -c \"from app import FlaskApp; print('OK')\""
+startCommand = "gunicorn app:FlaskApp --log-level debug --capture-output"
