@@ -1,4 +1,5 @@
 # encoding: utf-8
+import os
 import yaml
 import sys
 import pytest
@@ -54,11 +55,10 @@ FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
 FlaskApp.config.from_pyfile('config/default.cfg')
 FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
 
-import os
 db_url = os.environ.get('SQLALCHEMY_DATABASE_URI') or os.environ.get('DATABASE_URL')
 if db_url:
     FlaskApp.config['SQLALCHEMY_DATABASE_URI'] = db_url
-
+    
 # LOGGER
 # RequestID(FlaskApp)
 with FlaskApp.open_resource('config/logging.yml') as f:
