@@ -61,9 +61,6 @@ Flask-Session==0.8.0
 Flask-SQLAlchemy==3.1.1
 Flask-Uploads==0.2.1
 Flask-WTF==1.2.2
-flet==0.28.3
-flet-core==0.24.1
-flet-runtime==0.24.1
 frozenlist==1.7.0
 fsspec==2026.3.0
 greenlet==3.2.3
@@ -137,8 +134,6 @@ py==1.11.0
 py4j==0.10.9.9
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
-PyAudio==0.2.14
-PyAutoGUI==0.9.54
 pycodestyle==2.14.0
 pycountry==24.6.1
 pycparser==2.22
@@ -161,7 +156,6 @@ pypng==0.20220715.0
 PyRect==0.2.0
 pyrsistent==0.20.0
 PyScreeze==1.0.1
-pyspark==4.0.0
 pytest==8.4.1
 pytest-cov==6.2.1
 python-dateutil==2.9.0.post0
