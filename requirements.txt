@@ -170,7 +170,6 @@ python-multipart==0.0.20
 python-slugify==8.0.4
 pytweening==1.2.0
 pytz==2025.2
-pywin32==310
 PyYAML==6.0.2
 pyzmq==27.0.0
 qiniu==7.17.0
