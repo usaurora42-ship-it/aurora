@@ -1,5 +1,4 @@
 # encoding: utf-8
-import os
 import yaml
 import sys
 import pytest
@@ -51,7 +50,12 @@ Session(FlaskApp)
 FlaskApp.config.from_pyfile('config/default.cfg')
 FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
 
-db_url = os.environ.get('DATABASE_URL')
+# Config
+FlaskApp.config.from_pyfile('config/default.cfg')
+FlaskApp.config.from_pyfile('config/%s.cfg' % environment)
+
+import os
+db_url = os.environ.get('SQLALCHEMY_DATABASE_URI') or os.environ.get('DATABASE_URL')
 if db_url:
     FlaskApp.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
