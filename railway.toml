@@ -2,4 +2,4 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "gunicorn app:FlaskApp"
+startCommand = "gunicorn app:FlaskApp --log-level debug --capture-output"
