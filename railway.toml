@@ -2,4 +2,4 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "python -c \"from app import FlaskApp; print('DB:', FlaskApp.config.get('SQLALCHEMY_DATABASE_URI'))\" 2>&1 || true && gunicorn app:FlaskApp --log-level debug --capture-output"
+startCommand = "gunicorn app:FlaskApp --log-level debug --capture-output"
