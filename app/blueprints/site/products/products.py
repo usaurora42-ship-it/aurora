@@ -19,7 +19,8 @@ from app.model.enum import StatusEnum
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
-app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\products'
+app.config['UPLOAD_PATH'] = os.path.join(os.getcwd(), 'app', 'static', 'images', 'products')
+os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
 
 
 def categories_get():    

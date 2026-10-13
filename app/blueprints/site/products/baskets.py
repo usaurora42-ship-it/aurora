@@ -19,7 +19,8 @@ from app.model.basket_products import ModelBasketProduct
 
 LOGGER = logging.getLogger(__name__)
 app = Flask(__name__)
-app.config['UPLOAD_PATH'] = os.getcwd() + '\\app\\static\\images\\baskets'
+app.config['UPLOAD_PATH'] = os.path.join(os.getcwd(), 'app', 'static', 'images', 'baskets')
+os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
 
 def descriptions_get():    
     # query categories    
