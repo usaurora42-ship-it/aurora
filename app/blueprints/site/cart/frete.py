@@ -50,7 +50,7 @@ def calcular_frete():
                 'Authorization': f'Bearer {MELHOR_ENVIO_TOKEN}',
                 'Content-Type':  'application/json',
                 'Accept':        'application/json',
-                'User-Agent':    'Aurora Semijóias (contato@aurora.com.br)',
+                'User-Agent':    'Aurora Semijóias (auroraonlinesemijoias@gmail.com)',
             },
             timeout=10
         )
