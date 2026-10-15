@@ -22,9 +22,6 @@ app = Flask(__name__)
 app.config['UPLOAD_PATH'] = os.path.join(os.getcwd(), 'app', 'static', 'images', 'products')
 os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
 
-print("FORM:", request.form.to_dict(), flush=True)
-
-
 def categories_get():    
     query_category = ModelCategory.query.with_entities(
         ModelCategory.id,
