@@ -139,6 +139,7 @@ def products_post():
             'description': data.get('description', '').strip(),
             'details':     form.get('details') or None,
             'material':    form.get('material') or None,
+            'category_id': form.get('category') or None,
             'value':       value,
             'size':        data.get('size', '').strip() or None,
             'stock':       form.get('stock') or 0,
