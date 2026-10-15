@@ -22,6 +22,7 @@ app = Flask(__name__)
 app.config['UPLOAD_PATH'] = os.path.join(os.getcwd(), 'app', 'static', 'images', 'products')
 os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
 
+
 def categories_get():    
     query_category = ModelCategory.query.with_entities(
         ModelCategory.id,
@@ -78,6 +79,14 @@ def products_post():
     model_product          = ModelProduct()  
     model_product_category = ModelProductCategory()
 
+    def num(v):
+        v = (v or '').strip()
+        if not v:
+            return None
+        if ',' in v:
+            v = v.replace('.', '').replace(',', '.')   # "1.304,95" -> "1304.95"
+        return v
+
     def render_error(errors):
         print(">>> [ERRO] Erros retornados:", errors)
         resp = make_response(render_template('products/products.html',
@@ -121,15 +130,25 @@ def products_post():
 
         print(">>> [ARQUIVO] Path relativo:", directory_path)
 
+        form = request.form.to_dict()
+        form.pop('material_check', None)
+
         # ── Monta data_product ─────────────────────────────────────
         data_product = {
             'name':        data.get('name', '').strip(),
             'description': data.get('description', '').strip(),
+            'details':     form.get('details') or None,
+            'material':    form.get('material') or None,
             'value':       value,
             'size':        data.get('size', '').strip() or None,
+            'stock':       form.get('stock') or 0,
             'unit_id':     int(data.get('unit', 0)),
+            'value':       num(form.get('value')),
+            'value_old':   num(form.get('value_old')),
             'path':        directory_path,
         }
+
+        print("DATA:", data, flush=True)
 
         print(">>> [MODEL] data_product:", data_product)
 
