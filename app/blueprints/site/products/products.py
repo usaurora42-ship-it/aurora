@@ -22,6 +22,8 @@ app = Flask(__name__)
 app.config['UPLOAD_PATH'] = os.path.join(os.getcwd(), 'app', 'static', 'images', 'products')
 os.makedirs(app.config['UPLOAD_PATH'], exist_ok=True)
 
+print("FORM:", request.form.to_dict(), flush=True)
+
 
 def categories_get():    
     query_category = ModelCategory.query.with_entities(
@@ -136,6 +138,9 @@ def products_post():
 
         product = model_product.create_product(data_product)
 
+        LOGGER.warning("FORM: %s", request.form.to_dict())
+        LOGGER.warning("FILES: %s", list(request.files.keys()))
+
         if product is None:
             print(">>> [ERRO] create_product falhou:", model_product.errors)
             return render_error(model_product.errors)
@@ -157,9 +162,7 @@ def products_post():
             return render_error(model_product_category.errors)
 
         print(">>> [OK] ProductCategory criado")
-
-        print("FORM:", request.form.to_dict())
-        print("DATA:", data)   # o que vai para create_product  
+        
 
         # ── Sucesso ────────────────────────────────────────────────
         resp = make_response(render_template('products/products.html',
