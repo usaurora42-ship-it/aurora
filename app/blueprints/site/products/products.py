@@ -158,6 +158,9 @@ def products_post():
 
         print(">>> [OK] ProductCategory criado")
 
+        print("FORM:", request.form.to_dict())
+        print("DATA:", data)   # o que vai para create_product  
+
         # ── Sucesso ────────────────────────────────────────────────
         resp = make_response(render_template('products/products.html',
             success=True,
