@@ -91,6 +91,13 @@ class ModelProduct(db.Model):
         index=True
     )
 
+    category_id = db.Column(
+        INTEGER(unsigned=True),
+        db.ForeignKey('categories.id', onupdate='CASCADE'),
+        nullable=True,
+        index=True
+    )
+
     # Relationships
     unit = db.relationship(
         'ModelUnit',
