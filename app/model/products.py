@@ -283,6 +283,11 @@ class ModelProduct(db.Model):
             type: number
             coerce: float
             nullable: true
+        category_id:
+            coerce: integer
+            min: 1
+            nullable: true
+            type: integer
         '''
         return yaml.load(schema, Loader=yaml.FullLoader)
 
